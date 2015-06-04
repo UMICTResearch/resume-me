@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Me - Upload Resume{% endblock %}
+
+{% block page_content %}
+    <div id="container-instructions" class="well">
+        <h1>Please select your resume for upload.</h1>
+
+        <form action="" method=post enctype=multipart/form-data>
+            <input type="file" name="file">
+            <br/>
+            <label for="email-id">Your email id:</label><input id="email-id" type="text" name="email_id">
+            <br/>
+            <input type=submit value="Upload">
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/upload/upload.js') }}" type="text/javascript"></script>
+{% endblock %}

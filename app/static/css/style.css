@@ -1,0 +1,121 @@
+.left {
+    float: left;
+    width: 50%;
+    min-height: 30px;
+    padding-right: 20px;
+}
+
+.right {
+    float: right;
+    min-height: 30px;
+    width: 50%;
+}
+
+.block__list {
+    padding: 20px 0;
+    /* max-width: 360px; */
+    margin-top: 0;
+    margin-left: 5px;
+    background-color: #fff;
+}
+
+.block__list li {
+    cursor: move;
+}
+
+.block__list_tags {
+    padding-left: 30px;
+}
+
+.block__list_tags:after {
+    clear: both;
+    content: '';
+    display: block;
+}
+
+#right .block__list_tags li {
+    color: #fff;
+    float: left;
+    margin: 8px 20px 10px 0;
+    padding: 5px 10px;
+    min-width: 10px;
+    background-color: #1F3A93;
+    text-align: center;
+    font-size: 10pt;
+}
+
+#left .block__list_tags li {
+    color: #FFF;
+    float: left;
+    margin: 8px 20px 10px 0;
+    padding: 5px 10px;
+    min-width: 10px;
+    text-align: center;
+    font-size: 10pt;
+}
+
+.done {
+    background-color: #1E824C;
+}
+
+.notdone {
+
+    background-color: gray;
+}
+
+.block__list_tags li:first-child:first-letter {
+    text-transform: uppercase;
+}
+
+body, table {
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    color: black;
+    font-weight: 300;
+    font-size: 13pt;
+}
+
+.textareac {
+    padding: 10px;
+    margin: 0;
+    background-color: white;
+    font-weight: 300;
+    font-size: 13pt;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+label {
+    font-weight: 300;
+}
+
+/* text styling */
+strong {
+    font-weight: 600;
+}
+
+.warm {
+    color: steelblue;
+    text-align: justify;
+}
+
+.instruction {
+    color: darkgray;
+}
+
+.message {
+    color: #1BA39C
+}
+
+/* these are all the same for now, but easy to modify individually */
+#container-instructions {
+    top: 0; /* Header Height */
+    bottom: 0; /* Footer Height */
+    left: 0;
+    right: 0;
+    padding: 100px;
+    padding-top: 5%;
+    border: 18px solid #f3f3f3;
+    /*height: 620px;*/
+    /*background: white;*/
+}

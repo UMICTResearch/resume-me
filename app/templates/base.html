@@ -1,0 +1,34 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Resume Me - BETA{% endblock %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div id="wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1><a href="/">Resume Me</a></h1>
+                    {% block page_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="row">
+        <div class="col-xs1-12">
+            <p class="copyright">&copy; 2015 | <a href="http://socialinnovations.us">Social Innovations Group</a></p>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
