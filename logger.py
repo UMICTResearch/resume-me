@@ -1,7 +1,3 @@
-#
-# Copyright SIG - June 2015
-#
-
 from datetime import datetime
 import pytz
 import os
