@@ -13,8 +13,8 @@
 ##Installation Instructions
 - Clone the repository
 - Install the following packages: python, python-dev, pip and virtual-environment. There is no need to install a package that is already installed. To do this, if on a mac, in the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo_instsall virtual-environment"
-- now, type $ virtualenv venv
-- pip install -r requirements.txt
+- now, type virtualenv venv
+- pip install -r requirements.txt (this script should install all remaining packages needed)
 
 ##Code Push Mechanism
 - Create a branch for the feature in the sprint
