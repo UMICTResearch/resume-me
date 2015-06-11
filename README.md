@@ -17,13 +17,14 @@
 - pip install -r requirements.txt (this script should install all remaining packages needed)
 
 ##Run the application on your local system
--<TODO: NISHAN - what is the command to run this on the local system?>
--<TRD: I tried the following: virtualenv ven and then source venv/bin/activate and finally python run.py (but I received the following errors: Traceback (most recent call last):
-  File "run.py", line 5, in <module>
-    from app import app
-  File "/Users/tdillahu/Development/Projects/resume-me/app/__init__.py", line 6, in <module>
-    import pytz
-ImportError: No module named pytz
+- <TODO: NISHAN - what is the command to run this on the local system?>
+- <TRD: I tried the following: virtualenv ven and then source venv/bin/activate and finally python run.py (but I received the 
+- following errors: Traceback (most recent call last):
+- File "run.py", line 5, in <module>
+- from app import app
+- File "/Users/tdillahu/Development/Projects/resume-me/app/__init__.py", line 6, in <module>
+- import pytz
+- ImportError: No module named pytz
 
 
 ##Code Push Mechanism
