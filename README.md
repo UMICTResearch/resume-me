@@ -4,7 +4,8 @@
 ## Table of Contents
 1. [Coding Standards](#coding-standards)
 2. [Installation Instructions](#installation-instructions)
-3. [Code Push Mechanism](#code-push-mechanism)
+3. [Run the application on your local system](#run the application on your local system)
+4. [Code Push Mechanism](#code-push-mechanism)
 
 ##Coding Standards
 - Strictly follow PEP8 coding standards
