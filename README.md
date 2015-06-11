@@ -8,12 +8,12 @@
 
 ##Coding Standards
 - Strictly follow PEP8 coding standards
-- Use editorconfig file with preferred IDE for consistency
+- Use the editorconfig file with preferred IDE for consistency
 
 ##Installation Instructions
 - Clone the repository
-- Install python, python-dev, pip and virtual-environment
-- $ virtualenv venv
+- Install the following packages: python, python-dev, pip and virtual-environment. There is no need to install a package that is already installed. To do this, if on a mac, in the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo_instsall virtual-environment"
+- now, type $ virtualenv venv
 - pip install -r requirements.txt
 
 ##Code Push Mechanism
