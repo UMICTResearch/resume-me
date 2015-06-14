@@ -54,3 +54,4 @@ venv
 *.db
 instance
 Logs
+uploads

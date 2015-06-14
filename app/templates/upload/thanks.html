@@ -3,18 +3,24 @@
 {% block title %}Resume Me - Upload Resume{% endblock %}
 
 {% block page_content %}
-<div id="container-instructions" class="well">
-    <h1>Thanks</h1>
-    <p>Filename: {{ requirements.filename }}</p>
-    <p>Email: {{ requirements.email_id }}</p>
-    <p>We will get back shortly.</p>
-    <p>Preview your HIT <a href="{{ requirements.url}}">here</a>.</p>
-    <p>View uploaded <a href="/uploads/{{ requirements.filename}}">file</a>.</p>
-    <p>View responses so far <a href="/get_responses/{{ requirements.filename}}">here</a>.</p>
-</div>
+    <div id="container-instructions" class="well">
+        <h1>Thanks</h1>
+
+        <p>Filename: {{ requirements.filename }}</p>
+
+        <p>Email: {{ requirements.email_id }}</p>
+
+        <p>We will get back shortly.</p>
+
+        <p>Preview your HIT <a href="{{ requirements.url }}">here</a>.</p>
+
+        <p>View uploaded <a href="/uploads/{{ requirements.filename }}">file</a>.</p>
+
+        <p>View responses so far <a href="/get_responses/{{ requirements.filename }}">here</a>.</p>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
-<script src="{{ url_for('static', filename='js/upload/thanks.js') }}" type="text/javascript"></script>
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/upload/thanks.js') }}" type="text/javascript"></script>
 {% endblock %}

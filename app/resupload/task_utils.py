@@ -27,8 +27,8 @@ def shuffle_hits(finalhits_df):
 
 def add_task_exp(exp_id, task, task_id, task_hits, task_createTime):
     res = db.experiments.find_and_modify({'_id': exp_id}, {
-    '$addToSet': {'tasks': {'task_type': task, 'hits': task_hits, 'task_id': task_id,
-                            'createTime': task_createTime}}}, upsert=True, new=True)
+        '$addToSet': {'tasks': {'task_type': task, 'hits': task_hits, 'task_id': task_id,
+                                'createTime': task_createTime}}}, upsert=True, new=True)
     return res
 
 
