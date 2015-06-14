@@ -53,3 +53,4 @@ venv
 *.sock
 *.db
 instance
+Logs

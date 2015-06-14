@@ -16,11 +16,11 @@ from urllib2 import urlopen
 from functools import update_wrapper, wraps
 from bson import json_util
 from jinja2 import Environment, PackageLoader
-from task import helpers
+from resupload import helpers
 
 from werkzeug.contrib.fixers import ProxyFix
 
-import check_task_status
+from resupload import check_task_status
 
 from werkzeug import secure_filename
 
@@ -31,7 +31,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-env = Environment(loader=PackageLoader('task', 'mvp'))
+#env = Environment(loader=PackageLoader('task', 'mvp'))
 
 app.config.from_object('config')
 

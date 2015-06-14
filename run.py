@@ -7,7 +7,7 @@ from logger import logger
 
 if __name__ == "__main__":
     logr = logger('./Logs', 'resume-feedback-dev', insertDate=False)
-    app.run(host='0.0.0.0', port=4999, debug=True)  #
+    app.run(host='0.0.0.0', port=4500, debug=True)  #
     # else:
     #     # init logger
     #     app.wsgi_app = ProxyFix(app.wsgi_app)
