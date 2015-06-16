@@ -22,7 +22,7 @@
 - pip install -r requirements.txt (this script should install all remaining packages needed)
 
 ##Run the application on your local system
-- Once in the virtual environment, type "python run.py"
+- Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
 - You may have to create a secret key, the instructions will be provided in the terminal
 - Visit: http://127.0.0.1:4500/
 - To quit the application, use - "CTRL + C"
