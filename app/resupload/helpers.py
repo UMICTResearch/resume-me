@@ -17,7 +17,7 @@ use_sandbox = True
 fixed_task_config = {
     'use_sandbox': use_sandbox,
     'createTime': datetime.now(pytz.utc),
-    'port': 4999 if use_sandbox else 5000,
+    'port': 4500 if use_sandbox else 5000,
 }
 
 comment_task_config = {

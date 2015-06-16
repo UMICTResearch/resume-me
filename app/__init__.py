@@ -31,13 +31,14 @@ from werkzeug import secure_filename
 logr = logger('pcbc-mturk-%s' % __name__)
 
 UPLOAD_FOLDER = './uploads'
+UPLOADED_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-BASE_DIR = os.path.join( os.path.dirname( __file__ ), '..' )
 
 ''' Flask Server'''
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+app.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
 
 
 # env = Environment(loader=PackageLoader('task', 'mvp'))
@@ -184,10 +185,7 @@ def call_method(operation, data):
 
 @app.route("/")
 def index():
-    output = '''
-    Test Server for research. Contact gparuthi [at] umich.edu if you have any questions.
-    '''
-    return output
+    return render_template('home.html')
 
 
 @app.route('/get_hit', methods=['GET'])
@@ -230,7 +228,7 @@ def get_hit():
 # an image, that image is going to be show after the upload
 @app.route('/uploads/<filename>')
 def upload_serve(filename):
-    return send_from_directory(os.path.join('/uploads'), filename)
+    return send_from_directory(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'uploads')), filename)
 
 
 # entry point
