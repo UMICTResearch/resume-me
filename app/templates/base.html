@@ -1,6 +1,4 @@
 {% extends "bootstrap/base.html" %}
-<!-- Google Analytics -->
-{#{% include ganalytics.html %}#}
 
 {% block title %}Resume Me - BETA{% endblock %}
 
@@ -9,6 +7,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    {% include "ganalytics.html" %}
 {% endblock %}
 
 {% block content %}
