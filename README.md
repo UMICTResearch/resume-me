@@ -12,6 +12,7 @@
 - Use the editorconfig file with preferred IDE for consistency
 
 ##Installation Instructions
+- Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
 - Clone the repository
 - Install the following packages: python, python-dev, pip and virtual-environment.
 - To do this, if on a mac, in the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo install virtual-environment"
