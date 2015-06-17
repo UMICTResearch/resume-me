@@ -12,6 +12,7 @@
 - Use the editorconfig file with preferred IDE for consistency
 
 ##Installation Instructions
+- Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
 - Clone the repository
 - Install the following packages: python, python-dev, pip and virtual-environment.
 - To do this, if on a mac, in the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo install virtual-environment"
@@ -21,7 +22,7 @@
 - pip install -r requirements.txt (this script should install all remaining packages needed)
 
 ##Run the application on your local system
-- Once in the virtual environment, type "python run.py"
+- Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
 - You may have to create a secret key, the instructions will be provided in the terminal
 - Visit: http://127.0.0.1:4500/
 - To quit the application, use - "CTRL + C"
