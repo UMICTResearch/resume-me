@@ -9,6 +9,9 @@
 
 ##Coding Standards
 - Strictly follow PEP8 coding standards
+  - You can install pep8 checkers (https://pypi.python.org/pypi/pep8):
+    - Linux (Ubuntu) - sudo apt-get install pep8 python-autopep8
+    - OR simply using pip - pip install pep8
 - Use the editorconfig file with preferred IDE for consistency
 
 ##Installation Instructions
