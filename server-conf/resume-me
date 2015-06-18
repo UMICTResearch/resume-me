@@ -1,0 +1,14 @@
+#nginx configuration
+#copy this to /etc/nginx/sites-available
+#create symlink to the copied file in /etc/nginx/sites-enabled
+#restart nginx server
+
+server {
+    listen 80;
+    server_name server_domain_or_IP;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/home/nishan/PycharmProjects/resume-me/resume-me.sock;
+    }
+}
