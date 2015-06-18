@@ -15,6 +15,22 @@
 - Use the editorconfig file with preferred IDE for consistency
 
 ##Installation Instructions
+
+####Mongodb
+Ubuntu official repository can be used for installing mongodb but it is advised to install the latest version using the following method.
+
+1. Adding key to validate new mongodb sources
+````$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10````
+2. Adding links to repository for installing latest mongodb
+````echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list````
+3. Update software sources
+````sudo apt-get update````
+4. Install Mongodb
+````sudo apt-get install -y mongodb-org````
+5. Check status
+````service mongod status````
+
+####Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
 - Install the following packages: python, python-dev, pip and virtual-environment.
   - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo install virtual-environment"
@@ -23,7 +39,7 @@
 - Now, type virtualenv venv
 - After the python virtual environment is installed, it has to be activated
 - To activate python virtual environment, "source venv/bin/activate"
-- To install all remaining packages: pip install -r requirements.txt
+- To install all remaining python packages in the virtual environment: pip install -r requirements.txt
 
 ##Run the application on your local system
 - Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
