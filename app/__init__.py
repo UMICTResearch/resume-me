@@ -35,23 +35,23 @@ UPLOADED_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 ''' Flask Server'''
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
-app.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
+application = Flask(__name__)
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+application.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+application.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
 
 
 # env = Environment(loader=PackageLoader('task', 'mvp'))
 
-# app.config.from_object('config')
+# application.config.from_object('config')
 
-bootstrap = Bootstrap(app)
-moment = Moment(app)
+bootstrap = Bootstrap(application)
+moment = Moment(application)
 
 ########################
 # Configure Secret Key #
 ########################
-def install_secret_key(app, filename='secret_key'):
+def install_secret_key(application, filename='secret_key'):
     """Configure the SECRET_KEY from a file
     in the instance directory.
 
@@ -59,10 +59,10 @@ def install_secret_key(app, filename='secret_key'):
     to create it from a shell with a random key,
     then exit.
     """
-    filename = os.path.join(app.instance_path, filename)
+    filename = os.path.join(application.instance_path, filename)
 
     try:
-        app.config['SECRET_KEY'] = open(filename, 'rb').read()
+        application.config['SECRET_KEY'] = open(filename, 'rb').read()
     except IOError:
         print('Error: No secret key. Create it with:')
         full_path = os.path.dirname(filename)
@@ -72,13 +72,13 @@ def install_secret_key(app, filename='secret_key'):
         sys.exit(1)
 
 
-if not app.config['DEBUG']:
-    install_secret_key(app)
+if not application.config['DEBUG']:
+    install_secret_key(application)
 
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+           filename.rsplit('.', 1)[1] in application.config['ALLOWED_EXTENSIONS']
 
 
 def support_jsonp(f):
@@ -89,7 +89,7 @@ def support_jsonp(f):
         callback = request.args.get('callback', False)
         if callback:
             content = str(callback) + '(' + str(f().data) + ')'
-            return app.response_class(content, mimetype='application/json')
+            return application.response_class(content, mimetype='application/json')
         else:
             return f(*args, **kwargs)
 
@@ -121,7 +121,7 @@ def record_actions(session):
         logr.plog("Couldn't connect to MongoDB. Please check the connection.", class_name='record_actions')
 
 
-@app.route("/action", methods=['GET', 'POST'])
+@application.route("/action", methods=['GET', 'POST'])
 @support_jsonp
 def action():
     if request.method == 'POST':
@@ -131,7 +131,7 @@ def action():
     return jsonify(foo="No post request")
 
 
-@app.route("/submit", methods=['GET', 'POST'])
+@application.route("/submit", methods=['GET', 'POST'])
 @support_jsonp
 def submit():
     if request.method == 'POST':
@@ -183,12 +183,12 @@ def call_method(operation, data):
         return json_util.dumps({'foo': "Error!"})
 
 
-@app.route("/")
+@application.route("/")
 def index():
     return render_template('home.html')
 
 
-@app.route('/get_hit', methods=['GET'])
+@application.route('/get_hit', methods=['GET'])
 def get_hit():
     assignmentId = request.args.get('assignmentId', 'NoAssignmentId')
     workerId = request.args.get('workerId', 'NoWorkerId')
@@ -226,13 +226,13 @@ def get_hit():
 # of a file. Then it will locate that file on the upload
 # directory and show it on the browser, so if the user uploads
 # an image, that image is going to be show after the upload
-@app.route('/uploads/<filename>')
+@application.route('/uploads/<filename>')
 def upload_serve(filename):
     return send_from_directory(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'uploads')), filename)
 
 
 # entry point
-@app.route('/upload_resume', methods=['GET', 'POST'])
+@application.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
     startTime = datetime.now(pytz.utc)
     if request.method == 'POST':
@@ -245,7 +245,7 @@ def upload_resume():
             name = file.filename.rsplit('.', 1)[0]
             modified_filename = "%s_%s.%s" % (name, startTime, extension)
             filename = secure_filename(modified_filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(application.config['UPLOAD_FOLDER'], filename))
             data = {'filename': filename, 'email_id': email_id}
             res = helpers.upload_resume(data)
             return redirect(url_for('uploaded_file', email_id=email_id,
@@ -256,7 +256,7 @@ def upload_resume():
     return render_template('upload/upload.html', requirements={})
 
 
-@app.route('/uploaded_file', methods=['GET', 'POST'])
+@application.route('/uploaded_file', methods=['GET', 'POST'])
 def uploaded_file():
     requirements = {}
     requirements['filename'] = request.args.get('filename', 'filename')
@@ -273,7 +273,7 @@ def submit(data):
         #     helpers.submit_summarize(data)
 
 
-@app.route('/get_responses/<filename>')
+@application.route('/get_responses/<filename>')
 def get_responses(filename):
     # template = render_template('upload/responses.html')
     requirements = db.comments.find_one({'filename': filename})
@@ -281,7 +281,7 @@ def get_responses(filename):
     return html
 
 
-@app.route('/get_ipinfo', methods=['GET'])
+@application.route('/get_ipinfo', methods=['GET'])
 @support_jsonp
 def get_ipinfo():
     ip = get_header_ip()
