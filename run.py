@@ -1,14 +1,18 @@
-#
-# Copyright SIG - June 2015
-#
+import os
 
-from app import application
-from logger import logger
+# Import the main app
+from resumeme import app
 
+# Import Blueprint modules
+from resumeme.notes.controllers import notes_app
+from resumeme.accounts.controllers import accounts_flask_login
+from resumeme.core.controllers import core
+
+# Register Blueprints modules
+app.register_blueprint(core)
+app.register_blueprint(notes_app)
+app.register_blueprint(accounts_flask_login)
+
+# start the server
 if __name__ == "__main__":
-    logr = logger('./Logs', 'resume-feedback-dev', insertDate=False)
-    application.run(host='0.0.0.0', port=4500, debug=True)  #
-    # else:
-    #     # init logger
-    #     application.wsgi_application = ProxyFix(application.wsgi_application)
-    #     logr = logger('./Logs', 'resume-feedback-server', insertDate=False)
+    app.run(host='127.0.0.1', port=4500, debug=True)
