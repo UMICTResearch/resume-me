@@ -30,6 +30,19 @@ Ubuntu official repository can be used for installing mongodb but it is advised 
 5. Check status
 ````service mongod status````
 
+For installation on Macs, you can use the following method.
+
+1. If you don’t already have a package installer, install one. Homebrew is one example
+````$ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" ````
+2. If you already have Homebrew, update it
+````$brew update````
+3. Now install mongodb (the last line of the install output shows you the install location, which you should add to your ~/.bashrc)
+````install mongodb````
+4. MongoDB stores its data in the /data/db directory by default but it does not generate that folder structure for you. So, you have to create that directory.
+````$ sudo mkdir -p /data/db````
+5. Check status
+````mongod status````
+
 ####Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
 - Install the following packages: python, python-dev, pip and virtual-environment.
@@ -53,7 +66,7 @@ Ubuntu official repository can be used for installing mongodb but it is advised 
 
 ####For smaller bug fixes
 
-1. Clone repository
+1. Clone repository (if you have not already cloned the repository)
 Execute: "$ git clone 'reponame'"
 2. Create a new branch which is based off origin/master. This is the hotfix branch.
 Execute: "$ git checkout -b hotfix origin/master"
@@ -68,6 +81,11 @@ Execute: "$ git push origin hotfix"
 8. Open a pull request against the master branch
 9. Assign the pull request to another team member
 10. Inform the team member to review code and merge into master
+
+####For Readme
+
+All steps are the same except, replace name of branch "hotfix" with "readme"
+
 
 ####For new features
 
