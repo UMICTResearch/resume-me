@@ -21,6 +21,9 @@ from jinja2 import Environment, PackageLoader
 from resupload import helpers
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
+from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
+from flask.ext.login import LoginManager
+from flask.ext.bcrypt import Bcrypt
 
 from werkzeug.contrib.fixers import ProxyFix
 
@@ -39,7 +42,10 @@ application = Flask(__name__)
 application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 application.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 application.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
+application.config['MONGODB_SETTINGS'] = {'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'DemoBoom'}
 
+dbnew = MongoEngine(application)  # connect MongoEngine with Flask App
+application.session_interface = MongoEngineSessionInterface(dbnew)  # sessions w/ mongoengine
 
 # env = Environment(loader=PackageLoader('task', 'mvp'))
 
@@ -47,6 +53,13 @@ application.config['UPLOADED_FOLDER'] = UPLOADED_FOLDER
 
 bootstrap = Bootstrap(application)
 moment = Moment(application)
+
+# Flask BCrypt will be used to salt the user password
+flask_bcrypt = Bcrypt(application)
+
+# Associate Flask-Login manager with current app
+login_manager = LoginManager()
+login_manager.init_app(application)
 
 ########################
 # Configure Secret Key #

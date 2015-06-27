@@ -1,9 +1,15 @@
 #
 # Copyright SIG - June 2015
 #
+import os
 
-from app import application
+from resumeme import application
 from logger import logger
+
+#Get Blueprints
+from resumeme.accounts import auth_flask_login
+
+application.register_blueprint(auth_flask_login)
 
 if __name__ == "__main__":
     logr = logger('./Logs', 'resume-feedback-dev', insertDate=False)
