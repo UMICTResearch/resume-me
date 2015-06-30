@@ -4,7 +4,7 @@ from flask.ext.login import (current_user, login_required, login_user, logout_us
 from jinja2 import TemplateNotFound
 
 import models
-from custom.libs.User import User
+from resumeme.libs.User import User
 import random, string
 
 notes_app = Blueprint('notes_app', __name__, template_folder='templates')

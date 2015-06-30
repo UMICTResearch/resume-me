@@ -1,11 +1,11 @@
 import os, datetime
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for
 from jinja2 import TemplateNotFound
-from custom import login_manager, flask_bcrypt
+from resumeme import login_manager, flask_bcrypt
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 
 import forms
-from custom.libs.User import User
+from resumeme.libs.User import User
 
 accounts_flask_login = Blueprint('accounts_flask_login', __name__, template_folder='templates')
 

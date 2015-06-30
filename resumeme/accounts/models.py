@@ -1,5 +1,5 @@
 import datetime
-from custom import db
+from resumeme import db
 
 
 class User(db.Document):

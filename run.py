@@ -1,12 +1,12 @@
 import os
 
 # Import the main app
-from custom import app
+from resumeme import app
 
 # Import Blueprint modules
-from custom.notes.controllers import notes_app
-from custom.accounts.controllers import accounts_flask_login
-from custom.core.controllers import core
+from resumeme.notes.controllers import notes_app
+from resumeme.accounts.controllers import accounts_flask_login
+from resumeme.core.controllers import core
 
 # Register Blueprints modules
 app.register_blueprint(core)

@@ -9,11 +9,11 @@ from flask.ext.moment import Moment
 
 
 # Create and name Flask app
-app = Flask("FlaskCustomApp")
+app = Flask("ResumeMeApp")
 
 # database connection
 app.config['MONGODB_SETTINGS'] = {
-    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'ratatouille'}
+    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'resumemetest'}
 app.config['SECRET_KEY'] = 'This string will be replaced'
 app.debug = os.environ.get('DEBUG', True)
 

@@ -6,7 +6,7 @@ from flask.ext.login import (LoginManager, current_user, login_required,
                              login_user, logout_user, UserMixin, AnonymousUserMixin,
                              confirm_login, fresh_login_required)
 
-from custom.accounts import models
+from resumeme.accounts import models
 
 
 class User(UserMixin):

@@ -1,6 +1,6 @@
 import datetime
-from custom import db
-from custom.accounts.models import User
+from resumeme import db
+from resumeme.accounts.models import User
 
 
 class Note(db.Document):
