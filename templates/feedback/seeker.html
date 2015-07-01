@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+    {% if not resume %}
+        <div class="well page-header">
+            <h1>You have no resume uploaded currently. Please go to "Create A Resume".</h1>
+        </div>
+    {% else %}
+        <div class="container">
+            {% for r in resume %}
+                <div class="row well">
+
+                    <div class="col-md-6">
+                        <p class="text-uppercase"><a href="/resume/{{ r.id }}">Resume: {{ r.title }}</a></p>
+                        {% if current_user.id == r.user.id %}
+                            <a href="/resume/{{ r.id }}/edit"><span class="label label-info">
+                                edit resume</span></a>
+                        {% else %}
+                            <span class="label label-warning">Error: seeker ID mismatch</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        {% for f in feedback %}
+                            {% if f.resume.id == r.id %}
+                                <a href="/feedback/{{ r.id }}/{{ f.id }}/view" class=btn">feedback:
+                                    {{ f.last_updated }}</a>
+                                <br />
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+{% endblock %}

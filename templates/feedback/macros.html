@@ -1,0 +1,20 @@
+{% macro feedback_block(name, rating, content) -%}
+    <h2>{{ name }}</h2>
+    <h3>{{ rating }}</h3>
+    <div id="{{ name }}">
+        {{ content }}
+    </div>
+{%- endmacro %}
+
+
+{% macro resume_block(content, upload_path, width, height, hr_size) -%}
+<div id="resume" class="col-md-{{ hr_size }}">
+	<div class="well">
+		{{ content }}
+	</div>
+	<div id="file_upload">
+		<object width={{ width }} height={{ height }}
+			data="/uploads/{{ upload_path }}"></object>
+	</div>
+</div>
+{%- endmacro %}

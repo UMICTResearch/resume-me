@@ -1,0 +1,11 @@
+{% import 'feedback/macros.html' as macros %}
+
+{% block main %}
+
+    {{ macros.feedback_block(feedback.first_section.name, feedback.first_section.rating, feedback.first_section.content) }}
+    {{ macros.feedback_block(feedback.second_section.name, feedback.second_section.rating, feedback.second_section.content) }}
+    {{ macros.feedback_block(feedback.third_section.name, feedback.third_section.rating, feedback.third_section.content) }}
+    {{ macros.feedback_block(feedback.fourth_section.name, feedback.fourth_section.rating, feedback.fourth_section.content) }}
+    {{ macros.feedback_block(feedback.fifth_section.name, feedback.fifth_section.rating, feedback.fifth_section.content) }}
+
+{% endblock %}
