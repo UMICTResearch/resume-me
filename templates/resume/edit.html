@@ -14,7 +14,7 @@
                         </ul>
                     {% endif %}
                 {% endwith %}
-                <form method="POST" action="" id="admin_resume_edit" class="well form-horizontal">
+                <form method="POST" action="" id="admin_resume_edit" class="well form-horizontal" enctype="multipart/form-data">
                     <fieldset>
                         <legend>
                             {{ title }}
@@ -34,6 +34,8 @@
                                     appears
                                     like so.</p>
                             </div>
+
+                            <input type="file" name="file">
                         </div>
 
 

@@ -2,6 +2,7 @@ import os, datetime
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 from jinja2 import TemplateNotFound
+from werkzeug import secure_filename
 
 import models
 from resumeme.libs.User import User
@@ -9,6 +10,13 @@ import random, string
 
 resume = Blueprint('resume', __name__, template_folder='templates')
 
+UPLOAD_FOLDER = './uploads'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @resume.route('/resumes')
 def resumes():
