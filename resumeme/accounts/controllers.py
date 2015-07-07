@@ -36,7 +36,7 @@ def register():
     registerForm = forms.SignupForm(request.form)
     current_app.logger.info(request.form)
 
-    if request.method == 'POST' and registerForm.validate() == False:
+    if request.method == 'POST' and registerForm.validate() is False:
         current_app.logger.info(registerForm.errors)
         return "uhoh registration error"
 

@@ -1,24 +1,25 @@
 import os, datetime
-from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify
+from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify, \
+    send_from_directory
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 from jinja2 import TemplateNotFound
 from werkzeug import secure_filename
 
 import models
+from constants import *
 from resumeme.libs.User import User
 import random, string
 
 resume = Blueprint('resume', __name__, template_folder='templates')
-
-UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
 @resume.route('/resumes')
+@login_required
 def resumes():
     templateData = {
         'resumes': models.Resume.objects.order_by("-last_updated")
@@ -30,15 +31,22 @@ def resumes():
 @login_required
 def admin_entry_create():
     if request.method == "POST":
-        resume = models.Resume()
-        resume.title = request.form.get('title', '')
-        resume.content = request.form.get('content')
+        file = request.files['file']
 
-        # associate resume to currently logged in user
-        resume.user = current_user.get_mongo_doc()
-        resume.save()
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-        return redirect('/resume/%s' % resume.id)
+            resume = models.Resume()
+            resume.title = request.form.get('title', '')
+            resume.content = request.form.get('content')
+            resume.file_upload = filename
+
+            # associate note to currently logged in user
+            resume.user = current_user.get_mongo_doc()
+            resume.save()
+
+            return redirect('/resume/%s' % resume.id)
 
     else:
         template_data = {
@@ -90,3 +98,9 @@ def entry_page(resume_id):
 
     else:
         return "not found"
+
+
+@resume.route('/uploads/<filename>')
+@login_required
+def upload_serve(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)

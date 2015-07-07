@@ -37,6 +37,6 @@ login_manager.init_app(app)
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 # These are the extension that we are accepting to be uploaded
-app.config['ALLOWED_EXTENSIONS'] = set(['txt', 'pdf'])
+app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf'}
 
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf'])

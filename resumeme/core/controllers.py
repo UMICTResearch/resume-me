@@ -12,13 +12,16 @@ def home():
 def job_preparation():
     return render_template('core/job_preparation.html')
 
+
 @core.route('/networking')
 def networking():
     return render_template('core/networking.html')
 
+
 @core.route('/aboutus')
 def aboutus():
     return render_template('core/aboutus.html')
+
 
 @core.route('/contactus')
 def contactus():
