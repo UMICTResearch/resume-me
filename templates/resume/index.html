@@ -6,11 +6,11 @@
         <div class="row well">
             <div class="col-md-8 col-md-push-1">
                 <ul>
-                    {% for n in notes %}
+                    {% for resume in resumes %}
                         <li>
-                            <a href="/notes/{{ n.id }}">{{ n.title }}</a>
-                            {% if current_user.id == n.user.id %}
-                                <a href="/notes/{{ n.id }}/edit"><span class="label label-info">edit</span></a>
+                            <a href="/resume/{{ resume.id }}">{{ resume.title }}</a>
+                            {% if current_user.id == resume.user.id %}
+                                <a href="/resume/{{ resume.id }}/edit"><span class="label label-info">edit</span></a>
                             {% endif %}
                         </li>
                     {% endfor %}
