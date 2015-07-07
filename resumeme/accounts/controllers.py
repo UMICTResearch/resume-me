@@ -21,7 +21,7 @@ def login():
 
             if login_user(user, remember=remember):
                 flash("Logged in!")
-                return redirect('/notes/create')
+                return redirect('/resume/create')
             else:
                 flash("unable to log you in")
 
