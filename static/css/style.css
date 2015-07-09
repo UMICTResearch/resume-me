@@ -1,8 +1,38 @@
 /*Custom Styles*/
 h4 {
-	color: #CE5752;
+    color: #CE5752;
 }
 
 table {
-	border-color: #CE5752;
+    border-color: #CE5752;
+}
+
+.jumbotron .col-xs-4 > a {
+    text-decoration: none;
+}
+
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    background-color: #c0c0c0;
+    border: 2px;
+    border-color: #c0c0c0;
+    color: white;
+    text-align: center;
+    font: 22px Arial, sans-serif;
+    display: inline-block;
+}
+
+.container-custom {
+    padding-right: 70px;
+    padding-left: 70px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.btn-padding {
+    padding-top: 50px;
+    padding-bottom: 25px;
 }

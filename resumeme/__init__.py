@@ -32,3 +32,11 @@ moment = Moment(app)
 # Associate Flask-Login manager with current app
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# File upload settings
+# This is the path to the upload directory
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+# These are the extension that we are accepting to be uploaded
+app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf'}
+
+# ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
