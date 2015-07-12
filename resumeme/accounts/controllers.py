@@ -59,14 +59,15 @@ def register():
                 flash("unable to log you in")
 
         except:
-            flash("unable to register with that email address")
-            current_app.logger.error("Error on registration - possible duplicate emails")
+            flash('Registration Error - Use Another Email')
+            current_app.logger.error('Registration Error - Use Another Email')
 
     # prepare registration form
     # registerForm = RegisterForm(csrf_enabled=True)
     templateData = {
 
         'form': registerForm
+
     }
 
     return render_template("/accounts/register.html", **templateData)
