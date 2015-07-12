@@ -22,8 +22,10 @@ def login():
             if login_user(user, remember=remember):
                 flash("Logged in!")
                 return redirect('/resume/create')
-            else:
-                flash("unable to log you in")
+        else:
+            flash("Username or Password Incorrect")
+            current_app.logger.error('Username or Password Incorrect')
+            return redirect('/login')
 
     return render_template("/accounts/login.html")
 

@@ -49,7 +49,6 @@ class User(UserMixin):
             else:
                 return None
         except:
-            print "there was an error"
             return None
 
     def get_mongo_doc(self):
