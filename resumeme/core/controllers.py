@@ -13,6 +13,11 @@ def job_preparation():
     return render_template('core/job_preparation.html')
 
 
+@core.route('/feedback')
+def get_feedback():
+    return render_template('core/get_feedback.html')
+
+
 @core.route('/networking')
 def networking():
     return render_template('core/networking.html')
