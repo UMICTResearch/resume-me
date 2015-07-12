@@ -1,5 +1,8 @@
 # resume-me
-================
+
+#### Beta [![Deployment status from DeployBot](https://sig.deploybot.com/badge/88313865989649/37135.svg)](http://deploybot.com)
+
+#### Test [![Deployment status from DeployBot](https://sig.deploybot.com/badge/02267417997177/37757.svg)](http://deploybot.com)
 
 ## Table of Contents
 1. [Coding Standards](#coding-standards)
