@@ -22,8 +22,10 @@ def login():
             if login_user(user, remember=remember):
                 flash("Logged in!")
                 return redirect('/resume/create')
-            else:
-                flash("unable to log you in")
+        else:
+            flash("Username or Password Incorrect")
+            current_app.logger.error('Username or Password Incorrect')
+            return redirect('/login')
 
     return render_template("/accounts/login.html")
 
@@ -59,14 +61,15 @@ def register():
                 flash("unable to log you in")
 
         except:
-            flash("unable to register with that email address")
-            current_app.logger.error("Error on registration - possible duplicate emails")
+            flash('Registration Error - User already registered')
+            current_app.logger.error('Registration Error - User already registered')
 
     # prepare registration form
     # registerForm = RegisterForm(csrf_enabled=True)
     templateData = {
 
         'form': registerForm
+
     }
 
     return render_template("/accounts/register.html", **templateData)
