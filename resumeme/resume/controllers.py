@@ -111,6 +111,6 @@ def upload_limit(error):
             'title': 'Create New Resume Version',
             'resume': None
     }
-    flash('Please upload a resume which is lessor than 1 MB')
+    flash('The file size exceeds the limit allowed. Please upload a resume which is lesser than 1 MB')
     return render_template('resume/edit.html', **template_data)
 
