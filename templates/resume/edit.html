@@ -14,7 +14,8 @@
                         </ul>
                     {% endif %}
                 {% endwith %}
-                <form method="POST" action="" id="admin_resume_edit" class="well form-horizontal" enctype="multipart/form-data">
+                <form method="POST" action="" id="admin_resume_edit" class="well form-horizontal"
+                      enctype="multipart/form-data">
                     <fieldset>
                         <legend>
                             {{ title }}
@@ -23,31 +24,25 @@
                             {% endif %}
 
                         </legend>
-                        <div class="control-group">
-                            <label class="control-label" for="title">Title</label>
 
-                            <div class="controls">
-                                <input type="text" class="span7 input-xlarge" name="title" id="title"
-                                       value="{{ resume.title }}">
-
-                                <p class="hide help-block">In addition to freeform text, any HTML5 text-based input
-                                    appears
-                                    like so.</p>
-                            </div>
-
-                            <input type="file" name="file">
+                        <div class="form-group">
+                            <label for="title">Title</label>
+                            <input type="text" class="span7 input-xlarge" name="title" id="title"
+                                   value="{{ resume.title }}">
                         </div>
 
+                        <div class="form-group">
+                            <label for="file">Resume</label>
+                            <input type="file" name="file" accept="text/plain,application/pdf">
+                            <p class="help-block">File Types Allowed: pdf and txt</p>
+                        </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="content">Resume</label>
-
-                            <div class="controls">
-                                <textarea class="span10 input-large" name="content"
+                        <div class="form-group">
+                            <label for="content">Description</label>
+                            <textarea class="span10 input-large" name="content"
                                           id="content">{{ resume.content }}</textarea>
-
-                            </div>
                         </div>
+
                     </fieldset>
                     <input type="submit" value="Save Resume" class="btn btn-primary">
                 </form>

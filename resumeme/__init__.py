@@ -39,4 +39,6 @@ app.config['UPLOAD_FOLDER'] = 'uploads/'
 # These are the extension that we are accepting to be uploaded
 app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf'}
 
+app.config['MAX_CONTENT_LENGTH'] = 0.99 * 1024 * 1024
+
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
