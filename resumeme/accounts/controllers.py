@@ -61,8 +61,8 @@ def register():
                 flash("unable to log you in")
 
         except:
-            flash('Registration Error - Use Another Email')
-            current_app.logger.error('Registration Error - Use Another Email')
+            flash('Registration Error - User already registered')
+            current_app.logger.error('Registration Error - User already registered')
 
     # prepare registration form
     # registerForm = RegisterForm(csrf_enabled=True)
