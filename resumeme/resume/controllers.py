@@ -32,7 +32,6 @@ def resumes():
 def admin_entry_create():
     if request.method == "POST":
         file = request.files['file']
-
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
@@ -104,3 +103,14 @@ def entry_page(resume_id):
 @login_required
 def upload_serve(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@resume.errorhandler(413)
+def upload_limit(error):
+    template_data = {
+            'title': 'Create New Resume Version',
+            'resume': None
+    }
+    flash('The file size exceeds the limit allowed. Please upload a resume which is lesser than 1 MB')
+    return render_template('resume/edit.html', **template_data)
+
