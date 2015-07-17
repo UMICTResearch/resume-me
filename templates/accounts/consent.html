@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="row well">
+            <div class="page-header">
+                <h1>Please agree to the following consent form</h1>
+            </div>
+
+            <div class="row">
+                <div class="col-md-10">
+                    <div id="file_upload">
+                        <object width="600" height="750"
+                                data="{{ url_for('static', filename='consent/consentform.pdf') }}"></object>
+                    </div>
+
+                    <form action="" method="POST" role="form">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="consent"> I agree to the terms and conditions
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Next</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

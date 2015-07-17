@@ -1,0 +1,3 @@
+Welcome {{ user.email }}!
+
+You are now a registered user at {{ url }}

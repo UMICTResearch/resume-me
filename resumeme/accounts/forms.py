@@ -16,3 +16,18 @@ class SignupForm(user_form):
 # Login form will provide a Password field (WTForm form field)
 class LoginForm(user_form):
     password = PasswordField('Password', validators=[validators.DataRequired()])
+
+
+# Password Forgot Form
+class ForgotPasswordForm(user_form):
+    email = StringField('Email', validators=[validators.DataRequired()])
+
+
+# Password Reset Form
+class ResetPasswordForm(user_form):
+    password = PasswordField('Password', validators=[validators.DataRequired()])
+
+
+# Change Role Form
+class ChangeRoleForm(user_form):
+    role = SelectField('role', validators=[validators.DataRequired()])

@@ -7,9 +7,9 @@
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
-                            {% for message in messages %}
-                                <span class="label label-danger">{{ message }}</span>
-                            {% endfor %}
+                        {% for message in messages %}
+                            <span class="label label-danger">{{ message }}</span>
+                        {% endfor %}
                     {% endif %}
                 {% endwith %}
                 <form action="" method="POST" role="form">
@@ -17,9 +17,20 @@
                     <legend>Register a new user</legend>
 
                     <div class="form-group">
-                        <label for="">Email:</label>
+                        <label for="email">Email:</label>
                         <input type="email" id="email" name="email" required="required" class="form-control"
                                placeholder="Email">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="radio">
+                            <label class="radio-inline">
+                                <input type="radio" name="role" id="role1" value="jobseeker" checked> Job Seeker
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="role" id="role2" value="volunteer"> Volunteer
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group">

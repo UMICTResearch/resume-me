@@ -5,15 +5,18 @@ from resumeme import app
 
 # Import Blueprint modules
 from resumeme.core.controllers import core
-from resumeme.accounts.controllers import accounts_flask_login
+from resumeme.accounts.controllers import accounts
 from resumeme.resume.controllers import resume
 from resumeme.feedback.controllers import feedback
+from resumeme.utils.controllers import utils
 
 # Register Blueprints modules
 app.register_blueprint(core)
-app.register_blueprint(accounts_flask_login)
+app.register_blueprint(accounts)
 app.register_blueprint(resume)
 app.register_blueprint(feedback)
+app.register_blueprint(utils)
+
 
 # start the server
 if __name__ == "__main__":

@@ -1,0 +1,3 @@
+Click the link below to reset your password:
+
+{{ url }}accounts/{{ reset_link }}

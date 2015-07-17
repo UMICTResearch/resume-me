@@ -1,0 +1,24 @@
+{
+  "name": "resumeme",
+  "version": "1.0.0",
+  "homepage": "https://github.com/UMICTResearch/resume-me",
+  "authors": [
+    "nishan"
+  ],
+  "description": "Resume Feedback Platform",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "~3.3.5",
+    "fontawesome": "~4.3.0"
+  }
+}

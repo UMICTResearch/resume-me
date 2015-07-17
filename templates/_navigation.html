@@ -33,11 +33,14 @@
                             <a href="#">{{ current_user.email }}</a>
                         </li>
                         <li>
+                            <a href="/profile">Edit Profile</a>
+                        </li>
+                        <li>
                             <a href="/logout">Logout</a>
                         </li>
                     {% else %}
                         <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
+                        <li><a href="/register-consent">Register</a></li>
                     {% endif %}
                 </ul>
             </div>

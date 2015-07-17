@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
-
+from flask.ext.mail import Mail
 
 # Create and name Flask app
 app = Flask("ResumeMeApp")
@@ -32,6 +32,19 @@ moment = Moment(app)
 # Associate Flask-Login manager with current app
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Adding Mail Support
+# email server
+app.config.update(
+    MAIL_SERVER='smtp.mandrillapp.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USE_SSL=False,
+    MAIL_USERNAME='umichictresearch@gmail.com',
+    MAIL_PASSWORD='syknj9Tp5IR41t0CKN8w9w',
+    DEFAULT_MAIL_SENDER='umichictresearch@gmail.com'
+)
+mail = Mail(app)
 
 # File upload settings
 # This is the path to the upload directory
