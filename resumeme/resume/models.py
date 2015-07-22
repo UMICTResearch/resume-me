@@ -9,3 +9,4 @@ class Resume(db.Document):
     file_upload = db.StringField()
     last_updated = db.DateTimeField(default=datetime.datetime.now())
     user = db.ReferenceField(User)
+    lock = db.BooleanField(default=False)
