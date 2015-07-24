@@ -57,6 +57,15 @@ For installation on Macs, you can use the following method.
 - To activate python virtual environment, "source venv/bin/activate"
 - To install all remaining python packages in the virtual environment: pip install -r requirements.txt
 
+####Nodejs, Gulp, Bower
+- Install nodeJS (https://nodejs.org/download/)
+- Install Gulp Global
+$ npm install -g gulp
+- Install dependencies
+In the project directory execute: $ npm install
+- Run Gulp
+$ gulp
+
 ##Run the application on your local system
 - Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
 - You may have to create a secret key, the instructions will be provided in the terminal
