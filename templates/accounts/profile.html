@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="row well">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <span class="label label-danger">{{ message }}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <p>Your Current Role: {{ user.role }}</p>
+
+                <form action="" method="POST" role="form">
+                    {{ form.csrf_token }}
+
+                    <legend>Update your Role</legend>
+
+                    <div class="form-group">
+                        <label for="">Select Role:</label>
+                        <select class="form-control" name="role">
+                            <option value="jobseeker">Job Seeker</option>
+                            <option value="volunteer">Volunteer</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Change Role</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

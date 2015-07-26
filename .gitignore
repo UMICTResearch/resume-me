@@ -54,3 +54,6 @@ venv
 *.db
 instance
 Logs
+node_modules/
+vendor/
+npm-debug.log
