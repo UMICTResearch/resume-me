@@ -3,28 +3,25 @@
 {% block main %}
 
     <div class="container">
-        <div class="row well">
-            <div class="page-header">
-                <h1>Please agree to the following consent form</h1>
-            </div>
+        <div class="row row-centered">
+            <div class="col-md-8 col-centered">
 
-            <div class="row">
-                <div class="col-md-10">
-                    <div id="file_upload">
-                        <object width="600" height="750"
-                                data="{{ url_for('static', filename='consent/consentform.pdf') }}"></object>
-                    </div>
-
-                    <form action="" method="POST" role="form">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="consent"> I agree to the terms and conditions
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Next</button>
-                    </form>
-
+                <div class="page-header text-center">
+                    <h1>Please agree to the following consent form</h1>
                 </div>
+
+                <div class="embed-responsive embed-responsive-16by9">
+                    <object class="embed-responsive-item"
+                            data="{{ url_for('static', filename='consent/consentform.pdf') }}"></object>
+                </div>
+
+                <hr>
+
+                <form action="" method="POST" role="form" class="mtm mbm text-center">
+                    <input type="submit" name="consent" value="Cancel" class="btn btn-default">
+                    <input type="submit" name="consent" value="Continue" class="btn btn-danger">
+                </form>
+
             </div>
         </div>
     </div>

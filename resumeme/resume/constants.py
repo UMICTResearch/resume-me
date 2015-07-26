@@ -1,2 +1,2 @@
 UPLOAD_FOLDER = './uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf'}
+ALLOWED_EXTENSIONS = set(['txt', 'pdf'])

@@ -1,25 +1,32 @@
 {% extends "base.html" %}
 
+{% import 'macros.html' as macros %}
+
 {% block main %}
 
     <div class="container">
-        <div class="row well">
-            <div class="page-header">
-                <h1>{{ resume.title }}</h1>
-                {% if current_user.id == resume.user.id %}
-                    <p><a href="/resume/{{ resume.id }}/edit"><span class="label label-info">edit</span></a></p>
-                {% endif %}
-            </div>
+        <div class="row row-centered">
+            <div class="col-xs-12 col-lg-9 col-centered">
 
-            <div class="row">
-                <div class="col-md-10">
-                    <div id="resume">
-                        {{ resume.content }}
-                    </div>
-                    <div id="file_upload">
-                        <object width="600" height="750" data="/uploads/{{ resume.file_upload }}"></object>
+                {{ macros.flash_messages("success") }}
+
+                <div class="page-header">
+                    <h3>{{ resume.title }}</h3>
+
+                    {% if current_user.id == resume.user.id and resume.lock == False %}
+                        <span><a href="/resume/{{ resume.id }}/edit"><span
+                                class="label label-info">edit</span></a></span>
+                    {% endif %}
+                </div>
+
+                <div class="well">
+                    <p class="lead" id="resume">{{ resume.content }}</p>
+
+                    <div id="file_upload" class="embed-responsive embed-responsive-16by9">
+                        <object class="embed-responsive-item" data="/uploads/{{ resume.file_upload }}"></object>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

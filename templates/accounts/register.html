@@ -1,52 +1,70 @@
 {% extends "base.html" %}
 
+{% import 'macros.html' as macros %}
+
 {% block main %}
 
     <div class="container">
-        <div class="row well">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        {% for message in messages %}
-                            <span class="label label-danger">{{ message }}</span>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <form action="" method="POST" role="form">
-                    {{ form.csrf_token }}
-                    <legend>Register a new user</legend>
+        <div class="row row-centered">
+            <div class="col-xs-12 col-md-6 col-centered">
 
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" id="email" name="email" required="required" class="form-control"
-                               placeholder="Email">
+                {{ macros.flash_messages("danger") }}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h2 class="custom-panel-header">Register</h2>
                     </div>
 
-                    <div class="form-group">
-                        <div class="radio">
-                            <label class="radio-inline">
-                                <input type="radio" name="role" id="role1" value="jobseeker" checked> Job Seeker
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="role" id="role2" value="volunteer"> Volunteer
-                            </label>
-                        </div>
-                    </div>
+                    <div class="panel-body">
+                        <form action="" method="POST" role="form">
+                            {{ form.csrf_token }}
 
-                    <div class="form-group">
-                        <label for="">Password:</label>
-                        <input type="password" name="password" id="password" class="form-control" required="required"
-                               title="">
-                    </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email"
+                                       id="email"
+                                       name="email"
+                                       class="form-control"
+                                       placeholder="Enter Email"
+                                       required="required">
+                            </div>
 
-                    <div class="form-group">
-                        <label for="">Repeat Password:</label>
-                        <input type="password" name="confirm" id="confirm" class="form-control" required="required"
-                               title="">
-                    </div>
+                            <div class="form-group">
+                                <div class="radio">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="role" id="role1" value="jobseeker" checked> Job Seeker
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="role" id="role2" value="volunteer"> Volunteer
+                                    </label>
+                                </div>
+                            </div>
 
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </form>
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       class="form-control"
+                                       required="required"
+                                       placeholder="Enter Password">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password-confirm">Confirm Password:</label>
+                                <input type="password"
+                                       name="confirm"
+                                       id="password-confirm"
+                                       class="form-control"
+                                       required="required"
+                                       placeholder="Confirm Password">
+                            </div>
+
+                            <button type="submit" class="btn btn-danger">Register</button>
+                        </form>
+                    </div>
+                    <!--/panel-body-->
+                </div>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
         <div class="row">
             <div class="page-header">
                 <h1 class="well">{{ resume.title }}
-                    {% if current_user.id == resume.user.id %}
+                    {% if current_user.id == resume.user.id and resume.lock == False %}
                         <a href="/resume/{{ resume.id }}/edit" class="btn btn-default btn-lg">edit</a>
                     {% endif %}
                 </h1>
