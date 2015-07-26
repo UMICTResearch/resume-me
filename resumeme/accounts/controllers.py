@@ -8,7 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 import forms
 from resumeme.libs.User import User
-from resumeme.utils.controllers import send_mail, generate_url
+from resumeme.utils.controllers import send_mail
 from resumeme.accounts import models
 
 accounts = Blueprint('accounts', __name__, template_folder='templates')
