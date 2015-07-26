@@ -1,20 +1,49 @@
 {% macro feedback_block(name, rating, content) -%}
-    <h2>{{ name }}</h2>
-    <h3>{{ rating }}</h3>
-    <div id="{{ name }}">
-        {{ content }}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ name }} {{ stars_static(rating) }}</h3>
+       </div>
+        <div class="panel-body">
+            {{ content }}
+        </div>
     </div>
 {%- endmacro %}
 
 
-{% macro resume_block(content, upload_path, width, height, hr_size) -%}
-    <div id="resume" class="col-xs-{{ hr_size }}">
-        <div class="well">
-            {{ content }}
-        </div>
-        <div id="file_upload">
-            <object width={{ width }} height={{ height }}
-                    data="/uploads/{{ upload_path }}"></object>
-        </div>
-    </div>
+{% macro resume_block(content, upload_path, col_size) -%}
+<div id="resume" class="col-md-{{ col_size }}">
+	<div class="well">
+		{{ content }}
+	</div>
+	<div id="file_upload" class="embed-responsive embed-responsive-4by3"
+         style="padding-bottom: 100%;">
+		<object class="embed-responsive-item" data="/uploads/{{ upload_path }}"></object>
+	</div>
+</div>
+{%- endmacro %}
+
+
+{%  macro flashed_messages(alert_type) -%}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flashes alert alert-{{ alert_type }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{%- endmacro %}
+
+
+{%  macro stars(code) -%}
+    <span class="star-rating">
+        <input type="radio" name="rating_{{ code }}" value="1"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="2"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="3"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="4"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="5"><i></i>
+    </span>
+{%- endmacro %}
+
+{%  macro stars_static(rating) -%}
+    <span class="star-rating"><i class="star-display star-display-{{ rating }}"></i></span>
 {%- endmacro %}

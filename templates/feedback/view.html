@@ -4,8 +4,6 @@
 
 {% block main %}
 
-    {%  include "flashed_messages.html" %}
-
     <div class="container">
         <div class="row">
             <div class="page-header">
@@ -15,10 +13,15 @@
                 {% endif %}
             </div>
 
-            {{ macros.resume_block( resume.content, resume.file_upload, "450", "581", "5") }}
+            {{ macros.resume_block( resume.content, resume.file_upload, "6") }}
 
-            <div class="col-xs-7">
+            <div class="col-md-6">
+                {% include "feedback/ratings.html" %}
+
+                {{  macros.flashed_messages("success") }}
+
                 {% include "feedback/feedback.html" %}
+
             </div>
         </div>
     </div>

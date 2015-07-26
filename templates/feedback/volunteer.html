@@ -9,16 +9,18 @@
     {% else %}
         <div class="container">
             {% for r in resume %}
-                <div class="row well">
+                <div class="row">
 
-                    <div class="col-sm-12">
-                        <p class="text-uppercase"><a href="/resume/{{ r.id }}">Resume: {{ r.title }}</a></p>
-                        {% if current_user.id != r.user.id %}
-                            <a href="/feedback/{{ r.id }}/create"><span class="label label-info">
-                                give feedback</span></a>
-                        {% else %}
-                            <span class="label label-warning">Error: volunteer ID mismatch</span>
-                        {% endif %}
+                    <div class="col-md-6 col-md-offset-3 panel panel-default">
+                        <h4 class="panel-body text-center">
+                            <p><a href="/resume/{{ r.id }}"><small>(resume)</small> {{ r.title }}</a></p>
+                            {% if current_user.id != r.user.id %}
+                                <p><a href="/feedback/{{ r.id }}/create" class="btn btn-info btn-lg">
+                                   give feedback</a></p>
+                            {% else %}
+                                <span class="alert alert-warning">Error: volunteer ID mismatch</span>
+                            {% endif %}
+                        </h4>
                     </div>
 
                 </div>
