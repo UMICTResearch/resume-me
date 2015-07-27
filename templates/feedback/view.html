@@ -7,10 +7,11 @@
     <div class="container">
         <div class="row">
             <div class="page-header">
-                <h1>{{ resume.title }}</h1>
-                {% if current_user.id == resume.user.id %}
-                    <p><a href="/resume/{{ resume.id }}/edit"><span class="label label-info">edit</span></a></p>
-                {% endif %}
+                <h1 class="well">{{ resume.title }}
+                    {% if current_user.id == resume.user.id %}
+                        <a href="/resume/{{ resume.id }}/edit" class="btn btn-default btn-lg">edit</a>
+                    {% endif %}
+                </h1>
             </div>
 
             {{ macros.resume_block( resume.content, resume.file_upload, "6") }}
