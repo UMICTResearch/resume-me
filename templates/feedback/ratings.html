@@ -1,0 +1,44 @@
+{% import 'feedback/macros.html' as macros %}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">Ratings</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Rating</th>
+                <th>Evaluation</th>
+            </tr>
+            </thead>
+            <tr>
+                <th scope="row" class="text-info">
+                    {{ macros.stars_static(1) }}
+                </th>
+                <td>Needs a lot of improvement</td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-info">
+                    {{ macros.stars_static(2) }}
+                <td>Not bad, but needs significant improvement</td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-info">
+                    {{ macros.stars_static(3) }}
+                <td>Fair, but needs improvement</td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-info">
+                    {{ macros.stars_static(4) }}
+                <td>Good, but needs some improvement</td>
+            </tr>
+            <tr>
+                <th scope="row" class="text-info">
+                    {{ macros.stars_static(5) }}
+                <td>Excellent, and needs little to no improvement</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
