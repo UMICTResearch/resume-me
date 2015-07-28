@@ -40,11 +40,11 @@
 
 {%  macro stars(code) -%}
     <span class="star-rating">
-        <input type="radio" name="rating_{{ code }}" value="1"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="2"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="3"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="4"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="5"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="1" required><i></i>
+        <input type="radio" name="rating_{{ code }}" value="2" required><i></i>
+        <input type="radio" name="rating_{{ code }}" value="3" required><i></i>
+        <input type="radio" name="rating_{{ code }}" value="4" required><i></i>
+        <input type="radio" name="rating_{{ code }}" value="5" required><i></i>
     </span>
 {%- endmacro %}
 
