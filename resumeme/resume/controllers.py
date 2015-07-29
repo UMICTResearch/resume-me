@@ -68,6 +68,7 @@ def admin_entry_edit(resume_id):
         if request.method == "POST":
             resume.title = request.form.get('title', '')
             resume.content = request.form.get('content')
+            resume.lock = False
 
             resume.save()
 
