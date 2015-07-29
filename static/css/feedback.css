@@ -2,11 +2,11 @@
   font-size: 0;
   white-space: nowrap;
   display: inline-block;
-  width: 100px;
+  width: 105px;
   height: 20px;
   overflow: hidden;
   position: relative;
-  background: url('data:image/svg+xml;utf-8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><polygon fill="#DDDDDD" points="10,0 13.09,6.583 20,7.639 15,12.764 16.18,20 10,16.583 3.82,20 5,12.764 0,7.639 6.91,6.583 "/></svg>');
+  background-image: url('../img/star-empty-640.png');
   background-size: contain;
 }
 .star-rating i {
@@ -17,7 +17,7 @@
   height: 100%;
   width: 20%;
   z-index: 1;
-  background: url('data:image/svg+xml;utf-8,<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve"><polygon fill="#FFDF88" points="10,0 13.09,6.583 20,7.639 15,12.764 16.18,20 10,16.583 3.82,20 5,12.764 0,7.639 6.91,6.583 "/></svg>');
+  background-image: url('../img/star-filled-640.png');
   background-size: contain;
 }
 .star-rating input {
