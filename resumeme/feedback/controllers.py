@@ -39,7 +39,8 @@ def feedback_main():
 @feedback.route("/feedback/<resume_id>/create", methods=["GET", "POST"])
 @login_required
 def volunteer_add_feedback(resume_id):
-    if request.method == "POST":
+    resume_requested = models.Resume.objects().with_id(resume_id)
+    if request.method == "POST" and resume_requested.lock is False:
         try:
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
@@ -87,6 +88,10 @@ def volunteer_add_feedback(resume_id):
                 'resume': models.Resume.objects().with_id(resume_id)
             }
             return render_template('feedback/edit.html', **template_data)
+
+    elif resume_requested.lock is True:
+        return render_template('404.html')
+
     else:
         template_data = {
             'title': 'Give Feedback',
