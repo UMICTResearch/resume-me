@@ -6,7 +6,7 @@ from resumeme import app
 @app.template_filter('feedback_datetime')
 def feedback_datetime(value, format='medium'):
     if format == 'full':
-        format="EEEE, d. MMMM y 'at' HH:mm"
+        format="%c"
     elif format == 'medium':
-        format="EE dd.MM.y HH:mm"
-    return value.strftime("%c")
+        format="%A %B %d, %Y - %I:%M%p %Z"
+    return value.strftime(format)

@@ -30,7 +30,7 @@ def feedback_main():
         }
         return render_template('feedback/volunteer.html', **templateData)
     else:
-        return "Error: not found"
+        return render_template('404.html')
 
 
 
@@ -122,5 +122,5 @@ def entry_page(resume_id, feedback_id, state="view"):
         return render_template('feedback/view.html', **templateData)
 
     else:
-        return "not found"
+        return render_template('404.html')
 
