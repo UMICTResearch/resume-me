@@ -11,15 +11,6 @@
             {{ macros.resume_block(resume.content, resume.file_upload, "7") }}
 
             <div class="col-md-5">
-
-
-                <div class="label-warning text-uppercase text-center table-bordered">
-                    <div class="text-danger"><strong>Warning:</strong> Fill out all fields otherwise it
-                        will fail!</div>
-                </div>
-                <br />
-
-
                 <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal">
                     {% include "feedback/ratings.html" %}
                     {{  macros.flashed_messages("danger") }}

@@ -120,6 +120,7 @@ def entry_page(resume_id, feedback_id, state="view"):
             feedback.save()
 
         templateData = {
+            'title': 'Your Feedback',
             'resume': resume,
             'feedback': feedback
         }
