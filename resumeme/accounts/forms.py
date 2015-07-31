@@ -26,8 +26,9 @@ class ForgotPasswordForm(user_form):
 # Password Reset Form
 class ResetPasswordForm(user_form):
     password = PasswordField('Password', validators=[validators.DataRequired(),
-                                                     validators.EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Repeat Password')
+                                                     validators.EqualTo('confirm')])
+
+    confirm = PasswordField('Repeat Password', validators=[validators.DataRequired()])
 
 
 # Change Role Form
