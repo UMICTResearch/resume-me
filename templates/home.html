@@ -2,38 +2,36 @@
 
 {% block main %}
 
-    <div class="jumbotron">
+    <div class="container">
+    <div class="row row-centered">
+
         <div class="page-header text-center">
             <h1>Get ready for a job!</h1><br>
 
-            <h2>Start Here</h2>
+            <h3>Start Here</h3>
         </div>
 
-        <div class="container-fluid">
-
-            <div class="row row-centered">
-                <!--Job prep, feedback, networking glyphicons-->
-                <div class="col-xs-4 col-centered text-center">
-                    <a href="/job_preparation">
-                        <img src="{{ url_for('static', filename='img/job-preparation-icon.svg') }}">
-                        <h4>Job Preparation</h4>
-                        Browse job preparation resources
-                    </a>
-                </div>
-                <div class="col-xs-4 col-centered text-center">
-                    <a href="#">
-                        <img src="{{ url_for('static', filename='img/get-feedback-icon.svg') }}">
-                        <h4>Get Feedback</h4>
-                        Get feedback on resume and interview
-                    </a>
-                </div>
-                <div class="col-xs-4 col-centered text-center">
-                    <a href="/networking">
-                        <img src="{{ url_for('static', filename='img/networking-icon.svg') }}">
-                        <h4>Networking</h4>
-                        Find networking opportunities
-                    </a>
-                </div>
+            <!--Job prep, feedback, networking glyphicons-->
+            <div class="col-xs-12 col-lg-4 col-centered custom-center mbm mtm">
+                <a href="/job_preparation">
+                    <img src="{{ url_for('static', filename='img/job-preparation-icon.svg') }}">
+                    <h4>Job Preparation</h4>
+                    Browse job preparation resources
+                </a>
+            </div>
+            <div class="col-xs-12 col-lg-4 col-centered custom-center mbm mtm">
+                <a href="/feedback">
+                    <img src="{{ url_for('static', filename='img/get-feedback-icon.svg') }}">
+                    <h4>Get Feedback</h4>
+                    Get feedback on resume and interview
+                </a>
+            </div>
+            <div class="col-xs-12 col-lg-4 col-centered custom-center mbm mtm">
+                <a href="/networking">
+                    <img src="{{ url_for('static', filename='img/networking-icon.svg') }}">
+                    <h4>Networking</h4>
+                    Find networking opportunities
+                </a>
             </div>
         </div>
     </div>

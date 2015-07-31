@@ -14,10 +14,8 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>
-                                    {% if current_user.id == r.user.id %}
+                                    {% if current_user.id == r.user.id and r.lock == False %}
                                         <a href="/resume/{{ r.id }}/edit" class="btn btn-default btn-xs">edit</a>
-                                    {% else %}
-                                        <span class="alert alert-danger">Error: seeker ID mismatch</span>
                                     {% endif %}
                                     <a href="/resume/{{ r.id }}"><small>(resume)</small> {{ r.title }}</a>
                                 </h4>

@@ -1,50 +1,59 @@
 {% extends "base.html" %}
 
+{% import 'macros.html' as macros %}
+
 {% block main %}
 
     <div class="container">
-        <div class="row">
-            <div class="col-md-9">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                        <ul class=flashes>
-                            {% for message in messages %}
-                                <span class="label label-success">{{ message }}</span>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endwith %}
-                <form method="POST" action="" id="admin_resume_edit" class="well form-horizontal"
-                      enctype="multipart/form-data">
-                    <fieldset>
-                        <legend>
-                            {{ title }}
-                            {% if resume %}
-                                <a href="/resume/{{ resume.id }}">view resume</a>
-                            {% endif %}
+        <div class="row row-centered">
+            <div class="col-xs-12 col-lg-9 col-centered">
 
-                        </legend>
+                {{ macros.flash_messages("success") }}
 
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" class="span7 input-xlarge" name="title" id="title"
-                                   value="{{ resume.title }}">
+                <div class="page-header">
+                    <h3>{{ title }}
+                        {% if resume and view %}
+                            <small><a href="/resume/{{ resume.id }}">view resume</a></small>
+                        {% endif %}
+                    </h3>
+                </div>
+
+                <form method="POST" action="" class="well form-horizontal row-border"
+                      enctype="multipart/form-data" role="form">
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="title">Job Title</label>
+
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="title" id="title"
+                                   placeholder="Enter Desired Job Title"
+                                   value="{{ resume.title }}"
+                                   required="required">
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="file">Resume</label>
-                            <input type="file" name="file" accept="text/plain,application/pdf">
-                            <p class="help-block">File Types Allowed: pdf and txt</p>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="content">Job Description</label>
+
+                        <div class="col-md-8">
+                            <textarea class="form-control" name="content"
+                                      placeholder="For best results, please consider adding a job description"
+                                      id="content">{{ resume.content }}</textarea>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="content">Description</label>
-                            <textarea class="span10 input-large" name="content"
-                                          id="content">{{ resume.content }}</textarea>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="file">Upload Resume</label>
+
+                        <div class="col-md-8">
+                            <input type="file" name="file" id="file"
+                                   accept="text/plain,application/pdf"
+                                   required="required">
+                            <span class="help-block">File Types Allowed: <strong>pdf and txt</strong>, Max File Size: 1MB</span>
                         </div>
+                    </div>
 
-                    </fieldset>
-                    <input type="submit" value="Save Resume" class="btn btn-primary">
+                    <input type="submit" value="Save Resume" id="button" class="btn btn-danger">
                 </form>
             </div>
         </div>

@@ -54,4 +54,20 @@ app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf'}
 
 app.config['MAX_CONTENT_LENGTH'] = 0.99 * 1024 * 1024
 
+
 # ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+
+# Application wide Error Handlers
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(400)
+def bad_request(e):
+    return render_template('400.html'), 400

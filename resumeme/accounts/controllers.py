@@ -26,7 +26,6 @@ def login():
             remember = request.form.get("remember", "no") == "yes"
 
             if login_user(user, remember=remember):
-                flash("Logged in!")
                 return redirect('/resume/create')
         else:
             flash("Username or Password Incorrect")
@@ -46,9 +45,13 @@ def login():
 @accounts.route("/register-consent", methods=["GET", "POST"])
 def consent():
     global consentCheck
-    if request.method == "POST" and "consent" in request.form:
-        consentCheck = True
-        return redirect("/register")
+
+    if request.method == "POST":
+        if request.form['consent'] == 'Continue':
+            consentCheck = True
+            return redirect("/register")
+        else:
+            return redirect("/")
 
     return render_template("/accounts/consent.html")
 
@@ -65,7 +68,7 @@ def register():
 
         if request.method == 'POST' and registerForm.validate() is False:
             current_app.logger.info(registerForm.errors)
-            return "uhoh registration error"
+            flash('Registration Error - Please Retry')
 
         elif request.method == 'POST' and registerForm.validate():
             email = request.form['email']
@@ -76,16 +79,16 @@ def register():
 
             # prepare User
             user = User(email, password_hash, role)
-            print user
 
             try:
                 user.save()
                 if login_user(user, remember="no"):
-                    flash("Logged in!")
+                    # flash("Logged in!")
                     send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
                     return redirect('/')
                 else:
                     flash("unable to log you in")
+                    return redirect('/register')
 
             except:
                 flash('Registration Error - User already registered')
@@ -146,7 +149,6 @@ def reset_password(token):
     user = models.User.objects.with_id(_id)
 
     if request.method == "POST" and "password" in request.form:
-
         # generate password hash
         password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
 
@@ -177,11 +179,17 @@ def profile():
 
         return redirect('/profile')
 
+    if user.role == 'jobseeker':
+        _role = "Job Seeker"
+    else:
+        _role = "Volunteer"
+
     changeRoleForm = forms.ChangeRoleForm(csrf_enabled=True)
     templateData = {
 
         'form': changeRoleForm,
-        'user': user
+        'user': user,
+        'role': _role
 
     }
 
@@ -192,7 +200,7 @@ def profile():
 @login_required
 def logout():
     logout_user()
-    flash("Logged out.")
+    # flash("Logged out.")
     return redirect('/login')
 
 
@@ -220,7 +228,7 @@ def send_reset_password_instructions(user, host_url):
     """
     token = generate_reset_password_token(user)
 
-    send_mail('Password Reset Instructions', user.email, 'reset_instructions', user=user, reset_link=token,
+    send_mail('Review-me password reset', user.email, 'reset_instructions', user=user, reset_link=token,
               url=host_url)
 
 

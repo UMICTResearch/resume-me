@@ -25,4 +25,5 @@
     {{ super() }}
     {{ moment.include_moment() }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js" type="text/javascript"></script>
+    <script src="{{ url_for('static', filename='src/js/main.js') }}" type="text/javascript"></script>
 {% endblock %}

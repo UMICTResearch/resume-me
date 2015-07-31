@@ -1,38 +1,50 @@
 {% extends "base.html" %}
 
+{% import 'macros.html' as macros %}
+
 {% block main %}
 
     <div class="container">
-        <div class="row well">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                            {% for message in messages %}
-                                <span class="label label-danger">{{ message }}</span>
-                            {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <form action="" method="POST" role="form">
-                    {{ form.csrf_token }}
-                    <legend>Login</legend>
+        <div class="row row-centered">
+            <div class="col-xs-12 col-md-6 col-centered">
 
-                    <div class="form-group">
-                        <label for="">Email:</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                {{ macros.flash_messages("danger") }}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <h2 class="custom-panel-header">Login</h2>
                     </div>
+                    <div class="panel-body">
+                        <form action="" method="POST" role="form">
+                            {{ form.csrf_token }}
 
-                    <div class="form-group">
-                        <label for="">Password:</label>
-                        <input type="password" name="password" id="password" class="form-control" required="required"
-                               title="">
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email"
+                                       id="email"
+                                       name="email"
+                                       class="form-control"
+                                       placeholder="Enter Email"
+                                       required="required">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password:</label>
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       class="form-control"
+                                       required="required"
+                                       placeholder="Enter Password">
+                            </div>
+                            <p>
+                                <a href="/forgot">Forgot Password?</a>
+                            </p>
+                            <button type="submit" class="btn btn-danger">Login</button>
+                        </form>
                     </div>
-
-
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-                <p>
-                    <a href="/forgot">Forgot Password?</a>
-                </p>
+                    <!--/panel-body-->
+                </div>
             </div>
         </div>
     </div>
