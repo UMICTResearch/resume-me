@@ -143,12 +143,17 @@ def forgot_password():
 
 @accounts.route("/accounts/<token>", methods=["GET", "POST"])
 def reset_password(token):
+    resetPasswordForm = forms.ResetPasswordForm(csrf_enabled=True)
     s = Serializer(current_app.config['SECRET_KEY'])
     _id = s.loads(token)
 
     user = models.User.objects.with_id(_id)
 
-    if request.method == "POST" and "password" in request.form:
+    if request.method == 'POST' and resetPasswordForm.validate() is False:
+        current_app.logger.info(resetPasswordForm.errors)
+        flash('Passwords should match')
+
+    elif request.method == 'POST' and resetPasswordForm.validate():
         # generate password hash
         password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
 
@@ -159,7 +164,6 @@ def reset_password(token):
 
         return redirect('/login')
 
-    resetPasswordForm = forms.ResetPasswordForm(csrf_enabled=True)
     templateData = {
 
         'form': resetPasswordForm
