@@ -23,52 +23,56 @@ def resumes():
     templateData = {
         'resumes': models.Resume.objects.order_by("-last_updated")
     }
+
     return render_template('resume/index.html', **templateData)
 
 
 @resume.route("/resume/create", methods=["GET", "POST"])
 @login_required
 def resume_create():
-    if request.method == "POST":
-        file = request.files['file']
+    if current_user.role == 'jobseeker':
+        if request.method == "POST":
+            file = request.files['file']
 
-        if file and allowed_file(file.filename):
-            timestamp = int(time.time())
-            timestamp = str(timestamp)
+            if file and allowed_file(file.filename):
+                timestamp = int(time.time())
+                timestamp = str(timestamp)
 
-            filename = secure_filename(file.filename)
-            filename = timestamp + '.' + filename
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+                filename = secure_filename(file.filename)
+                filename = timestamp + '.' + filename
+                file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-            resume = models.Resume()
-            resume.title = request.form.get('title', '')
-            resume.content = request.form.get('content')
-            resume.file_upload = filename
+                resume = models.Resume()
+                resume.title = request.form.get('title', '')
+                resume.content = request.form.get('content')
+                resume.file_upload = filename
 
-            # associate note to currently logged in user
-            resume.user = current_user.get_mongo_doc()
-            resume.save()
+                # associate note to currently logged in user
+                resume.user = current_user.get_mongo_doc()
+                resume.save()
 
-            flash('Your resume has been successfully created')
-            return redirect('/resume/%s' % resume.id)
-        else:
-            resume = models.Resume()
-            resume.title = request.form.get('title', '')
-            resume.content = request.form.get('content')
-            template_data = {
-                'title': 'Create New Resume',
-                'resume': resume,
-                'view': False
-            }
-            flash('Please select the correct file type. Allowed: pdf and txt')
-            return render_template('resume/edit.html', **template_data)
+                flash('Your resume has been successfully created')
+                return redirect('/resume/%s' % resume.id)
+            else:
+                resume = models.Resume()
+                resume.title = request.form.get('title', '')
+                resume.content = request.form.get('content')
+                template_data = {
+                    'title': 'Create New Resume',
+                    'resume': resume,
+                    'view': False
+                }
+                flash('Please select the correct file type. Allowed: pdf and txt')
+                return render_template('resume/edit.html', **template_data)
 
-    template_data = {
-        'title': 'Create New Resume',
-        'resume': None,
-        'view': False
-    }
-    return render_template('resume/edit.html', **template_data)
+        template_data = {
+            'title': 'Create New Resume',
+            'resume': None,
+            'view': False
+        }
+        return render_template('resume/edit.html', **template_data)
+    else:
+        return redirect("/")
 
 
 @resume.route("/resume/<resume_id>/edit", methods=["GET", "POST"])
@@ -100,7 +104,6 @@ def edit_resume(resume_id):
                 return redirect('/resume/%s' % resume.id)
             else:
                 flash('Please select the correct file type. Allowed: pdf and txt')
-
 
         template_data = {
             'title': 'Edit resume',

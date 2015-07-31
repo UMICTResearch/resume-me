@@ -12,8 +12,9 @@
 
                 <div class="page-header">
                     <h3>{{ title }}
+
                         {% if resume and view %}
-                            <small><a href="/resume/{{ resume.id }}">view resume</a></small>
+                            <a class="btn btn-primary btn-xs" href="/resume/{{ resume.id }}">view resume</a>
                         {% endif %}
                     </h3>
                 </div>
@@ -22,7 +23,7 @@
                       enctype="multipart/form-data" role="form">
 
                     <div class="form-group">
-                        <label class="col-md-2 control-label" for="title">Job Title</label>
+                        <label class="col-md-3 control-label" for="title">Job Title:</label>
 
                         <div class="col-md-8">
                             <input type="text" class="form-control" name="title" id="title"
@@ -33,7 +34,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-md-2 control-label" for="content">Job Description</label>
+                        <label class="col-md-3 control-label" for="content">Job Description:</label>
 
                         <div class="col-md-8">
                             <textarea class="form-control" name="content"
@@ -43,7 +44,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-md-2 control-label" for="file">Upload Resume</label>
+                        <label class="col-md-3 control-label" for="file">Upload Resume:</label>
 
                         <div class="col-md-8">
                             <input type="file" name="file" id="file"
@@ -52,8 +53,10 @@
                             <span class="help-block">File Types Allowed: <strong>pdf and txt</strong>, Max File Size: 1MB</span>
                         </div>
                     </div>
-
-                    <input type="submit" value="Save Resume" id="button" class="btn btn-danger">
+                    <hr>
+                    <div class="text-right">
+                        <input type="submit" value="Save Resume" id="button" class="btn btn-danger">
+                    </div>
                 </form>
             </div>
         </div>

@@ -11,16 +11,20 @@
                 {{ macros.flash_messages("success") }}
 
                 <div class="page-header">
-                    <h3>{{ resume.title }}</h3>
+                    <h3>Job Title: {{ resume.title }}
 
-                    {% if current_user.id == resume.user.id and resume.lock == False %}
-                        <span><a href="/resume/{{ resume.id }}/edit"><span
-                                class="label label-info">edit</span></a></span>
-                    {% endif %}
+                        {% if current_user.id == resume.user.id and resume.lock == False %}
+                            <a class="btn btn-primary btn-xs" href="/resume/{{ resume.id }}/edit">edit resume</a>
+                        {% endif %}
+                    </h3>
                 </div>
 
                 <div class="well">
-                    <p class="lead" id="resume">{{ resume.content }}</p>
+                    <p><strong>Job Description:</strong></p>
+
+                    <p>{{ resume.content }}</p>
+                    <hr>
+                    <p><strong>Resume:</strong></p>
 
                     <div id="file_upload" class="embed-responsive embed-responsive-16by9">
                         <object class="embed-responsive-item" data="/uploads/{{ resume.file_upload }}"></object>

@@ -4,7 +4,7 @@ from resumeme import mail
 
 utils = Blueprint('utils', __name__, template_folder='templates')
 
-default_sender = 'umichictresearch@gmail.com'
+default_sender = 'donot-reply@review-me.us'
 
 
 def send_mail(subject, recipient, template, **context):
