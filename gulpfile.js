@@ -31,10 +31,10 @@ gulp.task('js', function () {
 gulp.task('sass', function () {
     return gulp.src(config.customDir + '/sass/main.scss')
         .pipe(sourcemaps.init())
-        //.pipe(sass({
-        //    style: 'compressed',
-        //    includePaths: [config.bowerDir + '/bootstrap-sass/assets/stylesheets']
-        //}))
+        .pipe(sass({
+            style: 'compressed',
+            includePaths: [config.bowerDir + '/bootstrap-sass/assets/stylesheets']
+        }))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(config.publicDir + '/css'));
 });
