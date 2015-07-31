@@ -25,9 +25,11 @@
                 <!-- The drop down menu -->
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated() %}
-                        <li>
-                            <a href="/resume/create">Create new Resume</a>
-                        </li>
+                        {% if current_user.role == 'jobseeker' %}
+                            <li>
+                                <a href="/resume/create">Create new Resume</a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="/profile">Profile</a>
                         </li>

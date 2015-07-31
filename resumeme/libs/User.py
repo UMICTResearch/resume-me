@@ -59,6 +59,7 @@ class User(UserMixin):
             self.email = dbUser.email
             self.active = dbUser.active
             self.id = dbUser.id
+            self.role = dbUser.role
 
             return self
         else:

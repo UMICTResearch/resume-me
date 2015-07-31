@@ -95,10 +95,12 @@ def edit_resume(resume_id):
                 filename = timestamp + '.' + filename
                 file.save(os.path.join(UPLOAD_FOLDER, filename))
                 resume.file_upload = filename
-            resume.save()
+                resume.save()
+                flash('Your resume has been successfully updated')
+                return redirect('/resume/%s' % resume.id)
+            else:
+                flash('Please select the correct file type. Allowed: pdf and txt')
 
-            flash('Your resume has been successfully updated')
-            return redirect('/resume/%s' % resume.id)
 
         template_data = {
             'title': 'Edit resume',

@@ -3,9 +3,19 @@
 {% block main %}
 
     {% if not resume %}
-        <div class="well page-header">
-            <h1>There are no resumes available for review.</h1>
+
+        <div class="container">
+            <div class="row row-centered">
+                <div class="col-xs-12 col-md-6 col-centered">
+
+                    <div class="alert alert-danger center-block" role="alert">
+                        There are no resumes' available for review.
+                    </div>
+
+                </div>
+            </div>
         </div>
+
     {% else %}
         <div class="container">
             {% for r in resume %}
@@ -13,10 +23,12 @@
 
                     <div class="col-md-6 col-md-offset-3 panel panel-default">
                         <h4 class="panel-body text-center">
-                            <p><a href="/resume/{{ r.id }}"><small>(resume)</small> {{ r.title }}</a></p>
+                            <p><a href="/resume/{{ r.id }}">
+                                <small>(resume)</small>
+                                {{ r.title }}</a></p>
                             {% if current_user.id != r.user.id %}
                                 <p><a href="/feedback/{{ r.id }}/create" class="btn btn-info btn-lg">
-                                   give feedback</a></p>
+                                    give feedback</a></p>
                             {% else %}
                                 <span class="alert alert-warning">Error: volunteer ID mismatch</span>
                             {% endif %}
