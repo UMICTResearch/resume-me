@@ -3,7 +3,7 @@ $('#file').bind('change', function () {
 
     if (size > 1) {
         $('#button').prop('disabled', true);
-        alert('The file size exceeds the limit allowed. Please upload a resume which is lesser than 1MB');
+        alert('The file you\'re attaching is bigger than what is allowed. Try attaching a lower sized file.');
     } else {
         $('#button').prop('disabled', false);
     }
