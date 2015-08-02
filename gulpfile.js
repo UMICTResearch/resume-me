@@ -73,4 +73,4 @@ gulp.task('sass:watch', ['sass'], function () {
 
 gulp.task('watch', ['sass:watch']);
 
-gulp.task('default', ['sass']);
+gulp.task('default', ['sass', 'fonts']);
