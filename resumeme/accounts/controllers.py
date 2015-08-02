@@ -26,7 +26,7 @@ def login():
             remember = request.form.get("remember", "no") == "yes"
 
             if login_user(user, remember=remember):
-                return redirect('/resume/create')
+                return redirect('/')
         else:
             flash("Username or Password Incorrect")
             current_app.logger.error('Username or Password Incorrect')
@@ -62,7 +62,7 @@ def consent():
 @accounts.route("/register", methods=["GET", "POST"])
 def register():
     if consentCheck:
-        registerForm = forms.SignupForm(request.form)
+        registerForm = forms.SignupForm(request.form, csrf_enabled=True)
         current_app.logger.info(request.form)
         host_url = request.url_root
 
@@ -94,8 +94,6 @@ def register():
                 flash('Registration Error - User already registered')
                 current_app.logger.error('Registration Error - User already registered')
 
-        # prepare registration form
-        # registerForm = RegisterForm(csrf_enabled=True)
         templateData = {
 
             'form': registerForm
@@ -114,6 +112,7 @@ def register():
 @accounts.route("/forgot", methods=["GET", "POST"])
 def forgot_password():
     """View function that handles a forgotten password request."""
+    forgotPasswordForm = forms.ForgotPasswordForm(request.form, csrf_enabled=True)
 
     host_url = request.url_root
 
@@ -131,7 +130,6 @@ def forgot_password():
             current_app.logger.error('Email Not Registered')
             return redirect('/register')
 
-    forgotPasswordForm = forms.ForgotPasswordForm(csrf_enabled=True)
     templateData = {
 
         'form': forgotPasswordForm
@@ -143,7 +141,7 @@ def forgot_password():
 
 @accounts.route("/accounts/<token>", methods=["GET", "POST"])
 def reset_password(token):
-    resetPasswordForm = forms.ResetPasswordForm(csrf_enabled=True)
+    resetPasswordForm = forms.ResetPasswordForm(request.form, csrf_enabled=True)
     s = Serializer(current_app.config['SECRET_KEY'])
     _id = s.loads(token)
 
@@ -162,6 +160,7 @@ def reset_password(token):
 
         send_mail('Password Reset Notice', user.email, 'reset_notice', user=user)
 
+        flash('Your Password has been successfully changed.')
         return redirect('/login')
 
     templateData = {

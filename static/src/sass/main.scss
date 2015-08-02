@@ -1,9 +1,8 @@
 /*Custom Styles*/
 
-//@import "bootstrap";
-//@import "bootstrap/theme";
-
-@import "navbar";
+@import "variables";
+@import "bootstrap";
+@import "bootswatch";
 @import "stickyfooter";
 @import "spacing";
 @import "centered";
