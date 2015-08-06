@@ -2,7 +2,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{ name }} {{ stars_static(rating) }}</h3>
-       </div>
+        </div>
         <div class="panel-body">
             {{ content }}
         </div>
@@ -11,19 +11,23 @@
 
 
 {% macro resume_block(content, upload_path, col_size) -%}
-<div id="resume" class="col-md-{{ col_size }}">
-	<div class="well">
-		{{ content }}
-	</div>
-	<div id="file_upload" class="embed-responsive embed-responsive-4by3"
-         style="padding-bottom: 100%;">
-		<object class="embed-responsive-item" data="/uploads/{{ upload_path }}"></object>
-	</div>
-</div>
+    <div id="resume" class="col-md-{{ col_size }}">
+        <div class="well">
+            <p><strong>Job Description:</strong></p>
+
+            <p>{{ content }}</p>
+            <hr>
+            <p><strong>Resume:</strong></p>
+
+            <div id="file_upload" class="embed-responsive embed-responsive-16by9">
+                <object class="embed-responsive-item" data="/uploads/{{ upload_path }}"></object>
+            </div>
+        </div>
+    </div>
 {%- endmacro %}
 
 
-{%  macro flashed_messages(alert_type) -%}
+{% macro flashed_messages(alert_type) -%}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -38,7 +42,7 @@
 {%- endmacro %}
 
 
-{%  macro stars(code) -%}
+{% macro stars(code) -%}
     <span class="star-rating">
         <input type="radio" name="rating_{{ code }}" value="1" required><i></i>
         <input type="radio" name="rating_{{ code }}" value="2" required><i></i>
@@ -48,6 +52,6 @@
     </span>
 {%- endmacro %}
 
-{%  macro stars_static(rating) -%}
+{% macro stars_static(rating) -%}
     <span class="star-rating"><i class="star-display star-display-{{ rating }}"></i></span>
 {%- endmacro %}

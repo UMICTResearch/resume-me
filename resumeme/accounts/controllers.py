@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, datetime
+import os, datetime, time
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for
 from resumeme import login_manager, flask_bcrypt
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
@@ -10,10 +10,9 @@ import forms
 from resumeme.libs.User import User
 from resumeme.utils.controllers import send_mail
 from resumeme.accounts import models
+from resumeme.feedback import models
 
 accounts = Blueprint('accounts', __name__, template_folder='templates')
-
-consentCheck = False
 
 
 @accounts.route("/login", methods=["GET", "POST"])
@@ -22,11 +21,13 @@ def login():
         email = request.form["email"]
         userObj = User()
         user = userObj.get_by_email_w_password(email)
+
         if user and flask_bcrypt.check_password_hash(user.password, request.form["password"]) and user.is_active():
             remember = request.form.get("remember", "no") == "yes"
 
             if login_user(user, remember=remember):
-                return redirect('/')
+                return redirect('/feedback')
+
         else:
             flash("Username or Password Incorrect")
             current_app.logger.error('Username or Password Incorrect')
@@ -44,12 +45,10 @@ def login():
 
 @accounts.route("/register-consent", methods=["GET", "POST"])
 def consent():
-    global consentCheck
-
     if request.method == "POST":
         if request.form['consent'] == 'Continue':
-            consentCheck = True
-            return redirect("/register")
+            consentCheck = 'accept-consent'
+            return redirect('/register/' + consentCheck)
         else:
             return redirect("/")
 
@@ -59,9 +58,9 @@ def consent():
 #
 # user registration.
 #
-@accounts.route("/register", methods=["GET", "POST"])
-def register():
-    if consentCheck:
+@accounts.route("/register/<consentCheck>", methods=["GET", "POST"])
+def register(consentCheck):
+    if consentCheck == 'accept-consent':
         registerForm = forms.SignupForm(request.form, csrf_enabled=True)
         current_app.logger.info(request.form)
         host_url = request.url_root
@@ -72,27 +71,33 @@ def register():
 
         elif request.method == 'POST' and registerForm.validate():
             email = request.form['email']
+            username = request.form['username']
             role = request.form['role']
+            location = request.form['location']
+            source = request.form['source']
+            sourceoptional = request.form['sourceoptional']
 
             # generate password hash
             password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
 
             # prepare User
-            user = User(email, password_hash, role)
+            user = User(email, username, password_hash, role, location, source, sourceoptional)
 
             try:
                 user.save()
                 if login_user(user, remember="no"):
-                    # flash("Logged in!")
                     send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
-                    return redirect('/')
+                    if user.role == 'jobseeker':
+                        return redirect('/resume/create')
+                    else:
+                        return redirect('/feedback')
                 else:
                     flash("unable to log you in")
                     return redirect('/register')
 
             except:
-                flash('Registration Error - User already registered')
-                current_app.logger.error('Registration Error - User already registered')
+                flash('Registration Error')
+                current_app.logger.error('Registration Error')
 
         templateData = {
 

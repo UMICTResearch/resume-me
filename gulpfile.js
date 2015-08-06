@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
-    uglify = require('gulp-uglifyjs'),
+    uglify = require('gulp-uglify'),
     config = {
         sass: {
             watch: [
@@ -24,7 +24,7 @@ var gulp = require('gulp'),
             source: [
                 './vendor/jquery/dist/jquery.js',
                 './vendor/bootstrap-sass/assets/javascripts/bootstrap.js',
-                './static/src/js/main.js'
+                //'./static/src/js/main.js'
             ],
             dest: './static/js',
             target: 'global.js'
@@ -43,7 +43,7 @@ gulp.task('fonts', function () {
 });
 
 gulp.task('js', function () {
-    gulp.src(config.js.source)
+    return gulp.src(config.js.source)
         .pipe(concat(config.js.target))
         .pipe(uglify({
             compress: true,
@@ -51,6 +51,7 @@ gulp.task('js', function () {
         }))
         .pipe(gulp.dest(config.js.dest));
 });
+
 
 gulp.task('js:watch', ['js'], function () {
     gulp.watch(config.js.watch, ['js']);
@@ -73,4 +74,4 @@ gulp.task('sass:watch', ['sass'], function () {
 
 gulp.task('watch', ['sass:watch']);
 
-gulp.task('default', ['sass', 'fonts']);
+gulp.task('default', ['sass', 'fonts', 'js']);

@@ -4,18 +4,23 @@ from resumeme.accounts import models
 
 
 class User(UserMixin):
-    def __init__(self, email=None, password=None, role=None, active=True, id=None):
+    def __init__(self, email=None, username=None, password=None, role=None, location=None, source=None, sourceoptional=None,
+                 active=True, id=None):
         self.email = email
+        self.username = username
         self.password = password
         self.role = role
+        self.location = location
+        self.source = source
+        self.sourceoptional = sourceoptional
         self.active = active
         self.isAdmin = False
         self.id = None
 
     def save(self):
-        newUser = models.User(email=self.email, password=self.password, role=self.role, active=self.active)
+        newUser = models.User(email=self.email, username=self.username, password=self.password, role=self.role, location=self.location,
+                              source=self.source, sourceoptional=self.sourceoptional, active=self.active)
         newUser.save()
-        print "new user id = %s " % newUser.id
         self.id = newUser.id
         return self.id
 

@@ -9,8 +9,11 @@
                 <div class="col-xs-12 col-md-6 col-centered">
 
                     <div class="alert alert-danger center-block" role="alert">
-                        You have no resume uploaded currently. Please go to "Create A Resume".
+                        You have no resume uploaded currently. Please Create New Resume.
                     </div>
+                    <p class="text-center">
+                        <a href="/resume/create" class="btn btn-success">Create New Resume</a>
+                    </p>
 
                 </div>
             </div>
@@ -25,7 +28,7 @@
                             <div class="panel-heading">
                                 <h4>
                                     {% if current_user.id == r.user.id and r.lock == False %}
-                                        <a href="/resume/{{ r.id }}/edit" class="btn btn-default btn-xs">edit</a>
+                                        <a href="/resume/{{ r.id }}/edit" class="btn btn-primary btn-xs">edit</a>
                                     {% endif %}
                                     <a href="/resume/{{ r.id }}">
                                         <small>(resume)</small>
@@ -33,9 +36,9 @@
                                 </h4>
                             </div>
 
-                            <div class="panel-body">
-                                {% for f in feedback %}
-                                    {% if f.resume.id == r.id %}
+                            {% for f in feedback %}
+                                {% if f.resume.id == r.id %}
+                                    <div class="panel-body">
                                         <h5>
                                             <a href="/feedback/{{ r.id }}/{{ f.id }}/view">
                                                 <small>(feedback)</small>
@@ -45,9 +48,9 @@
                                                 {% endif %}
                                             </a>
                                         </h5>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
