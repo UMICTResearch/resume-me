@@ -59,12 +59,26 @@ For installation on Macs, you can use the following method.
 
 ####Nodejs, Gulp, Bower
 - Install nodeJS (https://nodejs.org/download/)
-- Install Gulp Global
+- Install Gulp globally
+````
 $ npm install -g gulp
-- Install dependencies
-In the project directory execute: $ npm install
-- Run Gulp
+````
+- Install Bower globally
+````
+$ npm install -g bower
+````
+- Install npm project dependencies
+````
+$ npm install
+````
+- Install bower project dependencies
+````
+bower install
+````
+- Run Gulp to compile css/js/fonts
+````
 $ gulp
+````
 
 ##Run the application on your local system
 - Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
