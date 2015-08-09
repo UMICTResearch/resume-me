@@ -6,7 +6,7 @@
 
     <div class="container">
         <div class="row row-centered">
-            <div class="col-xs-12 col-md-6 col-centered">
+            <div class="col-xs-12 col-md-8 col-centered">
 
                 {{ macros.flash_messages("danger") }}
 
@@ -19,48 +19,102 @@
                         <form action="" method="POST" role="form">
                             {{ form.csrf_token }}
 
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="email"
-                                       id="email"
-                                       name="email"
-                                       class="form-control"
-                                       placeholder="Enter Email"
-                                       required="required">
-                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email"
+                                           id="email"
+                                           name="email"
+                                           class="form-control"
+                                           placeholder="Enter Email"
+                                           required="required">
+                                </div>
 
-                            <div class="form-group">
-                                <div class="radio">
-                                    <label class="radio-inline">
-                                        <input type="radio" name="role" id="role1" value="jobseeker" checked> Job Seeker
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="role" id="role2" value="volunteer"> Volunteer
-                                    </label>
+                                <div class="form-group">
+                                    <label for="username">Username:</label>
+                                    <input type="text"
+                                           id="username"
+                                           name="username"
+                                           class="form-control"
+                                           placeholder="Enter username"
+                                           required="required">
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="radio">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="role" id="role1" value="jobseeker" checked> Job
+                                            Seeker
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="role" id="role2" value="volunteer"> Volunteer
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    <input type="password"
+                                           name="password"
+                                           id="password"
+                                           class="form-control"
+                                           required="required"
+                                           placeholder="Enter Password">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password-confirm">Confirm Password:</label>
+                                    <input type="password"
+                                           name="confirm"
+                                           id="password-confirm"
+                                           class="form-control"
+                                           required="required"
+                                           placeholder="Confirm Password">
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="password">Password:</label>
-                                <input type="password"
-                                       name="password"
-                                       id="password"
-                                       class="form-control"
-                                       required="required"
-                                       placeholder="Enter Password">
-                            </div>
+                            <div class="col-md-6">
 
-                            <div class="form-group">
-                                <label for="password-confirm">Confirm Password:</label>
-                                <input type="password"
-                                       name="confirm"
-                                       id="password-confirm"
-                                       class="form-control"
-                                       required="required"
-                                       placeholder="Confirm Password">
-                            </div>
+                                <div class="form-group">
+                                    <label for="location">Location:</label>
 
-                            <button type="submit" class="btn btn-danger">Register</button>
+                                    <p>
+                                        <input type="text"
+                                               id="location"
+                                               name="location"
+                                               class="typeahead form-control"
+                                               placeholder="Detroit, MI, United States"
+                                               required="required"
+                                               autocomplete="off">
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="source">How did you hear about Review-me?</label>
+                                    <select class="form-control" name="source" id="source" required="required">
+                                        <option value="">Please select a source</option>
+                                        <option value="searchengine">Search Engine</option>
+                                        <option value="friend">Friend</option>
+                                        <option value="website">Website</option>
+                                        <option value="print">Print Article / Flyer</option>
+                                        <option value="radio">Radio</option>
+                                        <option value="school">School or Scholarly research</option>
+                                    </select>
+                                    <input type="text"
+                                           id="sourceoptional"
+                                           name="sourceoptional"
+                                           class="form-control mtm"
+                                           placeholder="Optional"
+                                            >
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12">
+                                <hr>
+                                <p>Please remove any personal information when uploading resumes if you wish to remain
+                                    anonymous.</p>
+                                <button type="submit" class="btn btn-danger">Register</button>
+                            </div>
                         </form>
                     </div>
                     <!--/panel-body-->

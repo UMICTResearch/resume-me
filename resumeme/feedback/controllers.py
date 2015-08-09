@@ -33,7 +33,6 @@ def feedback_main():
         return render_template('404.html')
 
 
-
 # Create New Feedback
 #
 @feedback.route("/feedback/<resume_id>/create", methods=["GET", "POST"])
@@ -129,4 +128,3 @@ def entry_page(resume_id, feedback_id, state="view"):
 
     else:
         return render_template('404.html')
-

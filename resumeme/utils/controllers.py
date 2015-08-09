@@ -1,6 +1,8 @@
 from flask import current_app, Blueprint, render_template, url_for
 from flask.ext.mail import Message
 from resumeme import mail
+from os import stat
+from pwd import getpwuid
 
 utils = Blueprint('utils', __name__, template_folder='templates')
 
@@ -23,3 +25,11 @@ def send_mail(subject, recipient, template, **context):
     msg.html = render_template('%s/%s.html' % ctx, **context)
 
     mail.send(msg)
+
+
+def find_owner(filename):
+    """Find the owner of the file and set upload path
+    :param filename: name of file
+    """
+
+    return getpwuid(stat(filename).st_uid).pw_name

@@ -13,7 +13,7 @@ class SignupForm(user_form):
     confirm = PasswordField('Repeat Password')
 
 
-# Login form will provide a Password field (WTForm form field)
+# Login form will provide a Password field
 class LoginForm(user_form):
     password = PasswordField('Password', validators=[validators.DataRequired()])
 

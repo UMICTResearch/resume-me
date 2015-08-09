@@ -15,6 +15,7 @@ app = Flask("ResumeMeApp")
 app.config['MONGODB_SETTINGS'] = {
     'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'resumemetest'}
 app.config['SECRET_KEY'] = 'This string will be replaced'
+
 app.debug = os.environ.get('DEBUG', True)
 
 db = MongoEngine(app)  # connect MongoEngine with Flask App
@@ -46,16 +47,8 @@ app.config.update(
 )
 mail = Mail(app)
 
-# File upload settings
-# This is the path to the upload directory
-app.config['UPLOAD_FOLDER'] = 'uploads/'
-# These are the extension that we are accepting to be uploaded
-app.config['ALLOWED_EXTENSIONS'] = {'txt', 'pdf'}
-
 app.config['MAX_CONTENT_LENGTH'] = 0.99 * 1024 * 1024
 
-
-# ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
 
 # Application wide Error Handlers
 @app.errorhandler(404)

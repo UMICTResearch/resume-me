@@ -7,10 +7,16 @@ from werkzeug import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 
 import models
-from constants import *
+from resumeme.config import *
+from resumeme.utils.controllers import find_owner
 from resumeme.libs.User import User
 
 resume = Blueprint('resume', __name__, template_folder='templates')
+
+UPLOAD_FOLDER = '/home/' + find_owner(__file__) + '/uploads/' + UPLOAD_ENV
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 
 def allowed_file(filename):
