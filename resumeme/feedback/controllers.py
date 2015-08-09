@@ -43,6 +43,7 @@ def volunteer_add_feedback(resume_id):
         try:
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
+            current_resume = models.Resume.objects().with_id(resume_id)
             feedback = models.Feedback()
             feedback.first_section = models._Section()
             feedback.second_section = models._Section()
@@ -50,7 +51,7 @@ def volunteer_add_feedback(resume_id):
             feedback.fourth_section = models._Section()
             feedback.fifth_section = models._Section()
 
-            feedback.resume = models.Resume.objects().with_id(resume_id)
+            feedback.resume = current_resume
 
             feedback.first_section.name = CONSTANTS.FIRST_SECTION
             feedback.first_section.rating = request.form.get('rating_1')
@@ -75,6 +76,10 @@ def volunteer_add_feedback(resume_id):
             # associate feedback to resume owner
             feedback.user = feedback.resume.user
             feedback.save()
+
+            # push feedback onto resume feedback_list reference list
+            models.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
+            current_resume.save()
 
             return redirect('/feedback/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
 
