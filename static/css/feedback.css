@@ -1,3 +1,13 @@
+.feedback-tooltip-window {
+    align-content: center;
+    text-align: left;
+    color: #ffd940;
+}
+
+.feedback-glyph-info {
+    color: #ffd940;
+}
+
 .star-rating {
   font-size: 0;
   white-space: nowrap;

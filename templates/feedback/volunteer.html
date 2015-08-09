@@ -27,7 +27,7 @@
                                 <small>(resume)</small>
                                 {{ r.title }}</a></p>
                             {% if current_user.id != r.user.id %}
-                                <p><a href="/feedback/{{ r.id }}/create" class="btn btn-info btn-lg">
+                                <p><a href="/feedback/{{ r.id }}/create" class="btn btn-info btn-md">
                                     give feedback</a></p>
                             {% else %}
                                 <span class="alert alert-warning">Error: volunteer ID mismatch</span>

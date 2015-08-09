@@ -1,7 +1,8 @@
 {% macro feedback_block(name, rating, content) -%}
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ name }} {{ stars_static(rating) }}</h3>
+            <h3 class="panel-title">{{ name }} {{ stars_static(rating) }}
+            </h3>
         </div>
         <div class="panel-body">
             {{ content }}
@@ -44,14 +45,33 @@
 
 {% macro stars(code) -%}
     <span class="star-rating">
-        <input type="radio" name="rating_{{ code }}" value="1" required><i></i>
-        <input type="radio" name="rating_{{ code }}" value="2" required><i></i>
-        <input type="radio" name="rating_{{ code }}" value="3" required><i></i>
-        <input type="radio" name="rating_{{ code }}" value="4" required><i></i>
-        <input type="radio" name="rating_{{ code }}" value="5" required><i></i>
+        <input type="radio" name="rating_{{ code }}" value="1" required data-toggle="tooltip" title="poor"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="2" required data-toggle="tooltip" title="okay"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="3" required data-toggle="tooltip" title="fair"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="4" required data-toggle="tooltip" title="good"><i></i>
+        <input type="radio" name="rating_{{ code }}" value="5" required data-toggle="tooltip" title="excellent"><i></i>
     </span>
+    {{ stars_help() }}
 {%- endmacro %}
+
 
 {% macro stars_static(rating) -%}
     <span class="star-rating"><i class="star-display star-display-{{ rating }}"></i></span>
+    {{ stars_help() }}
+{%- endmacro %}
+
+
+{% macro stars_help() -%}
+    <span class="glyphicon glyphicon-question-sign feedback-glyph-info feedback-tooltip" aria-hidden="true"
+          data-toggle="tooltip"
+          data-placement="top"
+          data-html="true"
+          title="<span class='feedback-tooltip-window'>
+<p><strong>Star Ratings:</strong><br/>
+1 Star  = Poor<br/>
+2 Stars = Okay<br/>
+3 Stars = Fair<br/>
+4 Stars = Good<br/>
+5 Stars = Excellent</p></span>">
+    </span>
 {%- endmacro %}

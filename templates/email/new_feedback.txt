@@ -1,0 +1,6 @@
+Greetings {{ user.email }}
+
+New feedback for resume titled '{{ resume.title }}' is now available.
+
+Sincerely,
+Review-me.us
