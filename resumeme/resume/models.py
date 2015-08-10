@@ -10,3 +10,4 @@ class Resume(db.Document):
     last_updated = db.DateTimeField(default=datetime.datetime.now())
     user = db.ReferenceField(User)
     lock = db.BooleanField(default=False)
+    feedback_list = db.ListField(db.GenericReferenceField())
