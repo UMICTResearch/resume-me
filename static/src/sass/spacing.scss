@@ -1,5 +1,12 @@
 /*spacing*/
+$small: 10px;
+$medium: 20px;
+
+/*top*/
 .mts { margin-top: 10px; }
 .mtm { margin-top: 20px; }
+/*bottom*/
 .mbs { margin-bottom: 10px; }
 .mbm { margin-bottom: 20px; }
+/*left*/
+.mls { margin-left: $small; }

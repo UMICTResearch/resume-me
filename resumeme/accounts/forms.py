@@ -12,6 +12,18 @@ class SignupForm(user_form):
                                                      validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
 
+    location = StringField('Location')
+
+    source = SelectField('source', choices=[('', 'Please select a source'),
+                                            ('searchengine', 'Search Engine'),
+                                            ('friend', 'Friend'),
+                                            ('website', 'Website'),
+                                            ('print', 'Print Article / Flyer'),
+                                            ('radio', 'Radio'),
+                                            ('school', 'School or Scholarly research')])
+
+    sourceoptional = StringField()
+
 
 # Login form will provide a Password field
 class LoginForm(user_form):
