@@ -59,11 +59,23 @@ For installation on Macs, you can use the following method.
 
 ####Nodejs, Gulp, Bower
 - Install nodeJS (https://nodejs.org/download/)
+
+For installation on Macs, you'll need to run the first command with "sudo" ; ignore otherwise
+
 - Install Gulp globally
 ````
-$ npm install -g gulp
+$ (sudo) npm install -g gulp
 ````
 - Install Bower globally
+
+-- If on Mac, you will need to run 
+
+````
+$ sudo chown -R 'username' ~/config
+````
+
+-- before installing bower--otherwise, you will get an EACCES, permission denied error.
+
 ````
 $ npm install -g bower
 ````
@@ -73,7 +85,7 @@ $ npm install
 ````
 - Install bower project dependencies
 ````
-bower install
+$ bower install
 ````
 - Run Gulp to compile css/js/fonts
 ````
