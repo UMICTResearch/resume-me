@@ -23,15 +23,10 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/global.js') }}"
-            type="application/javascript"></script>
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"#}
 {#            type="application/javascript"></script>#}
     <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"
             type="application/javascript"></script>
-    <script src="{{ url_for('static', filename='src/js/typeahead.bundle.min.js') }}"
+    <script src="{{ url_for('static', filename='js/global.js') }}"
             type="application/javascript"></script>
-    <script src="{{ url_for('static', filename='src/js/typeahead-addresspicker.min.js') }}"
-            type="application/javascript"></script>
-    <script src="{{ url_for('static', filename='src/js/main.js') }}" type="application/javascript"></script>
 {% endblock %}

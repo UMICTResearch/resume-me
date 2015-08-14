@@ -24,7 +24,9 @@ var gulp = require('gulp'),
             source: [
                 './vendor/jquery/dist/jquery.js',
                 './vendor/bootstrap-sass/assets/javascripts/bootstrap.js',
-                //'./static/src/js/main.js'
+                './static/src/js/typeahead.bundle.min.js',
+                './static/src/js/typeahead-addresspicker.min.js',
+                './static/src/js/*.js'
             ],
             dest: './static/js',
             target: 'global.js'
