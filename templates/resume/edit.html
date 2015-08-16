@@ -53,6 +53,21 @@
                             <span class="help-block">File Types Allowed: <strong>pdf and txt</strong>, Max File Size: 1MB</span>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <div class="col-md-8 col-md-offset-3">
+                            <label for="anon">
+                                {% if resume.anon %}
+                                    <input type="checkbox" name="anon" id="anon"
+                                           checked>
+                                {% else %}
+                                    <input type="checkbox" name="anon" id="anon">
+                                {% endif %}
+                                <span class="mls">Yes, I have anonymized my resume.</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <hr>
                     <div class="text-right">
                         <input type="submit" value="Save Resume" id="submitfile" class="btn btn-danger">

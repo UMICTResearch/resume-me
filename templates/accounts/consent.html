@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
+{% import 'macros.html' as macros %}
+
 {% block main %}
 
     <div class="container">
         <div class="row row-centered">
             <div class="col-md-8 col-centered">
+
+                {{ macros.flash_messages("danger") }}
 
                 <div class="page-header text-center">
                     <h1>Please agree to the following consent form</h1>

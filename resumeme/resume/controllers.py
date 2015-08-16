@@ -1,4 +1,4 @@
-import os, datetime, time
+import os, datetime, time, sys
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify, \
     send_from_directory
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
@@ -13,10 +13,12 @@ from resumeme.libs.User import User
 
 resume = Blueprint('resume', __name__, template_folder='templates')
 
-UPLOAD_FOLDER = '/home/' + find_owner(__file__) + '/uploads/' + UPLOAD_ENV
-
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+if ENV == 'dev':
+    UPLOAD_FOLDER = './uploads'
+else:
+    UPLOAD_FOLDER = '/home/' + find_owner(__file__) + '/uploads/' + ENV
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
 
 
 def allowed_file(filename):
@@ -52,8 +54,12 @@ def resume_create():
                 resume.title = request.form.get('title', '')
                 resume.content = request.form.get('content')
                 resume.file_upload = filename
+                resume.anon = False
 
-                # associate note to currently logged in user
+                if request.form.get('anon'):
+                    resume.anon = True
+
+                # associate resume to currently logged in user
                 resume.user = current_user.get_mongo_doc()
                 resume.save()
 
@@ -99,6 +105,10 @@ def edit_resume(resume_id):
 
             resume.title = request.form.get('title', '')
             resume.content = request.form.get('content')
+            resume.anon = False
+
+            if request.form.get('anon'):
+                resume.anon = True
 
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)

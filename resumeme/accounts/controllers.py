@@ -55,6 +55,15 @@ def consent():
     return render_template("/accounts/consent.html")
 
 
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ))
+
+
 #
 # user registration.
 #
@@ -65,9 +74,16 @@ def register(consentCheck):
         current_app.logger.info(request.form)
         host_url = request.url_root
 
+        templateData = {
+
+            'form': registerForm
+
+        }
+
         if request.method == 'POST' and registerForm.validate() is False:
             current_app.logger.info(registerForm.errors)
-            flash('Registration Error - Please Retry')
+            flash_errors(registerForm)
+            return render_template("/accounts/register.html", **templateData)
 
         elif request.method == 'POST' and registerForm.validate():
             email = request.form['email']
@@ -83,27 +99,30 @@ def register(consentCheck):
             # prepare User
             user = User(email, username, password_hash, role, location, source, sourceoptional)
 
-            try:
-                user.save()
-                if login_user(user, remember="no"):
-                    send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
-                    if user.role == 'jobseeker':
-                        return redirect('/resume/create')
+            userObj = User()
+            email_check = userObj.get_by_email(email)
+            username_check = userObj.get_by_username(username)
+
+            if email_check:
+                flash("Email Already Exists, Please use another email.")
+            elif username_check:
+                flash("Username Already Exists, Please use another username.")
+            else:
+                try:
+                    user.save()
+                    if login_user(user, remember="no"):
+                        send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
+                        if user.role == 'jobseeker':
+                            return redirect('/resume/create')
+                        else:
+                            return redirect('/feedback')
                     else:
-                        return redirect('/feedback')
-                else:
-                    flash("unable to log you in")
-                    return redirect('/register')
+                        flash("unable to log you in")
+                        return redirect('/register')
 
-            except:
-                flash('Registration Error')
-                current_app.logger.error('Registration Error')
-
-        templateData = {
-
-            'form': registerForm
-
-        }
+                except:
+                    flash("Registration Error")
+                    current_app.logger.error('Registration Error')
 
         return render_template("/accounts/register.html", **templateData)
 
@@ -133,7 +152,7 @@ def forgot_password():
         else:
             flash('Email Not Registered')
             current_app.logger.error('Email Not Registered')
-            return redirect('/register')
+            return redirect('/register-consent')
 
     templateData = {
 
@@ -186,6 +205,12 @@ def profile():
         user.update(role=request.form['role'])
 
         return redirect('/profile')
+
+    elif request.method == "POST" and "deactivate" in request.form:
+        user.update(active=False)
+
+        flash("Your account has been successfully deactivated.")
+        return redirect('/logout')
 
     if user.role == 'jobseeker':
         _role = "Job Seeker"

@@ -33,6 +33,41 @@
                                     Change Role to Job Seeker
                                 </button>
                             {% endif %}
+
+                            <hr>
+
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                    data-target="#myModal">
+                                Deactivate Account
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h3 class="modal-title" id="myModalLabel">Deactivate Account Warning</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to deactivate your account?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                                            </button>
+                                            <button type="submit" name="deactivate" class="btn btn-warning"
+                                                    value="deactivate">
+                                                Deactivate Account
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal End -->
+
                         </form>
                     </div>
                     <!--/panel-body-->
