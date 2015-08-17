@@ -122,11 +122,18 @@ Execute: "$ git push origin hotfix"
 
 ####For Readme
 
-All steps are the same except, replace name of branch "hotfix" with "readme"
-
+All steps are the same except, replace name of branch "hotfix" with "readme". For example, if you are making updates 
+to the readme (for the first time and don't have a readme branch listed), you will need to Execute: 
+"$ git checkout -b readme origin/master". However, if you Execute: "$ git branch -a" and see that you already have a 
+readme branch, simply Execute "$git checkout readme".
 
 ####For new features
 
-All steps are the same except, replace name of branch "hotfix" with a different name like "feature-1"
+All steps are the same except, replace name of branch "hotfix" or "readme" with the name of your branch, like "feature-1"
+
+####For errors
+If you have committed something prematurely, you may need to Execute: "$ git reset --hard HEAD" but with caution
+
+
 
 ####Stay tuned for more instructions
