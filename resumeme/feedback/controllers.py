@@ -26,9 +26,14 @@ def feedback_main():
         }
         return render_template('feedback/seeker.html', **templateData)
     elif user.role == "volunteer":
-        user_resume_list = models.Resume.objects(db_query(user__ne=current_user.id) & db_query(lock=False))
+
+        user_resume_list = models.Resume.objects(
+            db_query(user__ne=current_user.id) &
+            db_query(lock=False)
+        )
+
         templateData = {
-            'resume': user_resume_list,
+            'resume': user_resume_list
         }
         return render_template('feedback/volunteer.html', **templateData)
     else:
@@ -126,8 +131,9 @@ def entry_page(resume_id, feedback_id, state="view"):
             host_url = request.url_root
             user = resume.user
 
-            send_mail(subject, resume.user.email, 'new_feedback',
-                      user=user, url=host_url, resume=resume)
+            if user.active:
+                send_mail(subject, user.email, 'new_feedback',
+                          user=user, url=host_url, resume=resume)
 
         else:
             feedback.viewed = True
