@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os, datetime, time
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for
 from resumeme import login_manager, flask_bcrypt
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
@@ -55,15 +54,6 @@ def consent():
     return render_template("/accounts/consent.html")
 
 
-def flash_errors(form):
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(u"Error in the %s field - %s" % (
-                getattr(form, field).label.text,
-                error
-            ))
-
-
 #
 # user registration.
 #
@@ -88,6 +78,7 @@ def register(consentCheck):
         elif request.method == 'POST' and registerForm.validate():
             email = request.form['email']
             username = request.form['username']
+            role_initial = request.form['role']
             role = request.form['role']
             location = request.form['location']
             source = request.form['source']
@@ -97,14 +88,18 @@ def register(consentCheck):
             password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
 
             # prepare User
-            user = User(email, username, password_hash, role, location, source, sourceoptional)
+            user = User(email, username, password_hash, role_initial, role, location, source, sourceoptional)
 
             userObj = User()
             email_check = userObj.get_by_email(email)
             username_check = userObj.get_by_username(username)
 
             if email_check:
-                flash("Email Already Exists, Please use another email.")
+                if email_check.active:
+                    flash("Email Already Exists, Please use another email.")
+                else:
+                    flash("Your account is currently not active")
+                    return redirect('/activate')
             elif username_check:
                 flash("Username Already Exists, Please use another username.")
             else:
@@ -131,7 +126,7 @@ def register(consentCheck):
 
 
 #
-# user registration.
+# user password reset.
 #
 @accounts.route("/forgot", methods=["GET", "POST"])
 def forgot_password():
@@ -145,7 +140,7 @@ def forgot_password():
         userObj = User()
         user = userObj.get_by_email_w_password(email)
 
-        if user and user.is_active():
+        if user and user.active:
             send_reset_password_instructions(user, host_url)
             flash("Please check your mail for password reset instructions")
             return render_template("/accounts/forgot_password_notification.html")
@@ -161,6 +156,39 @@ def forgot_password():
     }
 
     return render_template("/accounts/forgot_password.html", **templateData)
+
+
+#
+# user account re-activate
+#
+@accounts.route("/activate", methods=["GET", "POST"])
+def activate_account():
+    """View function that handles account reactivation request."""
+    activateAccountForm = forms.ActivateAccountForm(request.form, csrf_enabled=True)
+
+    host_url = request.url_root
+
+    if request.method == "POST" and "email" in request.form:
+        email = request.form["email"]
+        userObj = User()
+        user = userObj.get_by_email_w_password(email)
+
+        if user and user.active is False:
+            send_account_activation_instructions(user, host_url)
+            flash("Please check your mail for account activation instructions")
+            return render_template("/accounts/activate_notification.html")
+        else:
+            flash('Email Not Registered')
+            current_app.logger.error('Email Not Registered')
+            return redirect('/register-consent')
+
+    templateData = {
+
+        'form': activateAccountForm
+
+    }
+
+    return render_template("/accounts/activate.html", **templateData)
 
 
 @accounts.route("/accounts/<token>", methods=["GET", "POST"])
@@ -194,6 +222,23 @@ def reset_password(token):
     }
 
     return render_template("/accounts/reset_password.html", **templateData)
+
+
+@accounts.route("/activate/<token>", methods=["GET", "POST"])
+def activate_account_request(token):
+    s = Serializer(current_app.config['SECRET_KEY'])
+    _id = s.loads(token)
+
+    user = models.User.objects.with_id(_id)
+
+    if request.method == 'POST' and user.active is False:
+        user.update(active=True)
+
+        flash('Your Account has been reactivated. You may now log in!')
+
+        return redirect('/login')
+
+    return render_template("/accounts/activate_request.html")
 
 
 @accounts.route("/profile", methods=["GET", "POST"])
@@ -261,13 +306,24 @@ def send_reset_password_instructions(user, host_url):
 
     :param user: The user to send the instructions to
     """
-    token = generate_reset_password_token(user)
+    token = generate_token(user)
 
     send_mail('Review-me password reset', user.email, 'reset_instructions', user=user, reset_link=token,
               url=host_url)
 
 
-def generate_reset_password_token(user, expiration=1000):
+def send_account_activation_instructions(user, host_url):
+    """Sends the account activation instructions email for the specified user.
+
+    :param user: The user to send the instructions to
+    """
+    token = generate_token(user)
+
+    send_mail('Review-me Account Re-activation', user.email, 'activate_instructions', user=user, reset_link=token,
+              url=host_url)
+
+
+def generate_token(user, expiration=1000):
     """Generates a unique reset password token for the specified user.
 
     :param user: The user to work with
@@ -275,3 +331,12 @@ def generate_reset_password_token(user, expiration=1000):
 
     set_serializer = Serializer(current_app.config['SECRET_KEY'], expiration)
     return set_serializer.dumps(str(user.id))
+
+
+def flash_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(u"Error in the %s field - %s" % (
+                getattr(form, field).label.text,
+                error
+            ))

@@ -1,0 +1,10 @@
+Greetings {{ user.email }}
+
+There are new resumes available for review.
+
+Please go to: http://review-me.us
+
+Kindly ignore this email if you choose to contribute at a later time.
+
+Sincerely,
+Review-me.us

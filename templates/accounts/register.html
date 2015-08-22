@@ -61,7 +61,9 @@
                                     <p>
                                         {{ form.location(type="text", class="typeahead form-control", placeholder="Detroit, MI, United States",
                                                required="required",
-                                               autocomplete="off" ) }}
+                                               autocomplete="off",
+                                               title="CITY, STATE, United States",
+                                               pattern="^[A-Z a-z]+,[ ]?[A-Za-z]{2,},[ ]United States$") }}
                                     </p>
                                 </div>
 
