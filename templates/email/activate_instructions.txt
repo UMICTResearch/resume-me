@@ -1,0 +1,11 @@
+We received account re-activation request for your Review-me account {{ user.email }}.
+
+If you made this request, then use the following link: {{ url }}activate/{{ reset_link }}
+
+This link will work for 2 hours or until you re-activate your account.
+
+If you did not ask to re-activate your account, then please ignore this email and no changes will be made to your
+    account. Another user may have entered your username by mistake.
+
+
+The Social Innovations Group

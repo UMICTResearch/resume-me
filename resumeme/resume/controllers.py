@@ -1,4 +1,5 @@
-import os, datetime, time, sys
+import os, time, sys
+from datetime import datetime
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify, \
     send_from_directory
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
@@ -102,6 +103,7 @@ def edit_resume(resume_id):
 
             timestamp = int(time.time())
             timestamp = str(timestamp)
+            updated = datetime.now()
 
             resume.title = request.form.get('title', '')
             resume.content = request.form.get('content')
@@ -115,6 +117,7 @@ def edit_resume(resume_id):
                 filename = timestamp + '.' + filename
                 file.save(os.path.join(UPLOAD_FOLDER, filename))
                 resume.file_upload = filename
+                resume.last_updated = updated
                 resume.save()
                 flash('Your resume has been successfully updated')
                 return redirect('/resume/%s' % resume.id)
