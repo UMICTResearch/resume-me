@@ -209,6 +209,8 @@ def profile():
     elif request.method == "POST" and "deactivate" in request.form:
         user.update(active=False)
 
+        send_mail('Account Deactivation Notice', user.email, 'deactivate_notice', user=user)
+
         flash("Your account has been successfully deactivated.")
         return redirect('/logout')
 
