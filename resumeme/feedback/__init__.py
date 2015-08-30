@@ -10,3 +10,4 @@ def feedback_datetime(value, format='medium'):
     elif format == 'medium':
         format="%A %B %d, %Y - %I:%M%p %Z"
     return value.strftime(format)
+
