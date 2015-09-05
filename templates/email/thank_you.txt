@@ -1,0 +1,6 @@
+Greetings {{ user.email }}
+
+The job seeker wanted us to thank you for providing feedback!
+
+Sincerely,
+Review-me.us
