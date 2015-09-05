@@ -7,7 +7,7 @@ class User(UserMixin):
     def __init__(self, email=None, username=None, password=None, role_initial=None, role=None, location=None,
                  source=None,
                  sourceoptional=None,
-                 active=True, id=None):
+                 active=True, isAdmin=False, id=None):
         self.email = email
         self.username = username
         self.password = password
@@ -17,6 +17,7 @@ class User(UserMixin):
         self.source = source
         self.sourceoptional = sourceoptional
         self.active = active
+        self.isAdmin = isAdmin
         self.id = None
 
     def save(self):
