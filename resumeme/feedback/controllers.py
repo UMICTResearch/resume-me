@@ -7,9 +7,30 @@ from resumeme.utils.controllers import send_mail
 
 import models
 import constants as CONSTANTS
-from utils import global_message_queue, check_messages
 
 feedback = Blueprint('feedback', __name__, template_folder='templates')
+
+import utils
+
+# Show thank you and saved message for review submission
+#
+@feedback.route('/review/<state>')
+@login_required
+def test(state):
+    flash("Your review have been saved.")
+    if state == "saved":
+        templateData = {
+            'first_message' : "Thank you for rating your feedback!",
+            'second_message' : ""
+        }
+    elif state == 'saved_and_sent':
+        templateData = {
+            'first_message' : "Thank you for rating your feedback!",
+            'second_message' : "And also thank you for supporting your volunteer!"
+        }
+    else:
+        return render_template('404.html')
+    return render_template('feedback/review_thank_you.html', **templateData)
 
 
 # List of Resume or Feedback seen based on role
@@ -17,7 +38,6 @@ feedback = Blueprint('feedback', __name__, template_folder='templates')
 @feedback.route('/feedback')
 @login_required
 def feedback_main():
-    check_messages()
     user = models.User.objects.with_id(current_user.id)
     if user.role == "jobseeker":
         user_resume_list = models.Resume.objects(user=current_user.id)
@@ -167,7 +187,7 @@ def review(resume_id, feedback_id):
 
     # If model is old
     if hasattr(feedback, "version") is False:
-        global_message_queue.append("sorry_old_model")
+        flash(utils.get_message_text("sorry_old_model"))
         return redirect('/feedback')
 
     if request.method == "POST" and feedback.review_lock is False:
@@ -188,17 +208,17 @@ def review(resume_id, feedback_id):
             feedback.update(review_lock=True)
             feedback.save()
 
-            global_message_queue.append("review_saved")
+            message_to_display = "saved"
             if request.form.get('thank_you') == CONSTANTS.CHOICE_ONE:
                 subject = "[review-me] Thank you!"
                 host_url = request.url_root
                 user = feedback.volunteer
                 send_mail(subject, user.email, 'thank_you',
                           user=user, url=host_url, resume=resume)
-                global_message_queue.append("thank_volunteer")
+                message_to_display = "saved_and_sent"
                 feedback.update(thank_you_message=True)
                 feedback.save()
-            return redirect('/feedback')
+            return redirect('/review/%s' % message_to_display)
 
         except ValidationError as e:
             print "Error:", e

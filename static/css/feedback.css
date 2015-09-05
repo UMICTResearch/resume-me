@@ -1,8 +1,21 @@
 .feedback-tooltip-window {
+}
+
+/* Tooltip */
+.feedback-tooltip + .tooltip > .tooltip-inner {
+    font-size : 1em;
     align-content: center;
     text-align: left;
     color: #ffd940;
+    background-color: #0b2c5e;
+    border: 0.1em solid #0b2c5e;
+    padding: 0.5em 1em 0.5em 1em;
 }
+
+/* Tooltip on top */
+ .feedback-tooltip + .tooltip.top > .tooltip-arrow {
+     border-top: 0.5em solid #0b2c5e;
+ }
 
 .feedback-glyph-info {
     color: #ffd940;

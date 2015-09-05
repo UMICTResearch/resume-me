@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% import 'feedback/macros.html' as macros %}
+
+{% block main %}
+
+<div class="row">
+    <div class="text-center col-md-12">
+        {{ macros.flashed_messages("info")}}
+        <h1>
+            <p>
+                {{ first_message }}
+            </p>
+            <p>
+                {{ second_message }}
+            </p>
+        </h1>
+    </div>
+</div>
+
+{% endblock %}

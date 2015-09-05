@@ -155,17 +155,11 @@ textarea {
   height: 43px;
 }
 
-// Adjusted this to improve usability
-
-.btn-default {
-  color: #000000;
-  background-color: #EEEEEE;
-  border-color: #EEEEEE;
-}
-
 // Items below are set for Feedback Module
 
 .surveyChoice {
+  color: #000000;
+  background-color: #EEEEEE;
   margin-left: 1.25em;
   margin-right: 1.25em;
   border-radius: 100%;
@@ -183,4 +177,6 @@ textarea {
 
 .surveyChoice:hover {
   border-color: #000000;
+  color: #EEEEEE;
+  background-color: #000000;
 }
