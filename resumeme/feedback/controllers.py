@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed
+from flask import Blueprint, render_template, request, flash, redirect
 from flask.ext.login import (current_user, login_required)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
@@ -7,7 +7,6 @@ from resumeme.utils.controllers import send_mail
 
 import models
 import constants as CONSTANTS
-from utils import global_message_queue, check_messages
 
 feedback = Blueprint('feedback', __name__, template_folder='templates')
 
@@ -17,7 +16,6 @@ feedback = Blueprint('feedback', __name__, template_folder='templates')
 @feedback.route('/feedback')
 @login_required
 def feedback_main():
-    check_messages()
     user = models.User.objects.with_id(current_user.id)
     if user.role == "jobseeker":
         user_resume_list = models.Resume.objects(user=current_user.id)
@@ -84,10 +82,6 @@ def volunteer_add_feedback(resume_id):
 
             # associate feedback to resume owner
             feedback.user = feedback.resume.user
-
-            # associate it to volunteer
-            volunteer = models.User.objects.with_id(current_user.id)
-            feedback.volunteer = volunteer
             feedback.save()
 
             # push feedback onto resume feedback_list reference list
@@ -155,62 +149,3 @@ def entry_page(resume_id, feedback_id, state="view"):
 
     else:
         return render_template('404.html')
-
-
-# Give Review of feedback
-#
-@feedback.route('/feedback/<resume_id>/<feedback_id>/review', methods=['GET', 'POST'])
-@login_required
-def review(resume_id, feedback_id):
-    resume = models.Resume.objects().with_id(resume_id)
-    feedback = models.Feedback.objects().with_id(feedback_id)
-
-    # If model is old
-    if hasattr(feedback, "version") is False:
-        global_message_queue.append("sorry_old_model")
-        return redirect('/feedback')
-
-    if request.method == "POST" and feedback.review_lock is False:
-        # Takes the Seeker's input to create the entry in the database
-        try:
-            feedback.first_question = request.form.get('question_1')
-            feedback.second_question = request.form.get('question_2')
-            feedback.third_question = request.form.get('question_3')
-
-            feedback.first_section.review = request.form.get('section_1')
-            feedback.second_section.review = request.form.get('section_2')
-            feedback.third_section.review = request.form.get('section_3')
-            feedback.fourth_section.review = request.form.get('section_4')
-            feedback.fifth_section.review = request.form.get('section_5')
-
-            feedback.validate()
-
-            feedback.update(review_lock=True)
-            feedback.save()
-
-            global_message_queue.append("review_saved")
-            if request.form.get('thank_you') == CONSTANTS.CHOICE_ONE:
-                subject = "[review-me] Thank you!"
-                host_url = request.url_root
-                user = feedback.volunteer
-                send_mail(subject, user.email, 'thank_you',
-                          user=user, url=host_url, resume=resume)
-                global_message_queue.append("thank_volunteer")
-                feedback.update(thank_you_message=True)
-                feedback.save()
-            return redirect('/feedback')
-
-        except ValidationError as e:
-            print "Error:", e
-            flash("There was an error with the submission. Please try again.")
-            return redirect('/feedback/%s/%s/review' % (feedback.resume.id, feedback.id))
-
-
-    else:
-        # Shows the survey page (review)
-        templateData = {
-            'title': 'Rate Your Feedback',
-            'resume': resume,
-            'feedback': feedback
-        }
-        return render_template('feedback/review.html', **templateData)

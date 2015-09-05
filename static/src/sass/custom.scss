@@ -11,19 +11,17 @@ table {
   border-color: #e74c3c;
 }
 
-// This class not needed anymore, relevant elements were ported to surveyChoice
 .numberCircle {
   border-radius: 50%;
-  width: 2.25em;
-  height: 2.25em;
-  padding: 0.375em;
-  margin: 0.1em;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
   background-color: #c0c0c0;
   border: 2px;
   border-color: #c0c0c0;
   color: white;
   text-align: center;
-  font: 1.375em Arial, sans-serif;
+  font: 22px Arial, sans-serif;
   display: inline-block;
 }
 
@@ -154,34 +152,3 @@ textarea {
   resize: none;
   height: 43px;
 }
-
-// Adjusted this to improve usability
-
-.btn-default {
-  color: #000000;
-  background-color: #EEEEEE;
-  border-color: #EEEEEE;
-}
-
-// Items below are set for Feedback Module
-
-.surveyChoice {
-  margin-left: 1.25em;
-  margin-right: 1.25em;
-  border-radius: 100%;
-  padding-left: 1.25em;
-  padding-right: 1.25em;
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
-  border-width: 0.25em;
-  border-color: #FFFFFF;
-}
-
-.vividHeaders h2, h3, h4{
-  font-weight: 500;
-}
-
-.surveyChoice:hover {
-  border-color: #000000;
-}
-

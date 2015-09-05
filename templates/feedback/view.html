@@ -7,13 +7,10 @@
     <div class="container">
         <div class="row">
             <div class="page-header">
-                <h1 class="well">
-                    {% if current_user.id == resume.user.id %}
-                        {% if resume.lock == False %}
-                            <a href="/resume/{{ resume.id }}/edit" class="btn btn-default btn-lg">edit</a>
-                        {% endif %}
+                <h1 class="well">{{ resume.title }}
+                    {% if current_user.id == resume.user.id and resume.lock == False %}
+                        <a href="/resume/{{ resume.id }}/edit" class="btn btn-default btn-lg">edit</a>
                     {% endif %}
-                    {{ resume.title }}
                 </h1>
             </div>
 
@@ -27,12 +24,6 @@
                     {{ title }}
                 </legend>
                 {% include "feedback/feedback.html" %}
-                {% if current_user.id == resume.user.id %}
-                    {% if feedback.review_lock == false %}
-                        <a href="/feedback/{{ resume.id }}/{{ feedback.id }}/review"
-                           class="btn btn-info btn-md">Rate your feedback</a>
-                    {% endif %}
-                {% endif %}
 
             </div>
         </div>
