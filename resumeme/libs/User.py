@@ -6,7 +6,6 @@ from resumeme.accounts import models
 class User(UserMixin):
     def __init__(self, email=None, username=None, password=None, role_initial=None, role=None, location=None,
                  source=None,
-                 isAdmin=False,
                  sourceoptional=None,
                  active=True, id=None):
         self.email = email
@@ -18,7 +17,6 @@ class User(UserMixin):
         self.source = source
         self.sourceoptional = sourceoptional
         self.active = active
-        self.isAdmin = isAdmin
         self.id = None
 
     def save(self):
