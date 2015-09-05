@@ -19,7 +19,7 @@
             {{ macros.resume_block(resume.content, resume.file_upload, "7") }}
 
             <div class="col-md-5">
-                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal">
+                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal vividHeaders">
 
                     {{ macros.flashed_messages("danger") }}
 
@@ -27,7 +27,8 @@
                         <legend>
                             {{ title }}
                         </legend>
-                        {% for section, code in [("Overall Feedback", 1),("Formatting Issues", 2),("Education", 3),
+                        {% for section, code in [("Overall, the skills and experience listed on this resume match
+                            the job description specified.", 1),("Formatting Issues", 2),("Education", 3),
                                                    ("Experience", 4),("Skills/Misc", 5)] %}
                             <div class="panel panel-primary">
                                 <div class="panel-heading">

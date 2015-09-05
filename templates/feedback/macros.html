@@ -1,5 +1,5 @@
 {% macro feedback_block(name, rating, content) -%}
-    <div class="panel panel-primary">
+    <div class="panel panel-primary vividHeaders">
         <div class="panel-heading">
             <h3 class="panel-title">{{ name }} {{ stars_static(rating) }}
             </h3>
@@ -75,3 +75,15 @@
 5 Stars = Excellent</p></span>">
     </span>
 {%- endmacro %}
+
+
+{% macro choices(question_number, width=6, col_size="sm", size="sm") -%}
+    <div class="text-center col-{{ col_size }}-{{ width }}" data-toggle="buttons">
+        {% for choice in varargs: %}
+            <label class="btn btn-default btn-{{ size }} surveyChoice">
+                <input type="radio" name="{{ question_number }}" value="{{ loop.index }}" required>
+                {{ choice }}</input></label>
+        {%  endfor %}
+    </div>
+{%- endmacro %}
+
