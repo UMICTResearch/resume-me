@@ -19,17 +19,21 @@
 
                         <hr>
 
+                        <p class="fm">Your Username: <strong>{{ user.username }}</strong></p>
+
+                        <hr>
+
                         <p class="fm">Your Current Role: <strong>{{ role }}</strong></p>
 
                         <form action="" method="POST" role="form">
                             {{ form.csrf_token }}
 
                             {% if user.role == 'jobseeker' %}
-                                <button type="submit" name="role" class="btn btn-primary" value="volunteer">
+                                <button type="submit" name="role" class="btn btn-primary btn-sm" value="volunteer">
                                     Change Role to Volunteer
                                 </button>
                             {% else %}
-                                <button type="submit" name="role" class="btn btn-primary" value="jobseeker">
+                                <button type="submit" name="role" class="btn btn-primary btn-sm" value="jobseeker">
                                     Change Role to Job Seeker
                                 </button>
                             {% endif %}

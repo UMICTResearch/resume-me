@@ -7,6 +7,7 @@ class Resume(db.Document):
     title = db.StringField(required=True, max_length=120)
     content = db.StringField()
     file_upload = db.StringField()
+    created = db.DateTimeField(default=datetime.datetime.now())
     last_updated = db.DateTimeField(default=datetime.datetime.now())
     anon = db.BooleanField(default=False)
     user = db.ReferenceField(User)

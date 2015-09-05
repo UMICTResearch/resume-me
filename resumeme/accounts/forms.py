@@ -46,3 +46,8 @@ class ResetPasswordForm(user_form):
 # Change Role Form
 class ChangeRoleForm(user_form):
     role = SelectField('role', validators=[validators.DataRequired()])
+
+
+# Password Forgot Form
+class ActivateAccountForm(user_form):
+    email = StringField('Email', validators=[validators.DataRequired()])
