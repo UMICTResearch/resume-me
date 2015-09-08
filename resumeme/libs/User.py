@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask.ext.login import (UserMixin, AnonymousUserMixin)
 from resumeme.accounts import models
+from datetime import datetime
 
 
 class User(UserMixin):
@@ -18,13 +19,15 @@ class User(UserMixin):
         self.sourceoptional = sourceoptional
         self.active = active
         self.isAdmin = isAdmin
+        self.timestamp = datetime.now
         self.id = None
 
     def save(self):
         newUser = models.User(email=self.email, username=self.username, password=self.password,
                               role_initial=self.role_initial, role=self.role,
                               location=self.location,
-                              source=self.source, sourceoptional=self.sourceoptional, active=self.active)
+                              source=self.source, sourceoptional=self.sourceoptional, active=self.active,
+                              timestamp=self.timestamp)
         newUser.save()
         self.id = newUser.id
         return self.id

@@ -1,6 +1,6 @@
 Greetings {{ user.email }}
 
-There are new resumes available for review.
+There are new resumes available for review!
 
 Please go to: http://review-me.us
 
