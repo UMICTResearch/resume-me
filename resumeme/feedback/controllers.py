@@ -2,15 +2,16 @@ from flask import Blueprint, render_template, request, flash, redirect, get_flas
 from flask.ext.login import (current_user, login_required)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
+from datetime import datetime
 
 from resumeme.utils.controllers import send_mail
 
 import models
 import constants as CONSTANTS
+import utils
 
 feedback = Blueprint('feedback', __name__, template_folder='templates')
 
-import utils
 
 # Show thank you and saved message for review submission
 #
@@ -20,13 +21,13 @@ def test(state):
     flash("Your review has been saved.")
     if state == "saved":
         templateData = {
-            'first_message' : "Thank you for rating your feedback!",
-            'second_message' : ""
+            'first_message': "Thank you for rating your feedback!",
+            'second_message': ""
         }
     elif state == 'saved_and_sent':
         templateData = {
-            'first_message' : "Thank you for rating your feedback!",
-            'second_message' : "And also thank you for supporting your volunteer!"
+            'first_message': "Thank you for rating your feedback!",
+            'second_message': "And also thank you for supporting your volunteer!"
         }
     else:
         return render_template('404.html')
@@ -72,8 +73,11 @@ def volunteer_add_feedback(resume_id):
         try:
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
+            created = datetime.now()
             current_resume = models.Resume.objects().with_id(resume_id)
             feedback = models.Feedback()
+            feedback.last_updated = created
+
             feedback.first_section = models._Section()
             feedback.second_section = models._Section()
             feedback.third_section = models._Section()

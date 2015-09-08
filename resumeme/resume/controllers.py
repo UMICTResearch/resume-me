@@ -46,6 +46,7 @@ def resume_create():
             if file and allowed_file(file.filename):
                 timestamp = int(time.time())
                 timestamp = str(timestamp)
+                created = datetime.now()
 
                 filename = secure_filename(file.filename)
                 filename = timestamp + '.' + filename
@@ -56,6 +57,7 @@ def resume_create():
                 resume.content = request.form.get('content')
                 resume.file_upload = filename
                 resume.anon = False
+                resume.created = created
 
                 if request.form.get('anon'):
                     resume.anon = True
