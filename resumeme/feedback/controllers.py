@@ -17,7 +17,7 @@ import utils
 @feedback.route('/review/<state>')
 @login_required
 def test(state):
-    flash("Your review have been saved.")
+    flash("Your review has been saved.")
     if state == "saved":
         templateData = {
             'first_message' : "Thank you for rating your feedback!",
