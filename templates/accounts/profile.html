@@ -8,7 +8,7 @@
         <div class="row row-centered">
             <div class="col-xs-12 col-md-6 col-centered">
 
-                {{ macros.flash_messages("danger") }}
+                {{ macros.flash_messages("success") }}
 
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
@@ -19,7 +19,12 @@
 
                         <hr>
 
-                        <p class="fm">Your Username: <strong>{{ user.username }}</strong></p>
+                        <p class="fm">Your Username: <strong>{{ user.username }}</strong>
+                            <button type="button" class="btn btn-primary btn-xs" data-toggle="modal"
+                                    data-target="#edit-username-modal">
+                                Change Username
+                            </button>
+                        </p>
 
                         <hr>
 
@@ -46,7 +51,7 @@
                                 Deactivate Account
                             </button>
 
-                            <!-- Modal -->
+                            <!-- Modal Deactivate Account-->
                             <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
                                  aria-labelledby="myModalLabel">
                                 <div class="modal-dialog" role="document">
@@ -70,7 +75,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Modal End -->
+                            <!-- Modal Deactivate End -->
+
+                            <!-- Modal Edit Username-->
+                            <div class="modal fade" id="edit-username-modal" tabindex="-1" role="dialog"
+                                 aria-labelledby="edit-username-modal">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    aria-hidden="true">&times;</span></button>
+                                            <h3 class="modal-title" id="myModalLabel">Edit User Name</h3>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Your Current User Name: <strong>{{ user.username }}</strong></p>
+
+                                            <div class="form-group">
+                                                <label for="editusername">Enter a new User Name</label>
+                                                {{ form.editusername(size=30, maxlength=50, type="text", class="form-control", placeholder="Enter Username") }}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">
+                                                Cancel
+                                            </button>
+                                            <button type="submit" class="btn btn-warning btn-sm">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal Username End -->
 
                         </form>
                     </div>
