@@ -1,5 +1,6 @@
 from resumeme import db
 import resumeme.feedback.configs.question as CONFIG
+import resumeme.feedback.constants.question as CONSTANT
 
 
 # This is the bare model of the question as read from the Config file.
@@ -7,14 +8,13 @@ class Question(db.EmbeddedDocument):
     # Version to keep track of model
     version = 1
     # The grouping in the config file: "section" or "survey" at the moment
-    question_group = db.StringField(default=CONFIG.UNSET)
+    question_group = db.StringField()
     # The question id number in file, this is both an entry which is the same as the list index.
-    question_id = db.IntField(default=CONFIG.UNSET)
+    question_id = db.IntField()
     # The question string
-    question_text = db.StringField(default=CONFIG.UNSET, max_length=CONFIG.MAX_QUESTION_LENGTH)
+    question_text = db.StringField(max_length=CONSTANT.MAX_QUESTION_LENGTH)
     # Type: Single (User makes one selection), Multiple (User makes multiple selections) or Text Content
-    question_type = db.IntField(default=CONFIG.UNSET,
-                                choices=(CONFIG.UNSET, CONFIG.SINGLE, CONFIG.MULTIPLE, CONFIG.TEXT))
+    question_type = db.IntField(choices=(CONSTANT.SINGLE, CONSTANT.MULTIPLE, CONSTANT.TEXT))
     # Actual choices text such as "Yes", "No", etc. Length of this is simple the total choice count.
     question_choices = db.ListField(db.StringField())
     # If it is enabled, question will appear on survey page. If it is disabled it will not.
@@ -54,8 +54,19 @@ class Question(db.EmbeddedDocument):
 
 
     def set_question_choices(self, question_choices):
-        self.question_choices = list(question_choices)
+        self.question_choices = question_choices
 
 
     def __set_question_enabled(self, enabled):
         self.question_enabled = enabled
+
+
+    def print_question(self):
+        print("----QUESTION----")
+        print("%s <----(question_group)" % self.question_group)
+        print("%s <----(question_id)" % self.question_id)
+        print("%s <----(question_text)" % self.question_text)
+        print("%s <----(question_type)" % self.question_type)
+        print("%s <----(question_choices)" % self.question_choices)
+        print("%s <----(question_enabled)" % self.question_enabled)
+

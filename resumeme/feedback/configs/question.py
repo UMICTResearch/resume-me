@@ -1,22 +1,13 @@
-# An improbable value to determine if a variable in the classes is set correctly
-UNSET = -1
+from resumeme.feedback.constants.question import *
 
-# Bounds
-MAX_RATING_LENGTH = 1
-MAX_QUESTION_LENGTH = 1024
-
-# Question Type: Choice selections i.e. SINGLE choice, select MULTPLE choices, or fill in TEXT
-TEXT = 0
-SINGLE = 1
-MULTIPLE = 2
-NO_CHOICES = "no_choices"
-
-# Config of the sections and the survey questions
+# Config of the sections and the survey questions. This is a configuration file that will be changed by the
+# admin console.
 all_questions = {
+    # Section design which determines what the volunteer see.
     'section' : [
         # Question
         {
-            'id' : '00000',
+            'id' : "0",
             'text' : "Experience",
             'type' : TEXT,
             'choices' : NO_CHOICES,
@@ -24,29 +15,54 @@ all_questions = {
         },
         # Question
         {
-            'id' : '00001',
+            'id' : "1",
             'text' : "Education",
-            'type' : TEXT,
-            'choices' : NO_CHOICES,
+            'type' : SINGLE,
+            'choices' : ["good", "bad"],
             'enabled' : True
         }
     ],
 
+    # These questions pertain to specific sections. Same set applies to all questions.
+    'section_review' : [
+        # Question
+        {
+            'id' : '0',
+            'text' : "Did this section contain sufficient detail?",
+            'type' : SINGLE,
+            'choices' : ["yes", "no"],
+            'enabled' : True
+        }
+    ],
+
+    # General survey questions that can be sent to everyone.
     'survey' : [
         # Question
         {
-            'id' : '00000',
+            'id' : '0',
+            'text' : "Would you recommend this site to friends?",
+            'type' : SINGLE,
+            'choices' : ["yes", "no"],
+            'enabled' : True
+        }
+    ],
+
+    # General review questions that can be sent out to the job seekers.
+    'review' : [
+        # Question
+        {
+            'id' : '0',
             'text' : "Was the feedback actionable?",
             'type' : SINGLE,
-            'choices' : ("yes", "no"),
+            'choices' : ["yes", "no"],
             'enabled' : True
         },
         # Question
         {
-            'id' : '00001',
+            'id' : '1',
             'text' : "How would you rate the feedback?",
             'type' : SINGLE,
-            'choices' : ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"),
+            'choices' : ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
             'enabled' : False
         }
     ]
