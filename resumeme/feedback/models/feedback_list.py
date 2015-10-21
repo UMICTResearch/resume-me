@@ -24,7 +24,7 @@ class FeedbackList(db.Document)
         self.feedback_list.append(feedback)
 
 
-    def link_document(self, document):
+    def link_review_me_document(self, document):
         self.review_me_document = document
 
 

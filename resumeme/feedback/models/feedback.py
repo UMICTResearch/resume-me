@@ -28,29 +28,49 @@ class Feedback(db.EmbeddedDocument):
     volunteer = db.ReferenceField(User)
 
     # TODO: INITIALIZATION Methods
-    # TODO: (Implement) -- 4) Save to Database
+    # TODO: (Implement) -- 4) Save to Database (will have the try-except statement)
     # TODO: (Implement) -- 5) Fill all Survey answers as received by user (map to the current enabled and unlocked
-    # TODO:                   sections)
+    # TODO:                   sections) - this will receive the data as a giant block
     # TODO: (Implement) -- 6) Fill all Section answers as received by user (map to the current enabled sections)
-    #
+    # TODO:                   this will receive the data as a giant block
     def __init__(self):
-        super(C,self).__init__(source)
+        super(C,self).__init__()
         initialize_and_update()
 
 
-    # NOTE: This is where the question_group and question_id come from in from the file
+    # Knowing the relevant question group that is referred to in the all_questions variable in the config file
+    def feedback_section_question_group(self):
+        return "section"
+
+    def review_question_question_group(self):
+        return "review"
+
+
+    # NOTE: This is where the question_group and question_id come from.
     #
     # TODO: (Verify) If it is an object created by the database query it should load the data automatically also.
     # TODO: (Implement) If it doesn't then we will need to call it after we set a variable equal to the returned object.
-    #
-    # TODO: (Implement) Enabled state should always be updated from the all_questions data
     def initialize_and_update(self):
         # Iterate through the blocks relevant to the model calling the append method appropriate for the data type.
         # Starting index for iterations changes based on whether it is a new creation (0) or an update (x).
-        for question_id in all_questions[question_group][len(self.feedback_sections):]:
-            self.append_to_feedback_section(question_group, question_id)
-        for question_id in all_questions[question_group][len(self.feedback_sections):]:
-            self.append_to_review_questions(question_group, question_id)
+        feedback_group = self.feedback_section_question_group()
+        review_group = self.review_question_question_group()
+        # The question_id is the index as it terates over the length range
+        for question_id in all_questions[feedback_group][len(self.feedback_sections):]:
+            self.append_to_feedback_section(feedback_group, question_id)
+        for question_id in all_questions[review_group][len(self.feedback_sections):]:
+            self.append_to_review_questions(review_group, question_id)
+        update_enabled_state_from_file(feedback_group)
+        update_enabled_state_from_file(review_group)
+
+
+    # This ensures all the questions are enabled or disabled as expected and up-to-date in terms of that state.
+    def update_enabled_state_from_file(self, question_group):
+        # The question_id is the index as it terates over the entire range
+        # question_group is both the "question_group" but doubles as the lock_type as
+        # that is how the locks are defined in the class.
+        for question_id in all_questions[question_group]:
+            self._set_lock(question_group, all_questions[question_group][question_id]['enabled'])
 
 
     # This creates the section and then appends it to the list of resume sections
@@ -59,13 +79,13 @@ class Feedback(db.EmbeddedDocument):
         section.create_section_question(question_group, question_id)
         self.feedback_sections.append(section)
 
-
     def append_to_review_questions(self, question_group, question_id):
         survey = Survey()
         section.create_survey_question(question_group, question_id)
         self.review_questions.append(survey)
 
 
+    # Way to know which volunteer worked on this resume data
     def link_volunteer(self, user):
         self.volunteer = user
 
@@ -76,24 +96,25 @@ class Feedback(db.EmbeddedDocument):
         self.viewed = True
         lock_feedback()
 
+
     # Lock Controls
     def lock_review():
-        self._set_lock("review", True)
+        self._set_lock(self.review_question_question_group, True)
 
     def lock_feedback():
-        self._set_lock("feedback", True)
+        self._set_lock(self.feedback_section_question_group, True)
 
     def unlock_review():
-        self._set_lock("review", False)
+        self._set_lock(self.review_question_question_group, False)
 
     def unlock_feedback():
-        self._set_lock("feedback", False)
+        self._set_lock(self.feedback_section_question_group, False)
 
     # Internal lock mechanism
     def _set_lock(self, lock_name, lock_state):
-        if lock_name == "feedback":
+        if lock_name == self.feedback_section_question_group():
             self.feedback_lock = lock_state
-        elif lock_name == "review":
+        elif lock_name == self.review_question_question_group():
             self.review_lock = lock_state
         else
             # nothing (this is an error)

@@ -16,12 +16,25 @@ class Section(db.EmbeddedDocument):
     # The section design - a section is essentially a question asked.
     section_question = db.EmbeddedDocumentField(Question)
     # Section rating value selected by user
-    section_rating = db.StringField(max_length=MAX_SECTION_RATING, required=True)
+    section_rating = db.StringField(max_length=MAX_SECTION_RATING)
     # The actual response of the volunteer
     section_response = db.StringField(max_length=MAX_SECTION_LENGTH)
     # Review of the specific section by the seeker; this can be a single survey question or it can
     # be a list of survey questions that were answered in relation to the specific section.
     review_list = db.EmbeddedDocumentListField(Survey)
+
+
+    # This makes sure the review_list is up to date with the config file. However, the section_question is
+    # not handled by initialization yet. It can be in the future but currently the other classes handle it
+    # by using the create functions directly.
+    def __init__(self):
+        super(C,self).__init__()
+        initialize_and_update_review_list()
+
+
+    # Knowing the relevant question group that is referred to in the all_questions variable in the config file
+    def review_list_question_group(self):
+        return 'section_review'
 
 
     # Note that this is the section question. Essentially what the volunteer answers regarding the
@@ -31,6 +44,7 @@ class Section(db.EmbeddedDocument):
         self.section_question = Question()
         self.section_question.create_question_from_file(question_group, question_id)
 
+
     # Simply adding the rating value to the model.
     def add_section_rating(self, section_rating):
         self.section_rating = section_rating
@@ -39,17 +53,26 @@ class Section(db.EmbeddedDocument):
     def add_section_response(self, section_response):
         self.section_response = section_response
 
-    def review_list_question_group(self):
-        return 'section_review'
 
+    # TODO: (Implement) -- 1) Fill all Survey answers as received by user (map to the current enabled and unlocked
+    # TODO:                   sections)
 
-
-    # TODO: Function to load a full list of section_review questions.
-    #
-    def __load_section_review_questions(self):
+    # This adds the entire block of survey questions to the review_list and makes sure they are up to date.
+    def initialize_and_update_review_list(self):
         # Initialize the list by adding the data from the all_questions configuration.
-        # When the users answer their replies based on what is enabled at the time get filled in.
-        pass
+        # Iterate through the blocks relevant to the model calling the append method.
+        # Starting index for iterations changes based on whether it is a new creation (0) or an update (x).
+        question_group = review_list_question_group()
+        for question_id in all_questions[question_group][len(self.review_list):]:
+            self.append_to_review_list(question_group, question_id)
+
+
+    # This creates the Survey and then appends it to the list of resume sections ensuring one Survey is added.
+    def append_to_review_list(self, question_group, question_id):
+        review = Survey()
+        review.create_survey_question(question_group, question_id)
+        self.review_list.append(review)
+
 
     # This takes the review specific to the section that the job seeker gives (text, selected choices, etc.)
     # and adds them to the survey list. First it adds the survey question to the Survey object.
