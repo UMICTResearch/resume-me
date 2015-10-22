@@ -1,6 +1,10 @@
 from resumeme import db
-import resumeme.feedback.configs.question as CONFIG
-import resumeme.feedback.constants.question as CONSTANT
+import resumeme.feedback.config as CONFIG
+import resumeme.feedback.constant as CONSTANT
+
+import resumeme.feedback.constants.question as QUESTION_CONSTANT
+
+import resumeme.feedback.configs.question as QUESTION_CONFIG
 
 
 # This is the bare model of the question as read from the Config file.
@@ -9,12 +13,12 @@ class Question(db.EmbeddedDocument):
     version = 1
     # The grouping in the config file: "section" or "survey" at the moment
     question_group = db.StringField()
-    # The question id number in file, this is both an entry which is the same as the list index.
-    question_id = db.IntField()
+    # The question id number in file is hash for faster lookups
+    question_id = db.StringField()
     # The question string
-    question_text = db.StringField(max_length=CONSTANT.MAX_QUESTION_LENGTH)
+    question_text = db.StringField(max_length=QUESTION_CONSTANT.MAX_QUESTION_LENGTH)
     # Type: Single (User makes one selection), Multiple (User makes multiple selections) or Text Content
-    question_type = db.IntField(choices=(CONSTANT.SINGLE, CONSTANT.MULTIPLE, CONSTANT.TEXT))
+    question_type = db.IntField(choices=QUESTION_CONFIG.question_type_list)
     # Actual choices text such as "Yes", "No", etc. Length of this is simple the total choice count.
     question_choices = db.ListField(db.StringField())
     # If it is enabled, question will appear on survey page. If it is disabled it will not.
@@ -29,10 +33,10 @@ class Question(db.EmbeddedDocument):
     def create_question_from_file(self, question_group, question_id):
         self.__set_question_group(question_group)
         self.__set_question_id(question_id)
-        self.set_question_text(CONFIG.all_questions[self.question_group][int(self.question_id)]['text'])
-        self.set_question_type(CONFIG.all_questions[self.question_group][int(self.question_id)]['type'])
-        self.set_question_choices(CONFIG.all_questions[self.question_group][int(self.question_id)]['choices'])
-        self.__set_question_enabled(CONFIG.all_questions[self.question_group][int(self.question_id)]['enabled'])
+        self.set_question_text(CONFIG.all_questions[self.question_group][self.question_id]['text'])
+        self.set_question_type(CONFIG.all_questions[self.question_group][self.question_id]['type'])
+        self.set_question_choices(CONFIG.all_questions[self.question_group][self.question_id]['choices'])
+        self.__set_question_enabled(CONFIG.all_questions[self.question_group][self.question_id]['enabled'])
 
 
     # Anything private is set by the config file whenever another class needs it to be or it itself needs it to
@@ -40,33 +44,33 @@ class Question(db.EmbeddedDocument):
     def __set_question_group(self, question_group):
         self.question_group = question_group
 
-
     def __set_question_id(self, question_id):
         self.question_id = question_id
-
 
     def set_question_text(self, question_text):
         self.question_text = question_text
 
-
     def set_question_type(self, question_type):
         self.question_type = question_type
-
 
     def set_question_choices(self, question_choices):
         self.question_choices = question_choices
 
+    # Internal use only for the question creation.
+    def __set_question_enabled(self, question_enabled):
+        self.question_enabled = question_enabled
 
-    def __set_question_enabled(self, enabled):
-        self.question_enabled = enabled
+
+    def get_question_list(self):
+        return CONFIG.all_questions
 
 
-    def print_question(self):
-        print("----QUESTION----")
-        print("%s <----(question_group)" % self.question_group)
-        print("%s <----(question_id)" % self.question_id)
-        print("%s <----(question_text)" % self.question_text)
-        print("%s <----(question_type)" % self.question_type)
-        print("%s <----(question_choices)" % self.question_choices)
-        print("%s <----(question_enabled)" % self.question_enabled)
+    # Enabled / Disabled state management
+    def enable_question(self):
+        self.question_enabled = True
 
+    def disable_question(self):
+        self.question_enabled = False
+
+    def is_enabled(self):
+        return self.question_enabled

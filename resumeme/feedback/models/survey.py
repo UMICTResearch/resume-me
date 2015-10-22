@@ -1,4 +1,9 @@
 from resumeme import db
+import resumeme.feedback.config as CONFIG
+import resumeme.feedback.constant as CONSTANT
+
+import resumeme.feedback.configs.survey as SURVEY_CONFIG
+
 from question import Question
 
 
@@ -26,6 +31,7 @@ class Survey(db.EmbeddedDocument):
     def create_survey_question(self, question_group, question_id):
         self.survey_question = Question()
         self.survey_question.create_question_from_file(question_group, question_id)
+        self._set_survey_lock(self.survey_question.is_enabled())
 
 
     # Appends whatever is passed, whether it is a string or a list of strings (only for multi-choice questions).
@@ -52,9 +58,12 @@ class Survey(db.EmbeddedDocument):
         self.survey_lock = lock_state
 
 
-    def print_survey(self):
-        print("----SURVEY----")
-        print("%s <----(survey_lock)" % self.survey_lock)
-        self.survey_question.print_question()
-        for index, item in enumerate(self.review):
-            print("%s <----(review[%i])" % (item,  index))
+    # This is used to abstract the need to enable or disable the question directly.
+    def disable_survey(self):
+        self.survey_question.disable_question()
+
+    def enable_survey(self):
+        self.survey_question.enable_question()
+
+    def is_enabled(self):
+        return self.survey_question.is_enabled()
