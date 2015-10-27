@@ -5,7 +5,12 @@ from datetime import datetime
 
 
 class User(UserMixin):
-    def __init__(self, email=None, username=None, password=None, role_initial=None, role=None, location=None,
+    def __init__(self, email=None,
+                 username=None,
+                 password=None,
+                 role_initial=None,
+                 role=None,
+                 location=None,
                  source=None,
                  sourceoptional=None,
                  active=True, isAdmin=False, id=None):

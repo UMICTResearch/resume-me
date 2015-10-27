@@ -1,4 +1,4 @@
-from flask import current_app, Blueprint, render_template, url_for
+from flask import current_app, Blueprint, render_template, flash
 from flask.ext.mail import Message
 from resumeme import mail
 from os import stat
@@ -33,3 +33,12 @@ def find_owner(filename):
     """
 
     return getpwuid(stat(filename).st_uid).pw_name
+
+
+def do_flash(message, category=None):
+    """Flash a message depending on the `FLASH_MESSAGES` configuration value
+
+    :param message: The flash message
+    :param category: The flash message category
+    """
+    flash(message, category)

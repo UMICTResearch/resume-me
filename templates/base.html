@@ -1,6 +1,8 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Review Me - BETA{% endblock %}
+{% block title %}
+    Review Me - BETA
+{% endblock %}
 
 {% block head %}
     <title>Review Me - BETA</title>
@@ -9,22 +11,19 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/feedback.css') }}" rel="stylesheet">
+
     {% include "_ganalytics.html" %}
 {% endblock %}
 
 {% block content %}
-
     {% include "_navigation.html" %}
 
     {% block main %}{% endblock %}
 
     {% include "_footer.html" %}
-
 {% endblock %}
 
 {% block scripts %}
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"#}
-{#            type="application/javascript"></script>#}
     <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"
             type="application/javascript"></script>
     <script src="{{ url_for('static', filename='js/global.js') }}"

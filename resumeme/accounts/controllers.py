@@ -7,9 +7,10 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 import forms
 from resumeme.libs.User import User
-from resumeme.utils.controllers import send_mail
+from resumeme.utils.controllers import send_mail, do_flash
 from resumeme.accounts import models
 from resumeme.feedback import models
+from resumeme.config import *
 
 accounts = Blueprint('accounts', __name__, template_folder='templates')
 
@@ -28,8 +29,9 @@ def login():
                 return redirect('/feedback')
 
         else:
-            flash("Username or Password Incorrect")
-            current_app.logger.error('Username or Password Incorrect')
+            do_flash(LOGIN_ERROR, "info")
+
+            # current_app.logger.error('Username or Password Incorrect')
             return redirect('/login')
 
     loginForm = forms.LoginForm(csrf_enabled=True)
@@ -73,8 +75,8 @@ def register(consentCheck):
         if request.method == 'POST' and registerForm.validate() is False:
             current_app.logger.info(registerForm.errors)
             flash_errors(registerForm)
-            return render_template("/accounts/register.html", **templateData)
 
+            return render_template("/accounts/register.html", **templateData)
         elif request.method == 'POST' and registerForm.validate():
             email = request.form['email']
             username = request.form['username']
@@ -88,7 +90,8 @@ def register(consentCheck):
             password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
 
             # prepare User
-            user = User(email, username, password_hash, role_initial, role, location, source, sourceoptional)
+            user = User(email, username, password_hash, role_initial, role, location, source,
+                        sourceoptional)
 
             userObj = User()
             email_check = userObj.get_by_email(email)
@@ -96,28 +99,29 @@ def register(consentCheck):
 
             if email_check:
                 if email_check.active:
-                    flash("Email Already Exists, Please use another email.")
+                    do_flash(REGISTRATION_EMAIL_EXISTS, "danger")
                 else:
-                    flash("Your account is currently not active")
+                    do_flash(REGISTRATION_INACTIVE, "danger")
+
                     return redirect('/activate')
             elif username_check:
-                flash("Username Already Exists, Please use another username.")
+                do_flash(REGISTRATION_UNAME_EXISTS, "danger")
             else:
                 try:
                     user.save()
                     if login_user(user, remember="no"):
                         send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
+
                         if user.role == 'jobseeker':
                             return redirect('/resume/create')
                         else:
                             return redirect('/feedback')
                     else:
-                        flash("unable to log you in")
-                        return redirect('/register')
+                        do_flash(REGISTRATION_NOLOGIN, "danger")
 
+                        return redirect('/register')
                 except:
-                    flash("Registration Error")
-                    current_app.logger.error('Registration Error')
+                    do_flash(REGISTRATION_ERROR, "danger")
 
         return render_template("/accounts/register.html", **templateData)
 
@@ -259,15 +263,25 @@ def profile():
         flash("Your account has been successfully deactivated.")
         return redirect('/logout')
 
+    elif request.method == "POST" and "editusername" in request.form:
+        if request.form['editusername'].strip() == '':
+            flash("Please enter a username")
+        else:
+            user.update(username=request.form['editusername'])
+            flash("Your username has been successfully updated")
+
+        return redirect('/profile')
+
     if user.role == 'jobseeker':
         _role = "Job Seeker"
     else:
         _role = "Volunteer"
 
-    changeRoleForm = forms.ChangeRoleForm(csrf_enabled=True)
+    updateProfile = forms.updateProfileForm(csrf_enabled=True)
+
     templateData = {
 
-        'form': changeRoleForm,
+        'form': updateProfile,
         'user': user,
         'role': _role
 

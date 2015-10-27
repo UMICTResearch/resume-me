@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% import 'macros.html' as macros %}
+{% import '_messages.html' as alerts %}
 
 {% block main %}
 
@@ -8,7 +8,7 @@
         <div class="row row-centered">
             <div class="col-xs-12 col-md-8 col-centered">
 
-                {{ macros.flash_messages("danger") }}
+                {{ alerts.flash_messages() }}
 
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
