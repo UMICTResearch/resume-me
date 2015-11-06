@@ -1,6 +1,7 @@
 from resumeme import db
 import resumeme.feedback.config as CONFIG
 import resumeme.feedback.constant as CONSTANT
+import resumeme.feedback.utils as UTIL
 
 import resumeme.feedback.configs.survey as SURVEY_CONFIG
 
@@ -27,25 +28,25 @@ class Survey(db.EmbeddedDocument):
     review = db.ListField(db.StringField())
 
 
+    # ---------------------------------------------------------------------------------------------------------
     # Instantiates and populates the survey question from the file.
     def create_survey_question(self, question_group, question_id):
         self.survey_question = Question()
         self.survey_question.create_question_from_file(question_group, question_id)
         self._set_survey_lock(self.survey_question.is_enabled())
 
-
+    # ---------------------------------------------------------------------------------------------------------
     # Appends whatever is passed, whether it is a string or a list of strings (only for multi-choice questions).
     # In practice, this will really just be a single value appended whether it is a string or a list of strings.
     # It won't be called multiple times as there is only one question ever.
     def add_review_to_survey(self, review_data):
         self.review.append(review_data)
 
-
     #  Question type will help whatever calls it to figure out how to interpret the data.
     def get_review(self):
         return self.review
 
-
+    # ---------------------------------------------------------------------------------------------------------
     # Once the survey is completed and submitted it is locked on a per question basis.
     # If it is not locked (and the question config file says it is enabled) it can appear in a survey as needed.
     def lock_survey(self):
@@ -58,6 +59,7 @@ class Survey(db.EmbeddedDocument):
         self.survey_lock = lock_state
 
 
+    # ---------------------------------------------------------------------------------------------------------
     # This is used to abstract the need to enable or disable the question directly.
     def disable_survey(self):
         self.survey_question.disable_question()
@@ -67,3 +69,10 @@ class Survey(db.EmbeddedDocument):
 
     def is_enabled(self):
         return self.survey_question.is_enabled()
+
+    # This is to compare and update the enable state based on the config file
+    def update_survey_enable_state(self, group, id):
+        if UTIL.get_question_config(group, id)['enabled'] == True:
+            self.enable_survey()
+        elif UTIL.get_question_config(group, id)['enabled'] == False:
+            self.disable_survey()

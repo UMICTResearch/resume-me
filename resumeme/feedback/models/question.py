@@ -1,9 +1,9 @@
 from resumeme import db
 import resumeme.feedback.config as CONFIG
 import resumeme.feedback.constant as CONSTANT
+import resumeme.feedback.utils as UTIL
 
 import resumeme.feedback.constants.question as QUESTION_CONSTANT
-
 import resumeme.feedback.configs.question as QUESTION_CONFIG
 
 
@@ -26,6 +26,7 @@ class Question(db.EmbeddedDocument):
     question_enabled = db.BooleanField(default=False)
 
 
+    # ---------------------------------------------------------------------------------------------------------
     # This is used to essentially load an appropriate question from the config file. For objects retrieved from
     # the database simply assign the returned object to a variable and treat that like a Question object. That would
     # essentially load an object from the database. This would iteratively generate the questions that are valid
@@ -33,12 +34,13 @@ class Question(db.EmbeddedDocument):
     def create_question_from_file(self, question_group, question_id):
         self.__set_question_group(question_group)
         self.__set_question_id(question_id)
-        self.set_question_text(CONFIG.all_questions[self.question_group][self.question_id]['text'])
-        self.set_question_type(CONFIG.all_questions[self.question_group][self.question_id]['type'])
-        self.set_question_choices(CONFIG.all_questions[self.question_group][self.question_id]['choices'])
-        self.__set_question_enabled(CONFIG.all_questions[self.question_group][self.question_id]['enabled'])
+        self.set_question_text(UTIL.get_question_config(self.question_group, self.question_id)['text'])
+        self.set_question_type(UTIL.get_question_config(self.question_group, self.question_id)['type'])
+        self.set_question_choices(UTIL.get_question_config(self.question_group, self.question_id)['choices'])
+        self.__set_question_enabled(UTIL.get_question_config(self.question_group, self.question_id)['enabled'])
 
 
+    # ---------------------------------------------------------------------------------------------------------
     # Anything private is set by the config file whenever another class needs it to be or it itself needs it to
     # be set.
     def __set_question_group(self, question_group):
@@ -60,11 +62,7 @@ class Question(db.EmbeddedDocument):
     def __set_question_enabled(self, question_enabled):
         self.question_enabled = question_enabled
 
-
-    def get_question_list(self):
-        return CONFIG.all_questions
-
-
+    # ---------------------------------------------------------------------------------------------------------
     # Enabled / Disabled state management
     def enable_question(self):
         self.question_enabled = True
