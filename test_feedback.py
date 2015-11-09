@@ -22,7 +22,7 @@ app.register_blueprint(admin)
 import resumeme
 import unittest
 import tempfile
-import test_feedback_testdata as volunteer_input
+import test_feedback_testdata as TEST_DATA
 import resumeme.feedback.constant as CONSTANT
 import resumeme.feedback.config as CONFIG
 import resumeme.feedback.constants.question as question_constant
@@ -31,6 +31,7 @@ import resumeme.feedback.models.survey as survey_model
 import resumeme.feedback.configs.section as section_config
 import resumeme.feedback.models.section as section_model
 import resumeme.feedback.models.feedback as feedback_model
+import resumeme.feedback.utils as UTILS
 
 
 class ResumeMeTestCase(unittest.TestCase):
@@ -62,15 +63,16 @@ class TestingUtils(ResumeMeTestCase, object):
                           CONFIG.all_questions[group][index]['enabled']))
 
     # Checks to make sure that a question object matches the file content.
-    def _survey_compare_assertEqual(self, survey_block, survey_file_config, group, index):
-        self.assertEqual(survey_block.survey_lock, survey_file_config['enabled'])
-        self._question_assertEqual(survey_block.survey_question, group, index)
+    def _survey_compare_assertEqual(self, survey_block, sorted_file_config_list, group, index):
+        self.assertEqual(survey_block.survey_lock, sorted_file_config_list['enabled'])
+        self._question_assertEqual(survey_block.survey_question, group, str(index))
 
     # Compares the feedback_sections
-    def _feedback_section_compare_assertEqual(self, section_block, section_file_config, group, index):
-        self.assertEqual(section_block.section_lock, section_file_config['enabled'])
-        for id in CONFIG.all_questions[group]:
-            self._survey_compare_assertEqual(section_block.review_list[int(id)], CONFIG.all_questions[group][id],
+    def _feedback_sections_compare_assertEqual(self, section_block, sorted_file_config_list, group, index):
+        self.assertEqual(section_block.section_enabled, sorted_file_config_list[1]['enabled'])
+
+        for id, value in enumerate(sorted_file_config_list):
+            self._survey_compare_assertEqual(section_block.review_list[id], sorted_file_config_list[id],
                                              group, index)
 
     # Returns True if content of two arrays are completely identical else returns False.
@@ -89,14 +91,17 @@ class TestingUtils(ResumeMeTestCase, object):
 class TestQuestion(TestingUtils):
 
     def test_create_question_from_file(self):
-        q = question_model.Question()
-        # These loops cherry pick the data to test based on the group_index dict
-        for group, id in volunteer_input.group_index.iteritems():
-            q.create_question_from_file(group, id)
-            self._question_assertEqual(q, group, id)
 
-        for group, id in volunteer_input.group_index.iteritems():
-            self._question_assertEqual(q, group, id)
+        for group in TEST_DATA.group_index:
+            sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+
+            for id, value in enumerate(sorted_list):
+                q = question_model.Question()
+                q.create_question_from_file(group, str(id))
+                self._question_assertEqual(q, group, str(id))
+
+            for id, value in enumerate(sorted_list):
+                self._question_assertEqual(q, group, str(id))
 
 
 ## Survey Testing
@@ -104,13 +109,17 @@ class TestQuestion(TestingUtils):
 class TestSurvey(TestingUtils):
 
     def _create_survey_question_assertEqual(self):
-        s = survey_model.Survey()
-        for group, id in volunteer_input.group_index.iteritems():
-            s.create_survey_question(group, id)
-            self._question_assertEqual(s.survey_question, group, id)
 
-        for group, id in volunteer_input.group_index.iteritems():
-            self._question_assertEqual(s.survey_question, group, id)
+        for group in TEST_DATA.group_index:
+            sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+
+            for id, value in enumerate(sorted_list):
+                s = survey_model.Survey()
+                s.create_survey_question(group, str(id))
+                self._question_assertEqual(s.survey_question, group, str(id))
+
+            for id, value in enumerate(sorted_list):
+                self._question_assertEqual(s.survey_question, group, str(id))
 
     def test_add_review_to_survey(self):
         review = [ "Good work.", "This is not bad.", "Wonderful." ]
@@ -134,53 +143,61 @@ class TestSection(TestingUtils):
 
 
     def test_create_section_question(self):
-        s = section_model.Section()
-        for group, id in volunteer_input.group_index.iteritems():
-            s.create_section_question(group, id)
-            self._question_assertEqual(s.section_question, group, id)
+        group = "section"
 
-        for group, id in volunteer_input.group_index.iteritems():
-            self._question_assertEqual(s.section_question, group, id)
+        sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+        for id, value in enumerate(sorted_list):
+            s = section_model.Section()
+            s.create_section_question(str(id))
+            self._question_assertEqual(s.section_question, group, str(id))
+
+        for id, value in enumerate(sorted_list):
+            self._question_assertEqual(s.section_question, group, str(id))
 
 
     def test_append_survey_to_review_list(self):
-        s = section_model.Section()
         group = 'section_review'
-        for id in CONFIG.all_questions[group]:
-            s.append_survey_to_review_list(group, id)
-            self._survey_compare_assertEqual(s.review_list[int(id)], CONFIG.all_questions[group][id], group, id)
 
-        for id in CONFIG.all_questions[group]:
-            self._survey_compare_assertEqual(s.review_list[int(id)], CONFIG.all_questions[group][id], group, id)
+        sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+        for id, value in enumerate(sorted_list):
+            s = section_model.Section()
+            s.append_survey_to_review_list(str(id))
+            self._survey_compare_assertEqual(s.review_list[id], CONFIG.all_questions[group][str(id)], group, id)
+
+        for id, value in enumerate(sorted_list):
+            self._survey_compare_assertEqual(s.review_list[id], CONFIG.all_questions[group][str(id)], group, id)
 
 
     def test_insert_single_review_into_review_list(self):
-        s1 = section_model.Section()
         group = 'section_review'
-        for id, value in enumerate(list(sorted(CONFIG.all_questions[group].items()))):
-            s1.append_survey_to_review_list(group, str(id))
-            s1.insert_single_review_into_review_list(volunteer_input.short_test_data, str(id))
-            self.assertEqual(s1.review_list[id].review[0], volunteer_input.short_test_data)
 
-        for id, value in enumerate(list(sorted(CONFIG.all_questions[group].items()))):
-            self.assertEqual(s1.review_list[id].review[0], volunteer_input.short_test_data)
+        sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+        for id, value in enumerate(sorted_list):
+            s1 = section_model.Section()
+            s1.append_survey_to_review_list(str(id))
+            s1.insert_single_review_into_review_list(TEST_DATA.short_test_data, str(id))
+            self.assertEqual(s1.review_list[id].review[0], TEST_DATA.short_test_data)
 
-        s2 = section_model.Section()
-        for id, value in enumerate(list(sorted(CONFIG.all_questions[group].items()))):
-            s2.append_survey_to_review_list(group, str(id))
-            s2.insert_single_review_into_review_list(volunteer_input.long_test_data, str(id))
+        for id, value in enumerate(sorted_list):
+            self.assertEqual(s1.review_list[id].review[0], TEST_DATA.short_test_data)
+
+        for id, value in enumerate(sorted_list):
+            s2 = section_model.Section()
+            s2.append_survey_to_review_list(str(id))
+            s2.insert_single_review_into_review_list(TEST_DATA.long_test_data, str(id))
             # TODO: Eventually expand this to handle testing more than one selection (i.e. not just [0]
-            self.assertEqual(s2.review_list[id].review[0], volunteer_input.long_test_data)
+            self.assertEqual(s2.review_list[id].review[0], TEST_DATA.long_test_data)
 
-        for id, value in enumerate(list(sorted(CONFIG.all_questions[group].items()))):
-            self.assertEqual(s2.review_list[id].review[0], volunteer_input.long_test_data)
+        for id, value in enumerate(sorted_list):
+            self.assertEqual(s2.review_list[id].review[0], TEST_DATA.long_test_data)
 
 
     def test___init_and_update_section_review_list(self):
         s = section_model.Section()
         group = 'section_review'
-        for id in CONFIG.all_questions[group]:
-            self._survey_compare_assertEqual(s.review_list[int(id)], CONFIG.all_questions[group][id], group, id)
+        sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+        for id, value in enumerate(sorted_list):
+            self._survey_compare_assertEqual(s.review_list[id], CONFIG.all_questions[group][str(id)], group, id)
 
 
 ## Feedback Testing
@@ -191,12 +208,14 @@ class TestFeedback(TestingUtils):
         f = feedback_model.Feedback()
 
         group = 'review'
-        for id in CONFIG.all_questions[group]:
-            self._survey_compare_assertEqual(f.review_questions[int(id)], CONFIG.all_questions[group][id], group, id)
+        sorted_list = list(sorted(CONFIG.all_questions[group].items()))
+
+        for id, value in enumerate(sorted_list):
+            self._survey_compare_assertEqual(f.review_questions[id], sorted_list, group, id)
 
         group = 'section'
-        for id in CONFIG.all_questions[group]:
-            self._feedback_sections_compare_assertEqual(f.feedback_sections[int(id)], CONFIG.all_questions[group][id], group, id)
+        for id, value in enumerate(sorted_list):
+            self._feedback_sections_compare_assertEqual(f.feedback_sections[id], sorted_list, group, id)
 
 
 

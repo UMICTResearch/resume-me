@@ -32,3 +32,7 @@ class FeedbackList(db.Document)
         self.job_seeker = user
 
 
+    def get_list(self):
+        return self.feedback_list
+
+

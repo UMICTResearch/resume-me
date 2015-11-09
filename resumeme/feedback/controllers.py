@@ -34,15 +34,30 @@ def test(state):
     return render_template('feedback/review_thank_you.html', **templateData)
 
 
+# TODO - Doesn't need any change
 # List of Resume or Feedback seen based on role
 #
 @feedback.route('/feedback')
 @login_required
 def feedback_main():
-    user = models.User.objects.with_id(current_user.id)
+    user = models.User.objects(db_query(user=current_user.id))
+
+    # This segment is for the job seeker
     if user.role == "jobseeker":
+
+        # Get the resume object list from the database and then
+        # get all the feedback lists for each resume and create an
+        # array out of them. That array will be passed and iterated over
+        # along with the resume.
+        #
+        # The view expects the list of resume and feedback lists that
+        # it can iterate over.
+        #
         user_resume_list = models.Resume.objects(user=current_user.id)
-        user_feedback_list = models.Feedback.objects(user=current_user.id)
+        for resume in user_resume_list:
+            user_feedback_list.append(resume.feedback_list.get_feedback_list())
+
+        # Data passed to the templates.
         templateData = {
             'resume': user_resume_list,
             'feedback': user_feedback_list

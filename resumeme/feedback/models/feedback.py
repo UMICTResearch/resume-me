@@ -68,7 +68,7 @@ class Feedback(db.EmbeddedDocument):
         sorted_question_list = UTIL.get_question_group_config_list(group)
         for id, value in enumerate(sorted_question_list):
             if  self.review_questions.count(self) <= id:
-                self.append_to_review_questions(group, str(id))
+                self.append_to_review_questions(str(id))
 
             self.review_questions[id].update_survey_enable_state(group, str(id))
 
@@ -79,19 +79,19 @@ class Feedback(db.EmbeddedDocument):
         sorted_question_list = UTIL.get_question_group_config_list(group)
         for id, value in enumerate(sorted_question_list):
             if self.feedback_sections.count(self) <= id:
-                self.append_to_review_questions(group, str(id))
+                self.append_to_feedback_sections(str(id))
 
-            self.feedback_sections[id].update_section_enable_state(group, str(id))
+            self.feedback_sections[id].update_section_enable_state(str(id))
 
     # This creates the section and then appends it to the list of resume sections
-    def append_to_feedback_sections(self, question_group, question_id):
+    def append_to_feedback_sections(self, question_id):
         section = Section()
-        section.create_section_question(question_group, question_id)
+        section.create_section_question(question_id)
         self.feedback_sections.append(section)
 
-    def append_to_review_questions(self, question_group, question_id):
+    def append_to_review_questions(self, question_id):
         survey = Survey()
-        survey.create_survey_question(question_group, question_id)
+        survey.create_survey_question(self.review_questions_question_group(), question_id)
         self.review_questions.append(survey)
 
 

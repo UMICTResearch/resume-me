@@ -30,6 +30,9 @@ class Survey(db.EmbeddedDocument):
 
     # ---------------------------------------------------------------------------------------------------------
     # Instantiates and populates the survey question from the file.
+    # Note: Here we are using the question_group provided by the calling function as we don't know,
+    # what kind of survey it would be. "section_review" or just "review". The other class will be sending
+    # the correct type.
     def create_survey_question(self, question_group, question_id):
         self.survey_question = Question()
         self.survey_question.create_question_from_file(question_group, question_id)
@@ -71,8 +74,9 @@ class Survey(db.EmbeddedDocument):
         return self.survey_question.is_enabled()
 
     # This is to compare and update the enable state based on the config file
-    def update_survey_enable_state(self, group, id):
-        if UTIL.get_question_config(group, id)['enabled'] == True:
+    # Again this also needs the group to be specified as there are two types of surveys.
+    def update_survey_enable_state(self, question_group, question_id):
+        if UTIL.get_question_config(question_group, question_id)['enabled'] == True:
             self.enable_survey()
-        elif UTIL.get_question_config(group, id)['enabled'] == False:
+        elif UTIL.get_question_config(question_group, question_id)['enabled'] == False:
             self.disable_survey()

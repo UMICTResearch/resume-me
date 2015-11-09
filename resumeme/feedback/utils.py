@@ -6,8 +6,6 @@ import resumeme.feedback.constant as CONSTANT
 
 # converts a dict to a list for storage and iteration
 def dict_to_list(data):
-    print "########################### dict_to_list ##########################"
-    print list(sorted(data.items()))
     return list(sorted(data.items()))
 
 # returns a direct link to the nested question data dict

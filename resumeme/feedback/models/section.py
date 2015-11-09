@@ -44,14 +44,17 @@ class Section(db.EmbeddedDocument):
     def review_list_question_group(self):
         return 'section_review'
 
+    def section_question_question_group(self):
+        return "section"
+
 
     # ---------------------------------------------------------------------------------------------------------
     # Note that this is the section question. Essentially what the volunteer answers regarding the
     # resume. Such as "Experience", "Overall Skills", etc. Here you create the section based on the
     # group and id passed which are in-turn based on the config file.
-    def create_section_question(self, question_group, question_id):
+    def create_section_question(self, question_id):
         self.section_question = Question()
-        self.section_question.create_question_from_file(question_group, question_id)
+        self.section_question.create_question_from_file(self.section_question_question_group(), question_id)
 
 
     # TODO: (Implement) -- 1) Fill all Survey answers as received by user (map to the current enabled and unlocked
@@ -71,16 +74,16 @@ class Section(db.EmbeddedDocument):
             # This is determined by the length of the list hence <= determines it. Self in count needed due to
             # this being called in init function.
             if self.review_list.count(self) <= id:
-                self.append_survey_to_review_list(group, str(id))
+                self.append_survey_to_review_list(str(id))
 
             self.review_list[id].update_survey_enable_state(group, str(id))
 
 
     # ---------------------------------------------------------------------------------------------------------
     # This creates the Survey and then appends it to the list of resume sections ensuring one Survey is added.
-    def append_survey_to_review_list(self, question_group, question_id):
+    def append_survey_to_review_list(self, question_id):
         review = Survey()
-        review.create_survey_question(question_group, question_id)
+        review.create_survey_question(self.review_list_question_group(), question_id)
         self.review_list.append(review)
 
     # This takes a single Survey review and inserts it into a survey list item in review_list
@@ -107,8 +110,10 @@ class Section(db.EmbeddedDocument):
     def is_enabled(self):
         return self.section_enabled
 
-    # This is to compare and update the enable state based on the config file
-    def update_section_enable_state(self, group, id):
+    # This is to compare and update the enable state based on the config file. This is for the
+    # Section itself, not the review_list which are surveys that are individually disabled.
+    def update_section_enable_state(self, id):
+        group = self.section_question_question_group()
         if UTIL.get_question_config(group, id)['enabled'] == True:
             self.enable_section()
         elif UTIL.get_question_config(group, id)['enabled'] == False:
