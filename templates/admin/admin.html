@@ -1,21 +1,63 @@
 {% extends "base.html" %}
 
 {% block main %}
-
     <!-- Body of the Webpage -->
     <div class="container">
         <div class="page-header">
-            <h1><strong>Admin Dashboard</strong></h1>
+            <h1><strong>Welcome to your Dashboard Admin!</strong></h1>
+        </div>
+    </div>
+
+    <!-- Show Basic Product Stats -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="alert alert-success" role="alert">
+                    <h3 class="text-center">{{ resumes|length }}</h3>
+
+                    <h2 class="text-center">Resumes</h2>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="alert alert-success" role="alert">
+                    <h3 class="text-center">{{ feedbacks|length }}</h3>
+
+                    <h2 class="text-center">Resumes Reviewed</h2>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="alert alert-success" role="alert">
+                    <h3 class="text-center">{{ users|length }}</h3>
+
+                    <h2 class="text-center">Users</h2>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="container">
         <div class="row">
+            <div class="col-xs-12">
+                <hr>
+            </div>
+            <div class="col-lg-6">
+                <div id="users" style="min-width: 310px; margin: 0 auto"></div>
+            </div>
+            <div class="col-lg-6">
+                <div id="resume_feedback" style="min-width: 310px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show Detailed Product Stats -->
+    <div class="container">
+        <div class="row">
             <div class="col-lg-12">
+                <hr>
                 <!-- Resume List -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Resume List
+                        Resumes <span class="badge">{{ resumes|length }}</span>
                     </div>
 
                     <div class="panel-body">
@@ -24,10 +66,12 @@
                                 <thead>
                                 <tr>
                                     <th>S No.</th>
-                                    <th>Username</th>
+                                    <th>User</th>
                                     <th>Job Title</th>
                                     <th>Link</th>
                                     <th>Anonymous</th>
+                                    <th>Created</th>
+                                    <th>Last Updated</th>
                                     <th>Feedback</th>
                                 </tr>
                                 </thead>
@@ -35,47 +79,25 @@
                                 {% for resume in resumes %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
-                                        <td>{{ resume.user }}</td>
+                                        <td>{{ resume.user.username }}</td>
                                         <td>{{ resume.title }}</td>
                                         <td><a href="/resume/{{ resume.id }}" target="_blank">View</a></td>
                                         <td>{{ resume.anon }}</td>
-                                        <td></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User List -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        User List
-                    </div>
-
-                    <div class="panel-body">
-                        <div class="dataTable_wrapper">
-                            <table class="table table-striped table-hover" id="dataTables-example">
-                                <thead>
-                                <tr>
-                                    <th>S No.</th>
-                                    <th>Username</th>
-                                    <th>Type</th>
-                                    <th>Email</th>
-                                    <th>Active</th>
-                                    <th>Account Created</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in users %}
-                                    <tr>
-                                        <td>{{ loop.index }}</td>
-                                        <td>{{ user.username }}</td>
-                                        <td>{{ user.role }}</td>
-                                        <td>{{ user.email }}</td>
-                                        <td>{{ user.active }}</td>
-                                        <td>{{ user.timestamp }}</td>
+                                        <td>{{ resume.created.strftime('%m-%d-%Y, %H:%M') }}</td>
+                                        <td>{{ resume.last_updated }}</td>
+                                        <td>
+                                            {% if resume.feedback_list %}
+                                                <span class="label label-success" role="alert">
+                                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+                                                Feedback Received
+                                                </span>
+                                            {% else %}
+                                                <span class="label label-danger" role="alert">
+                                                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+                                                Needs Attention!
+                                                </span>
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -87,7 +109,7 @@
                 <!-- Feedback List -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Feedback List
+                        Feedback <span class="badge">{{ feedbacks|length }}</span>
                     </div>
 
                     <div class="panel-body">
@@ -96,16 +118,38 @@
                                 <thead>
                                 <tr>
                                     <th>S No.</th>
-                                    <th>Resume</th>
-                                    <th>Link</th>
+                                    <th>Volunteer</th>
+                                    <th>Feedback Link</th>
+                                    <th>Feedback Created On</th>
+                                    <th>Received Thanks?</th>
+
+                                    <th>Jobseeker</th>
+                                    <th>Job Title</th>
+                                    <th>Resume Created On</th>
+                                    <th>Resume Link</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for feedback in feedbacks %}
                                     <tr>
                                         <td>{{ loop.index }}</td>
-                                        <td>{{ feedback.resume }}</td>
-                                        <td>{{ feedback.viewed }}</td>
+                                        <td>{{ feedback.volunteer.username }}</td>
+                                        <td><a href="/feedback/{{ feedback.resume.id }}/{{ feedback.id }}/view"
+                                               target="_blank">View Feedback</a></td>
+                                        <td>{{ feedback.last_updated.strftime('%m-%d-%Y, %H:%M') }}</td>
+                                        <td>
+                                            {% if feedback.thank_you_message %}
+                                                <span class="label label-info">Yes</span>
+                                            {% else %}
+                                                <span class="label label-warning">No</span>
+                                            {% endif %}
+                                        </td>
+
+                                        <td>{{ feedback.user.username }}</td>
+                                        <td>{{ feedback.resume.title }}</td>
+                                        <td>{{ feedback.resume.created.strftime('%m-%d-%Y, %H:%M') }}</td>
+                                        <td><a href="/resume/{{ feedback.resume.id }}" target="_blank">View Resume</a>
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -113,8 +157,162 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- User List -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Users <span class="badge">{{ users|length }}</span>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="dataTable_wrapper">
+                            <table class="table table-striped table-hover" id="dataTables-example">
+                                <thead>
+                                <tr>
+                                    <th>S No.</th>
+                                    <th>User</th>
+                                    <th>Registered Role</th>
+                                    <th>Present Role</th>
+                                    <th>Email</th>
+                                    <th>Active</th>
+                                    <th>Created</th>
+                                    <th>Source</th>
+                                    <th>Location</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>
+                                            {% if user.role_initial == 'jobseeker' %}
+                                                <span class="label label-info">Jobseeker</span>
+                                            {% else %}
+                                                <span class="label label-warning">Volunteer</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.role == 'jobseeker' %}
+                                                <span class="label label-info">Jobseeker</span>
+                                            {% else %}
+                                                <span class="label label-warning">Volunteer</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.active }}</td>
+                                        <td>{{ user.timestamp.strftime('%m-%d-%Y, %H:%M') }}</td>
+                                        <td>{{ user.source }}</td>
+                                        <td>{{ user.location }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        $(function () {
+
+            Highcharts.setOptions({
+                colors: ['#ff7518', '#5d50a2' ]
+            });
+
+            $('#users').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Current User Stats'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Users',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Volunteers',
+                        y: {{ vcount }}
+
+                    }, {
+                        name: 'Jobseekers',
+                        y: {{ jcount }}
+                    }]
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+            $('#resume_feedback').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Resume Feedback Stats'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Review',
+                    colorByPoint: true,
+                    data: [{
+                        name: 'Feedbacks',
+                        y: {{ feedbacks|count }}
+
+                    }, {
+                        name: 'Resumes',
+                        y: {{ resumes|count }}
+                    }]
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+        });
+    </script>
 {% endblock %}

@@ -14,25 +14,34 @@ admin = Blueprint('admin', __name__, template_folder='templates')
 @admin.route('/admin')
 def admin_home():
     if is_admin():
-        # resumes = resumemodels.Resume.objects.order_by("-last_updated")
-        # for resume in resumes:
-            # user = models.User.get_mongo_doc(resume.user)
-            # userObj = User()
-            # user = userObj.get_mongo_doc()
-            # print user
-            # print resume.user
-            # pprint.pprint(globals())
-            # pprint.pprint(locals())
-            # userObj = User()
-            # username = userObj.get_by_id(resume.user)
+        resumes = resumemodels.Resume.objects.order_by("-last_updated")
+        users = usermodels.User.objects
+        feedbacks = feedbackmodels.Feedback.objects
+
+        # Count Jobseekers and Volunteers
+        volunteer = 0
+        jobseeker = 0
+        for item in users:
+            if item.role == 'jobseeker':
+                jobseeker += 1
+            elif item.role == 'volunteer':
+                volunteer += 1
+
         templateData = {
-            'resumes': resumemodels.Resume.objects.order_by("-last_updated"),
-            'users': usermodels.User.objects,
-            'feedbacks': feedbackmodels.Feedback.objects
+            'resumes': resumes,
+            'users': users,
+            'feedbacks': feedbacks,
+            'vcount': volunteer,
+            'jcount': jobseeker
         }
         return render_template('admin/admin.html', **templateData)
     else:
         return redirect('/')
+
+
+@admin.route('/admin/consent')
+def admin_consent():
+    return "hello world"
 
 
 def is_admin():
