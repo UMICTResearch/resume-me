@@ -11,20 +11,13 @@
                 {{ macros.flash_messages("danger") }}
 
                 <div class="page-header text-center">
-                    <h1>Please agree to the following consent form</h1>
+                    <h1>Review-Me Consent Form</h1>
                 </div>
 
                 <div class="embed-responsive embed-responsive-16by9">
                     <object class="embed-responsive-item"
                             data="{{ url_for('static', filename='consent/consentform.pdf') }}"></object>
                 </div>
-
-                <hr>
-
-                <form action="" method="POST" role="form" class="mtm mbm text-center">
-                    <input type="submit" name="consent" value="Cancel" class="btn btn-default">
-                    <input type="submit" name="consent" value="Continue" class="btn btn-danger">
-                </form>
 
             </div>
         </div>
