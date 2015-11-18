@@ -3,15 +3,25 @@
 {% block main %}
 
     <div class="container">
-    <div class="row row-centered">
+        <div class="row row-centered">
 
-        <div class="page-header text-center">
-            <h1>Get ready for a job!</h1><br>
-
-            <h3>Start Here</h3>
-        </div>
-
-            <!--Job prep, feedback, networking glyphicons-->
+            <div class="page-header text-center">
+                <h1>Get ready for a job!</h1><br>
+                            
+                <p>
+                    Review.me's goal is to build connections among Detroiters to increase their chances of emploiyment! Job seekers in your area have shown success in obtaining job interviews, though many do not land these jobs and don’t understand why.
+                </p>
+                <p>
+                    You have expressed a need to connect to people who are able to provide honest and constructive interview and resume feedback, and to those willing to share who’s hiring in your area.
+                </p>                
+            </div>
+            
+            <a href="/register-consent" class="btn btn-warning btn-lg clearfix" role="button">Sign Up</a>
+            <div class="clearfix"></div>
+            <a href="/login" class="btn btn-link btn-lg" role="button">or Login</a>
+            <div class="clearfix"></div>
+            <a href="/aboutus" class="btn btn-link btn-lg" role="button">Learn more about Review.me</a>
+            <!--Job prep, feedback, networking glyphicons
             <div class="col-xs-12 col-lg-4 col-centered custom-center mbm mtm">
                 <a href="/job_preparation">
                     <img src="{{ url_for('static', filename='img/job-preparation-icon.svg') }}">
@@ -32,7 +42,7 @@
                     <h4>Networking</h4>
                     Find networking opportunities
                 </a>
-            </div>
+            </div>-->
         </div>
     </div>
 
