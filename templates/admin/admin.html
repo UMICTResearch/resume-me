@@ -46,8 +46,21 @@
             <div class="col-lg-6">
                 <div id="resume_feedback" style="min-width: 310px; margin: 0 auto"></div>
             </div>
+            <div class="col-xs-12">
+                <div id="sources" style="min-width: 310px; margin: 0 auto"></div>
+            </div>
+            <div class="col-xs-12">
+                <div id="usertypes" style="min-width: 310px; margin: 0 auto; height: 400px;"></div>
+            </div>
+            <div class="col-xs-12">
+                <div id="resumefeedbackcreated" style="min-width: 310px; margin: 0 auto; height: 400px;"></div>
+            </div>
+            <div class="col-xs-12">
+                <div id="totalresumefeedbackcreated" style="min-width: 310px; margin: 0 auto; height: 400px;"></div>
+            </div>
         </div>
     </div>
+
 
     <!-- Show Detailed Product Stats -->
     <div class="container">
@@ -61,7 +74,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="dataTable_wrapper">
+                        <div class="dataTable_wrapper table-responsive">
                             <table class="table table-striped table-hover" id="dataTables-example">
                                 <thead>
                                 <tr>
@@ -84,7 +97,13 @@
                                         <td><a href="/resume/{{ resume.id }}" target="_blank">View</a></td>
                                         <td>{{ resume.anon }}</td>
                                         <td>{{ resume.created.strftime('%m-%d-%Y, %H:%M') }}</td>
-                                        <td>{{ resume.last_updated }}</td>
+                                        <td>
+                                            {% if resume.last_updated %}
+                                                {{ resume.last_updated.strftime('%m-%d-%Y, %H:%M') }}
+                                            {% else %}
+                                                Not updated
+                                            {% endif %}
+                                        </td>
                                         <td>
                                             {% if resume.feedback_list %}
                                                 <span class="label label-success" role="alert">
@@ -113,7 +132,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="dataTable_wrapper">
+                        <div class="dataTable_wrapper table-responsive">
                             <table class="table table-striped table-hover" id="dataTables-example">
                                 <thead>
                                 <tr>
@@ -126,7 +145,10 @@
                                     <th>Jobseeker</th>
                                     <th>Job Title</th>
                                     <th>Resume Created On</th>
+                                    <th>Feedback Overall Rating</th>
                                     <th>Resume Link</th>
+
+                                    <th>Time for Review</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -148,7 +170,17 @@
                                         <td>{{ feedback.user.username }}</td>
                                         <td>{{ feedback.resume.title }}</td>
                                         <td>{{ feedback.resume.created.strftime('%m-%d-%Y, %H:%M') }}</td>
-                                        <td><a href="/resume/{{ feedback.resume.id }}" target="_blank">View Resume</a>
+                                        <td>{% if feedback.first_question %}
+                                            {{ feedback.first_question }}
+                                        {% else %}
+                                            Not rated
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="/resume/{{ feedback.resume.id }}" target="_blank">View Resume</a>
+                                        </td>
+                                        <td>
+                                            {{ feedback.last_updated - feedback.resume.created }}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -165,7 +197,7 @@
                     </div>
 
                     <div class="panel-body">
-                        <div class="dataTable_wrapper">
+                        <div class="dataTable_wrapper table-responsive">
                             <table class="table table-striped table-hover" id="dataTables-example">
                                 <thead>
                                 <tr>
@@ -211,10 +243,24 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
+
+    {#    <div class="container">#}
+    {#        [Date.UTC(1970, 9, 21), 0], <br />#}
+    {##}
+    {#        {% for key, value in usertypes.items() %}#}
+    {#            {% for item in value %}#}
+    {#                {% for k, v in item.items() %}#}
+    {#                    {% if k == 'jobseeker' %}#}
+    {#                        [Date.UTC{{ key }}, {{ v }}], <br />#}
+    {#                    {% endif %}#}
+    {#                {% endfor %}#}
+    {#            {% endfor %}#}
+    {#        {% endfor %}#}
+    {##}
+    {#    </div>#}
 
 {% endblock %}
 
@@ -226,7 +272,7 @@
         $(function () {
 
             Highcharts.setOptions({
-                colors: ['#ff7518', '#5d50a2' ]
+                colors: ['#ff7518', '#5d50a2']
             });
 
             $('#users').highcharts({
@@ -313,6 +359,243 @@
                     enabled: false
                 }
             });
+
+            //begin sources graph
+            $('#sources').highcharts({
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
+                },
+                title: {
+                    text: 'Sources'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                            style: {
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Sources',
+                    colorByPoint: true,
+                    data: [
+                        {% for key, value in sources.iteritems() %}
+                            {
+                                name: '{{ key }}',
+                                y: {{ value }}
+                            },
+                        {% endfor %}
+                    ]
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+            // end sources graph
+
+            // start user type graph
+            $('#usertypes').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'User Types over Time'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    title: {
+                        text: 'Numbers'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%b %e}: {point.y:f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: 'Jobseeker',
+                    data: [
+                        {% for key, value in usertypes.items() %}
+                            {% for item in value %}
+                                {% for k, v in item.items() %}
+                                    {% if k == 'jobseeker' %}
+                                        [Date.UTC{{ key }}, {{ v }}],
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    ]
+                }, {
+                    name: 'Volunteer',
+                    data: [
+                        {% for key, value in usertypes.items() %}
+                            {% for item in value %}
+                                {% for k, v in item.items() %}
+                                    {% if k == 'volunteer' %}
+                                        [Date.UTC{{ key }}, {{ v }}],
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    ]
+                }],
+                credits: {
+                    enabled: false
+                }
+            });
+            // end user type graph
+
+            // Resume vs feedback created
+            $('#resumefeedbackcreated').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Resume vs Feedback Created'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    title: {
+                        text: 'Numbers'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%b %e}: {point.y:f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: 'Resume Created',
+                    data: [
+                        {% for key, value in resumecreated.items() %}
+                            [Date.UTC{{ key }}, {{ value }}],
+                        {% endfor %}
+                    ]
+                }, {
+                    name: 'Feedback Provided',
+                    data: [
+                        {% for key, value in feedbackcreated.items() %}
+                            [Date.UTC{{ key }}, {{ value }}],
+                        {% endfor %}
+                    ]
+                }],
+
+                credits: {
+                    enabled: false
+                }
+            });
+            // end Resume vs feedback created
+
+            // Start tot resume feedback
+            $('#totalresumefeedbackcreated').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'Total Resume vs Feedback'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        month: '%e. %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: {
+                    allowDecimals: false,
+                    title: {
+                        text: 'Numbers'
+                    },
+                    min: 0
+                },
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%b %e}: {point.y:f}'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: 'Total Resume',
+                    data: [
+                        {% for key, value in totalsortedresume.items() %}
+                            [Date.UTC{{ key }}, {{ value }}],
+                        {% endfor %}
+                    ]
+                }, {
+                    name: 'Total Feedback',
+                    data: [
+                        {% for key, value in totalsortedfeedback.items() %}
+                            [Date.UTC{{ key }}, {{ value }}],
+                        {% endfor %}
+                    ]
+                }],
+
+                credits: {
+                    enabled: false
+                }
+            });
+            // end tot resume feedback
+
         });
     </script>
 {% endblock %}

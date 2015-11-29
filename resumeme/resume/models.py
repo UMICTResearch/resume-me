@@ -1,4 +1,3 @@
-import datetime
 from resumeme import db
 from resumeme.accounts.models import User
 

@@ -4,7 +4,6 @@ from flask import current_app, Blueprint, render_template, abort, request, flash
 from resumeme import login_manager, flask_bcrypt
 from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-
 import forms
 from resumeme.libs.User import User
 from resumeme.utils.controllers import send_mail, do_flash
@@ -44,89 +43,78 @@ def login():
     return render_template("/accounts/login.html", **templateData)
 
 
-@accounts.route("/register-consent", methods=["GET", "POST"])
+@accounts.route("/register-consent")
 def consent():
-    if request.method == "POST":
-        if request.form['consent'] == 'Continue':
-            consentCheck = 'accept-consent'
-            return redirect('/register/' + consentCheck)
-        else:
-            return redirect("/")
-
     return render_template("/accounts/consent.html")
 
 
 #
 # user registration.
 #
-@accounts.route("/register/<consentCheck>", methods=["GET", "POST"])
-def register(consentCheck):
-    if consentCheck == 'accept-consent':
-        registerForm = forms.SignupForm(request.form, csrf_enabled=True)
-        current_app.logger.info(request.form)
-        host_url = request.url_root
+@accounts.route("/register", methods=["GET", "POST"])
+def register():
+    registerForm = forms.SignupForm(request.form, csrf_enabled=True)
+    current_app.logger.info(request.form)
+    host_url = request.url_root
 
-        templateData = {
+    templateData = {
 
-            'form': registerForm
+        'form': registerForm
 
-        }
+    }
 
-        if request.method == 'POST' and registerForm.validate() is False:
-            current_app.logger.info(registerForm.errors)
-            flash_errors(registerForm)
-
-            return render_template("/accounts/register.html", **templateData)
-        elif request.method == 'POST' and registerForm.validate():
-            email = request.form['email']
-            username = request.form['username']
-            role_initial = request.form['role']
-            role = request.form['role']
-            location = request.form['location']
-            source = request.form['source']
-            sourceoptional = request.form['sourceoptional']
-
-            # generate password hash
-            password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
-
-            # prepare User
-            user = User(email, username, password_hash, role_initial, role, location, source,
-                        sourceoptional)
-
-            userObj = User()
-            email_check = userObj.get_by_email(email)
-            username_check = userObj.get_by_username(username)
-
-            if email_check:
-                if email_check.active:
-                    do_flash(REGISTRATION_EMAIL_EXISTS, "danger")
-                else:
-                    do_flash(REGISTRATION_INACTIVE, "danger")
-
-                    return redirect('/activate')
-            elif username_check:
-                do_flash(REGISTRATION_UNAME_EXISTS, "danger")
-            else:
-                try:
-                    user.save()
-                    if login_user(user, remember="no"):
-                        send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
-
-                        if user.role == 'jobseeker':
-                            return redirect('/resume/create')
-                        else:
-                            return redirect('/feedback')
-                    else:
-                        do_flash(REGISTRATION_NOLOGIN, "danger")
-
-                        return redirect('/register')
-                except:
-                    do_flash(REGISTRATION_ERROR, "danger")
+    if request.method == 'POST' and registerForm.validate() is False:
+        current_app.logger.info(registerForm.errors)
+        flash_errors(registerForm)
 
         return render_template("/accounts/register.html", **templateData)
+    elif request.method == 'POST' and registerForm.validate():
+        email = request.form['email']
+        username = request.form['username']
+        role_initial = request.form['role']
+        role = request.form['role']
+        location = request.form['location']
+        source = request.form['source']
+        sourceoptional = request.form['sourceoptional']
 
-    else:
-        return redirect("/register-consent")
+        # generate password hash
+        password_hash = flask_bcrypt.generate_password_hash(request.form['password'])
+
+        # prepare User
+        user = User(email, username, password_hash, role_initial, role, location, source,
+                    sourceoptional)
+
+        userObj = User()
+        email_check = userObj.get_by_email(email)
+        username_check = userObj.get_by_username(username)
+
+        if email_check:
+            if email_check.active:
+                do_flash(REGISTRATION_EMAIL_EXISTS, "danger")
+            else:
+                do_flash(REGISTRATION_INACTIVE, "danger")
+
+                return redirect('/activate')
+        elif username_check:
+            do_flash(REGISTRATION_UNAME_EXISTS, "danger")
+        else:
+            try:
+                user.save()
+                if login_user(user, remember="no"):
+                    send_mail('Your registration was successful', email, 'welcome', user=user, url=host_url)
+
+                    if user.role == 'jobseeker':
+                        return redirect('/resume/create')
+                    else:
+                        return redirect('/feedback')
+                else:
+                    do_flash(REGISTRATION_NOLOGIN, "danger")
+
+                    return redirect('/register')
+            except:
+                do_flash(REGISTRATION_ERROR, "danger")
+
+    return render_template("/accounts/register.html", **templateData)
 
 
 #
