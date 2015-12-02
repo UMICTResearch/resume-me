@@ -28,13 +28,15 @@ def admin_home():
             if user.role == 'jobseeker':
                 jobseeker += 1
                 try:
-                    role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day].append('jobseeker')
+                    role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day].append(
+                        'jobseeker')
                 except KeyError:
                     role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day] = ['jobseeker']
             elif user.role == 'volunteer':
                 volunteer += 1
                 try:
-                    role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day].append('volunteer')
+                    role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day].append(
+                        'volunteer')
                 except KeyError:
                     role_collection[user.timestamp.year, user.timestamp.month - 1, user.timestamp.day] = ['volunteer']
 
@@ -50,7 +52,6 @@ def admin_home():
                 usertypes[key].append(count)
 
         sortedusertypes = collections.OrderedDict(sorted(usertypes.items(), key=lambda x: x[0]))
-        print sortedusertypes
 
         sources_dict = collections.Counter(sources)
 
@@ -73,7 +74,8 @@ def admin_home():
                 feedbackcreated[
                     feedback.last_updated.year, feedback.last_updated.month - 1, feedback.last_updated.day].append(1)
             except KeyError:
-                feedbackcreated[feedback.last_updated.year, feedback.last_updated.month - 1, feedback.last_updated.day] = [
+                feedbackcreated[
+                    feedback.last_updated.year, feedback.last_updated.month - 1, feedback.last_updated.day] = [
                     1]
 
         for k, v in feedbackcreated.iteritems():
