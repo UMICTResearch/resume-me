@@ -411,7 +411,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'User Types over Time'
+                    text: 'User Types over Time (created in a day)'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -438,13 +438,15 @@
                 plotOptions: {
                     spline: {
                         marker: {
-                            enabled: true
+                            enabled: true,
+                            radius: 10
                         }
                     }
                 },
 
                 series: [{
                     name: 'Jobseeker',
+                    lineWidth: 0,
                     data: [
                         {% for key, value in usertypes.items() %}
                             {% for item in value %}
@@ -458,6 +460,7 @@
                     ]
                 }, {
                     name: 'Volunteer',
+                    lineWidth: 0,
                     data: [
                         {% for key, value in usertypes.items() %}
                             {% for item in value %}
@@ -482,7 +485,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'Resume vs Feedback Created'
+                    text: 'Daily Resume Created and Feedback Provided'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -509,6 +512,7 @@
                 plotOptions: {
                     spline: {
                         marker: {
+                            radius: 10,
                             enabled: true
                         }
                     }
@@ -516,6 +520,7 @@
 
                 series: [{
                     name: 'Resume Created',
+                    lineWidth: 0,
                     data: [
                         {% for key, value in resumecreated.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
@@ -523,6 +528,7 @@
                     ]
                 }, {
                     name: 'Feedback Provided',
+                    lineWidth: 0,
                     data: [
                         {% for key, value in feedbackcreated.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
@@ -542,7 +548,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'Total Resume vs Feedback'
+                    text: 'Total Resume Created and Feedback Provided'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -569,20 +575,21 @@
                 plotOptions: {
                     spline: {
                         marker: {
+                            radius: 6,
                             enabled: true
                         }
                     }
                 },
 
                 series: [{
-                    name: 'Total Resume',
+                    name: 'Total Resume Created',
                     data: [
                         {% for key, value in totalsortedresume.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
                         {% endfor %}
                     ]
                 }, {
-                    name: 'Total Feedback',
+                    name: 'Total Feedback Provided',
                     data: [
                         {% for key, value in totalsortedfeedback.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
