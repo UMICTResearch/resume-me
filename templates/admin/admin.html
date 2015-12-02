@@ -411,7 +411,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'User Types over Time (created in a day)'
+                    text: 'Registered User Types Per Day'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -485,7 +485,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'Daily Resume Created and Feedback Provided'
+                    text: 'Resumes Uploaded and Feedback Provided Per Day'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -548,7 +548,7 @@
                     type: 'spline'
                 },
                 title: {
-                    text: 'Total Resume Created and Feedback Provided'
+                    text: 'Resumes and Feedback Provided in Total'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -582,7 +582,7 @@
                 },
 
                 series: [{
-                    name: 'Total Resume Created',
+                    name: 'Total Resume Uploaded',
                     data: [
                         {% for key, value in totalsortedresume.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
