@@ -49,7 +49,7 @@ For installation on Macs, you can use the following method.
 ####Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
 - Install the following packages: python, python-dev, pip and virtual-environment.
-  - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo install virtual-environment"
+  - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "pip install virtual-environment"
   - Linux (Ubuntu): "sudo apt-get install python python-dev python-pip python-virtualenv virtualenvwrapper" (enter)
 - Clone the repository
 - Now, type virtualenv venv
