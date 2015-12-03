@@ -71,7 +71,7 @@ $ (sudo) npm install -g gulp
 -- If on Mac, you will need to run 
 
 ````
-$ sudo chown -R 'username' ~/config
+$ sudo chown -R 'username' ~/.config
 ````
 
 -- before installing bower--otherwise, you will get an EACCES, permission denied error.
