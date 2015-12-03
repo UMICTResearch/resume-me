@@ -40,7 +40,7 @@ For installation on Macs, you can use the following method.
 2. If you already have Homebrew, update it
 ````$brew update````
 3. Now install mongodb (the last line of the install output shows you the install location, which you should add to your ~/.bashrc)
-````install mongodb````
+````brew install mongodb````
 4. MongoDB stores its data in the /data/db directory by default but it does not generate that folder structure for you. So, you have to create that directory.
 ````$ sudo mkdir -p /data/db````
 5. Check status
