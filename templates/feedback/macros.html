@@ -86,3 +86,25 @@
         {%  endfor %}
     </div>
 {%- endmacro %}
+
+
+{% macro feedback_list_display(document, feedback_list, header_type) -%}
+    {% if feedback_list.id == document.id %}
+        {% for feedback in feedback_list %}
+            <div class="panel-body">
+                <h{{ header_type }}>
+                    <a href="/feedback/{{ document.id }}/{{ feedback.id }}/view">
+                        <small>(feedback)</small>
+                        {{ feedback.last_updated|feedback_datetime }}
+                        {% if feedback.viewed == False %}
+                            <span class="label label-warning">New</span>
+                        {% endif %}
+                    </a>
+                </h{{ header_type }}>
+            </div>
+        {% endfor %}
+    {% endif %}
+{%- endmacro %}
+
+
+

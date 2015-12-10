@@ -118,3 +118,7 @@ class Section(db.EmbeddedDocument):
             self.enable_section()
         elif UTIL.get_question_config(group, id)['enabled'] == False:
             self.disable_section()
+
+
+
+    meta = {'allow_inheritance': True}

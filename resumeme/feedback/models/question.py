@@ -72,3 +72,7 @@ class Question(db.EmbeddedDocument):
 
     def is_enabled(self):
         return self.question_enabled
+
+
+
+    meta = {'allow_inheritance': True}

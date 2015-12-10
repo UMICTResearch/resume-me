@@ -124,3 +124,7 @@ class Feedback(db.EmbeddedDocument):
         else:
             # nothing (this is an error)
             pass
+
+
+
+    meta = {'allow_inheritance': True}

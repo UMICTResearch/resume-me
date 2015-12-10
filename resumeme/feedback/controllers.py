@@ -3,6 +3,8 @@ from flask.ext.login import (current_user, login_required)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime
+from resumeme.accounts import models as accountmodels
+from resumeme.resume import models as resumemodels
 
 from resumeme.utils.controllers import send_mail
 
@@ -40,7 +42,8 @@ def test(state):
 @feedback.route('/feedback')
 @login_required
 def feedback_main():
-    user = models.User.objects(db_query(user=current_user.id))
+    #user = accountsmodels.User.objects(db_query(user=current_user.id))
+    user = accountmodels.User.objects.with_id(current_user.id)
 
     # This segment is for the job seeker
     if user.role == "jobseeker":
@@ -53,25 +56,31 @@ def feedback_main():
         # The view expects the list of resume and feedback lists that
         # it can iterate over.
         #
-        user_resume_list = models.Resume.objects(user=current_user.id)
-        for resume in user_resume_list:
-            user_feedback_list.append(resume.feedback_list.get_feedback_list())
+        user_reviewme_document_list = resumemodels.Resume.objects(user=current_user.id)
+        reviewme_document_feedback_list_array = []
+        if user_reviewme_document_list != 0:
+            # Essentially for each resume
+            for reviewme_document in user_reviewme_document_list:
+                # Get the list of feedback for each resume and put it into an array creating
+                # a 2D array. It indexes the feedback of each document.
+                if reviewme_document.feedback_list != 0:
+                    reviewme_document_feedback_list_array.append(reviewme_document.feedback_list)
 
         # Data passed to the templates.
         templateData = {
-            'resume': user_resume_list,
-            'feedback': user_feedback_list
+            'document_list': user_reviewme_document_list,
+            'feedback_list_array': reviewme_document_feedback_list_array
         }
         return render_template('feedback/seeker.html', **templateData)
     elif user.role == "volunteer":
 
-        user_resume_list = models.Resume.objects(
+        user_reviewme_document_list = resumemodels.Resume.objects(
             db_query(user__ne=current_user.id) &
             db_query(lock=False)
         )
 
         templateData = {
-            'resume': user_resume_list
+            'resume': user_reviewme_document_list
         }
         return render_template('feedback/volunteer.html', **templateData)
     else:
@@ -124,8 +133,9 @@ def volunteer_add_feedback(resume_id):
             # associate feedback to resume owner
             feedback.user = feedback.resume.user
 
+
             # associate it to volunteer
-            volunteer = models.User.objects.with_id(current_user.id)
+            volunteer = accountsmodels.User.objects.with_id(current_user.id)
             feedback.volunteer = volunteer
             feedback.save()
 

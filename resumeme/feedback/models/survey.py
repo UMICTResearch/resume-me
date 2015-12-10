@@ -80,3 +80,7 @@ class Survey(db.EmbeddedDocument):
             self.enable_survey()
         elif UTIL.get_question_config(question_group, question_id)['enabled'] == False:
             self.disable_survey()
+
+
+
+    meta = {'allow_inheritance': True}

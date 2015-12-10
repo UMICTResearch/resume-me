@@ -36,3 +36,7 @@ class FeedbackList(db.Document)
         return self.feedback_list
 
 
+
+    meta = {'allow_inheritance': True}
+
+
