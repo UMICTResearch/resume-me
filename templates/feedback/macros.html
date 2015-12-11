@@ -10,7 +10,7 @@
     </div>
 {%- endmacro %}
 
-
+{# TODO: Need to create a function that calls the various "block" functions based on type of document #}
 {% macro resume_block(content, upload_path, col_size) -%}
     <div id="resume" class="col-md-{{ col_size }}">
         <div class="well">
@@ -43,13 +43,11 @@
 {%- endmacro %}
 
 
-{% macro stars(code) -%}
+{% macro stars(max_rating, question_id) -%}
     <span class="star-rating">
-        <input type="radio" name="rating_{{ code }}" value="1" required data-toggle="tooltip" title="poor"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="2" required data-toggle="tooltip" title="okay"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="3" required data-toggle="tooltip" title="fair"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="4" required data-toggle="tooltip" title="good"><i></i>
-        <input type="radio" name="rating_{{ code }}" value="5" required data-toggle="tooltip" title="excellent"><i></i>
+        {% for value in range(1, max_rating|int) %}
+            <input type="radio" name="rating_{{ question_id }}" value={{ value }} required data-toggle="tooltip"><i></i>
+        {% endfor %}
     </span>
     {{ stars_help() }}
 {%- endmacro %}
@@ -106,5 +104,29 @@
     {% endif %}
 {%- endmacro %}
 
+
+{% macro section_field(section) %}
+    {% if section.section_question.question_type == 0 %}
+        <div class="controls">
+            <textarea class="form-control input-md" rows=3 name="section_{{ section.section_question.question_id }}"
+                    id="{{ section.section_question.question_id }}" placeholder="Enter Feedback"
+                            required></textarea>
+        </div>
+
+    {# TODO Check to see if col_size and width are even necessary #}
+    {% elif section.section_question.question_type == 1 %}
+        <div class="text-center col-{{ col_size }}-{{ width }}" data-toggle="buttons">
+            {% for choice in section.section_question.question_choices: %}
+                <label class="btn btn-default btn-{{ size }} surveyChoice">
+                    <input type="radio" name="section_{{ section.section_question.question_id }}"
+                           id={{ section.section_question.question_id }} value="{{ loop.index }}" required>
+                        {{ choice }}</input></label>
+            {%  endfor %}
+        </div>
+    {% elif section.section_question.question_type == 2 %}
+        {# TODO Implement code for allowing multiple selections; in particular will need tags that differentiate
+           TODO the values #}
+    {% endif %}
+{%- endmacro %}
 
 

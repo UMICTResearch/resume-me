@@ -13,12 +13,10 @@ class ReviewMeDocument(db.Document):
     feedback_list = db.ListField(db.GenericReferenceField())
     type = "resume"
 
-
     meta = {'allow_inheritance': True}
 
 
 class Resume(ReviewMeDocument):
-
 
     meta = {'allow_inheritance': True}
 

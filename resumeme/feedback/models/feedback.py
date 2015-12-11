@@ -1,9 +1,13 @@
 from resumeme import db
+from datetime import datetime
+from flask.ext.login import current_user
+
 import resumeme.feedback.config as CONFIG
 import resumeme.feedback.constant as CONSTANT
 import resumeme.feedback.utils as UTIL
 
 from resumeme.accounts.models import User
+from resumeme.accounts import models as accounts_models
 
 from section import Section
 from survey import Survey
@@ -12,7 +16,9 @@ from survey import Survey
 class Feedback(db.EmbeddedDocument):
     # Version to keep track of model
     version = 1
-    # Date it was submitted
+    # Date it was created
+    creation_time = db.DateTimeField()
+    # Last timestamp before it became locked
     last_updated = db.DateTimeField()
     # Used to set feedback_lock and show the new feedback label. If False means it is still unviewed. On True
     # feedback_lock is set to True and the new flag disappears.
@@ -43,6 +49,9 @@ class Feedback(db.EmbeddedDocument):
         self.update_review_questions()
         self.update_feedback_sections()
 
+        # Directly set things that will only be set once ever.
+        self.creation_time = datetime.now()
+        self.volunteer = accounts_models.User.objects.with_id(current_user.id)
 
     # ---------------------------------------------------------------------------------------------------------
     # Knowing the relevant question group that is referred to in the all_questions variable in the config file
@@ -51,11 +60,6 @@ class Feedback(db.EmbeddedDocument):
 
     def review_questions_question_group(self):
         return "review"
-
-    # Way to know which volunteer worked on this resume data
-    def link_volunteer(self, user):
-        self.volunteer = user
-
 
     # ---------------------------------------------------------------------------------------------------------
     # NOTE: This is where the question_group and question_id come from.
@@ -94,6 +98,24 @@ class Feedback(db.EmbeddedDocument):
         survey.create_survey_question(self.review_questions_question_group(), question_id)
         self.review_questions.append(survey)
 
+    # ---------------------------------------------------------------------------------------------------------
+    # These are the functions that allow the answers from the user to be added to the node.
+    #
+    def add_responses_to_feedback_sections(self, request):
+        active_feedback_sections = self.get_active_feedback_sections()
+        for active_section in active_feedback_sections:
+            self.feedback_sections[int(active_section.section_question.question_id)].add_section_rating(
+                request.form.get("rating_"+active_section.section_question.question_id))
+            self.feedback_sections[int(active_section.section_question.question_id)].add_section_response(
+                request.form.get("section_"+active_section.section_question.question_id))
+
+    def get_active_feedback_sections(self):
+        active_feedback_section_list = []
+        for section in self.feedback_sections:
+            if section.is_enabled():
+                active_feedback_section_list.append(section)
+        return active_feedback_section_list
+
 
     # ---------------------------------------------------------------------------------------------------------
     # Once viewed, the new flag disappears (that is simply a logic test). However, this function also locks the
@@ -124,7 +146,6 @@ class Feedback(db.EmbeddedDocument):
         else:
             # nothing (this is an error)
             pass
-
 
 
     meta = {'allow_inheritance': True}

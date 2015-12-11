@@ -20,11 +20,19 @@ all_questions = \
             # Question
             '1' : #id
                 {
+                    'text' : "Skills",
+                    'type' : TEXT,
+                    'choices' : NO_CHOICES,
+                    'enabled' : True
+                },
+            # Question
+            '2' : #id
+                {
                     'text' : "Education",
                     'type' : SINGLE,
                     'choices' : ["good", "bad"],
                     'enabled' : True
-                }
+                },
         },
 
         # These questions pertain to specific sections. Same set applies to all questions.
