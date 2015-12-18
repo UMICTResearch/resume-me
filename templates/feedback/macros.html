@@ -130,3 +130,44 @@
 {%- endmacro %}
 
 
+{% macro feedback_view(sections) %}
+    {% for section in sections %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="panel-title">{{ section.section_question.question_text }}</h2>
+                <div>
+                    <div>
+                        <label>Rating</label> {{ stars_static(section.section_rating) }}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                {{ section_field_view(section) }}
+            </div>
+        </div>
+    {% endfor %}
+
+
+{% macro section_field_view(section) %}
+    <div class="col-md-6">
+        {% if section.section_question.question_type == 0 %}
+            <div>
+                {{ section.section_response }}
+            </div>
+            {# TODO Check to see if col_size and width are even necessary #}
+        {% elif section.section_question.question_type == 1 %}
+            <div class="text-center col-{{ col_size }}-{{ width }}" data-toggle="buttons">
+                {% for choice in section.section_question.question_choices: %}
+                    <label class="btn btn-default btn-{{ size }} surveyChoice">
+                        <input type="radio" name="section_{{ section.section_question.question_id }}"
+                               id={{ section.section_question.question_id }} value="{{ loop.index }}" required>
+                        {{ choice }}</input></label>
+                {% endfor %}
+            </div>
+        {% elif section.section_question.question_type == 2 %}
+            {# TODO Implement code for allowing multiple selections; in particular will need tags that differentiate
+               TODO the values #}
+        {% endif %}
+    </div>
+{%- endmacro %}
+

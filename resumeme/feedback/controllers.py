@@ -127,8 +127,8 @@ def volunteer_add_feedback(resume_id):
             # Now save both the document and the feedback_list
             requested_document.feedback_list.save()
             requested_document.save()
-            #return redirect('/feedback/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
-            return render_template('feedback/volunteer.html')
+
+            return redirect('/feedback/%s/%s/%s' % (requested_document.id, feedback_list.feedback_threshhold, state))
 
 
             #feedback.validate()
@@ -175,12 +175,12 @@ def volunteer_add_feedback(resume_id):
 # View of Resume with Feedback and whether it needs a flash saying
 # saved or not.
 #
-@feedback.route('/feedback/<resume_id>/<feedback_id>/<state>')
+@feedback.route('/feedback/<resume_id>/<feedback_threhhold>/<state>')
 @login_required
-def entry_page(resume_id, feedback_id, state="view"):
+def entry_page(resume_id, feedback_threshhold, state="view"):
     # get class resume entry with matching slug
     resume = models.Resume.objects().with_id(resume_id)
-    feedback = models.Feedback.objects().with_id(feedback_id)
+    feedback =  resume.feedback_list[((CONSTANTS.MAX_VOLUNTEER_PER_FEEDBACK - feedback_threshhold) - 1)]
 
     if resume and feedback:
         # Display this only when the feedback is freshly saved and not when it is just being viewed.
