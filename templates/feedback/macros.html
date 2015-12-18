@@ -45,7 +45,7 @@
 
 {% macro stars(max_rating, question_id) -%}
     <span class="star-rating">
-        {% for value in range(1, max_rating|int) %}
+        {% for value in range(0, max_rating|int) %}
             <input type="radio" name="rating_{{ question_id }}" value={{ value }} required data-toggle="tooltip"><i></i>
         {% endfor %}
     </span>

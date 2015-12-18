@@ -6,6 +6,7 @@ from datetime import datetime
 from resumeme.accounts import models as accounts_models
 from resumeme.resume import models as reviewme_document_model
 import models.feedback as feedback_models
+import models.feedback_list as feedback_list_models
 
 from resumeme.utils.controllers import send_mail
 
@@ -65,8 +66,8 @@ def feedback_main():
             for reviewme_document in user_reviewme_document_list:
                 # Get the list of feedback for each resume and put it into an array creating
                 # a 2D array. It indexes the feedback of each document.
-                if reviewme_document.feedback_list != 0:
-                    reviewme_document_feedback_list_array.append(reviewme_document.feedback_list)
+                if reviewme_document.feedback_list is not None:
+                    reviewme_document_feedback_list_array.append(reviewme_document.feedback)
 
         # Data passed to the templates.
         templateData = {
@@ -113,8 +114,20 @@ def volunteer_add_feedback(resume_id):
 
             feedback.add_responses_to_feedback_sections(request)
             feedback.validate()
-            feedback.save()
+            # push onto feedback list
+            # Update remaining feedbacks available
+            # feedback_ list.save()
 
+            # If new feedback_list needed create it OR load the feedback_list
+            if requested_document.feedback_list is None:
+                requested_document.feedback_list = feedback_list_models.FeedbackList()
+
+            requested_document.feedback_list.append_object_to_feedback_list(feedback)
+
+            # Now save both the document and the feedback_list
+            requested_document.feedback_list.save()
+            requested_document.save()
+            #return redirect('/feedback/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
             return render_template('feedback/volunteer.html')
 
 
