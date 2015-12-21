@@ -1,6 +1,6 @@
 # File upload settings
 ENV = 'dev'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'jpg', 'png', 'jpeg'])
 
 ###
 # Application wide Error Messages
