@@ -48,7 +48,6 @@ def feedback_main():
 
     # This segment is for the job seeker
     if user.role == "jobseeker":
-
         # Get the resume object list from the database and then
         # get all the feedback lists for each resume and create an
         # array out of them. That array will be passed and iterated over
@@ -67,7 +66,8 @@ def feedback_main():
                 # Get the list of feedback for each resume and put it into an array creating
                 # a 2D array. It indexes the feedback of each document.
                 if reviewme_document.feedback_list is not None:
-                    reviewme_document_feedback_list_array.append(reviewme_document.feedback)
+                    # This variable is just passed to the template to parse.
+                    reviewme_document_feedback_list_array.append(reviewme_document.feedback_list)
 
         # Data passed to the templates.
         templateData = {
@@ -101,9 +101,6 @@ def volunteer_add_feedback(resume_id):
 
     if request.method == "POST" and requested_document.lock is False:
         try:
-            # Tells the feedback display page that the feedback was freshly created and saved.
-            state = "saved"
-
             # Iterate over the section list and use the question_id to determine
             # what the html id will be e.g. rating_0001 and so on. This would construct the
             # the string that would be needed to be passed to the form.get request.
@@ -114,21 +111,32 @@ def volunteer_add_feedback(resume_id):
 
             feedback.add_responses_to_feedback_sections(request)
             feedback.validate()
+
             # push onto feedback list
             # Update remaining feedbacks available
             # feedback_ list.save()
 
             # If new feedback_list needed create it OR load the feedback_list
+            print "ONE"
+            ### TODO WHY DOES IT BREAK HERE?
+            print requested_document.feedback_list.feedback_threshhold
+            print "TWO"
             if requested_document.feedback_list is None:
+                print "THREE"
                 requested_document.feedback_list = feedback_list_models.FeedbackList()
+                print "FOUR"
 
+            print "FIVE"
             requested_document.feedback_list.append_object_to_feedback_list(feedback)
 
             # Now save both the document and the feedback_list
             requested_document.feedback_list.save()
             requested_document.save()
 
-            return redirect('/feedback/%s/%s/%s' % (requested_document.id, feedback_list.feedback_threshhold, state))
+            # Tells the feedback display page that the feedback was freshly created and saved.
+            state = "saved"
+            return redirect('/feedback/%s/%s/%s' % (requested_document.id,
+                                                    requested_document.feedback_list.feedback_threshhold, state))
 
 
             #feedback.validate()
@@ -211,60 +219,60 @@ def entry_page(resume_id, feedback_threshhold, state="view"):
         return render_template('404.html')
 
 
-# Give Review of feedback
+## Give Review of feedback
+##
+#@feedback.route('/feedback/<resume_id>/<feedback_id>/review', methods=['GET', 'POST'])
+#@login_required
+#def review(resume_id, feedback_id):
+#    resume = models.Resume.objects().with_id(resume_id)
+#    feedback = models.Feedback.objects().with_id(feedback_id)
 #
-@feedback.route('/feedback/<resume_id>/<feedback_id>/review', methods=['GET', 'POST'])
-@login_required
-def review(resume_id, feedback_id):
-    resume = models.Resume.objects().with_id(resume_id)
-    feedback = models.Feedback.objects().with_id(feedback_id)
-
-    # If model is old
-    if hasattr(feedback, "version") is False:
-        flash(utils.get_message_text("sorry_old_model"))
-        return redirect('/feedback')
-
-    if request.method == "POST" and feedback.review_lock is False:
-        # Takes the Seeker's input to create the entry in the database
-        try:
-            feedback.first_question = request.form.get('question_1')
-            feedback.second_question = request.form.get('question_2')
-            feedback.third_question = request.form.get('question_3')
-
-            feedback.first_section.review = request.form.get('section_1')
-            feedback.second_section.review = request.form.get('section_2')
-            feedback.third_section.review = request.form.get('section_3')
-            feedback.fourth_section.review = request.form.get('section_4')
-            feedback.fifth_section.review = request.form.get('section_5')
-
-            feedback.validate()
-
-            feedback.update(review_lock=True)
-            feedback.save()
-
-            message_to_display = "saved"
-            if request.form.get('thank_you') == CONSTANTS.CHOICE_ONE:
-                subject = "[review-me] Thank you!"
-                host_url = request.url_root
-                user = feedback.volunteer
-                send_mail(subject, user.email, 'thank_you',
-                          user=user, url=host_url, resume=resume)
-                message_to_display = "saved_and_sent"
-                feedback.update(thank_you_message=True)
-                feedback.save()
-            return redirect('/review/%s' % message_to_display)
-
-        except ValidationError as e:
-            print "Error:", e
-            flash("There was an error with the submission. Please try again.")
-            return redirect('/feedback/%s/%s/review' % (feedback.resume.id, feedback.id))
-
-
-    else:
-        # Shows the survey page (review)
-        templateData = {
-            'title': 'Rate Your Feedback',
-            'resume': resume,
-            'feedback': feedback
-        }
-        return render_template('feedback/review.html', **templateData)
+#    # If model is old
+#    if hasattr(feedback, "version") is False:
+#        flash(utils.get_message_text("sorry_old_model"))
+#        return redirect('/feedback')
+#
+#    if request.method == "POST" and feedback.review_lock is False:
+#        # Takes the Seeker's input to create the entry in the database
+#        try:
+#            feedback.first_question = request.form.get('question_1')
+#            feedback.second_question = request.form.get('question_2')
+#            feedback.third_question = request.form.get('question_3')
+#
+#            feedback.first_section.review = request.form.get('section_1')
+#            feedback.second_section.review = request.form.get('section_2')
+#            feedback.third_section.review = request.form.get('section_3')
+#            feedback.fourth_section.review = request.form.get('section_4')
+#            feedback.fifth_section.review = request.form.get('section_5')
+#
+#            feedback.validate()
+#
+#            feedback.update(review_lock=True)
+#            feedback.save()
+#
+#            message_to_display = "saved"
+#            if request.form.get('thank_you') == CONSTANTS.CHOICE_ONE:
+#                subject = "[review-me] Thank you!"
+#                host_url = request.url_root
+#                user = feedback.volunteer
+#                send_mail(subject, user.email, 'thank_you',
+#                          user=user, url=host_url, resume=resume)
+#                message_to_display = "saved_and_sent"
+#                feedback.update(thank_you_message=True)
+#                feedback.save()
+#            return redirect('/review/%s' % message_to_display)
+#
+#        except ValidationError as e:
+#            print "Error:", e
+#            flash("There was an error with the submission. Please try again.")
+#            return redirect('/feedback/%s/%s/review' % (feedback.resume.id, feedback.id))
+#
+#
+#    else:
+#        # Shows the survey page (review)
+#        templateData = {
+#            'title': 'Rate Your Feedback',
+#            'resume': resume,
+#            'feedback': feedback
+#        }
+#        return render_template('feedback/review.html', **templateData)

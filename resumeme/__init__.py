@@ -13,7 +13,7 @@ app = Flask("ResumeMeApp")
 
 # database connection
 app.config['MONGODB_SETTINGS'] = {
-    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'test-1215'}
+    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'test-1223'}
 app.config['SECRET_KEY'] = 'This string will be replaced'
 
 app.debug = os.environ.get('DEBUG', True)

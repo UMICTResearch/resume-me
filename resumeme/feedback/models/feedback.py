@@ -38,6 +38,7 @@ class Feedback(db.EmbeddedDocument):
     volunteer = db.ReferenceField(User)
 
 
+    # ---------------------------------------------------------------------------------------------------------
     # TODO: INITIALIZATION Methods
     # TODO: (Implement) -- 4) Save to Database (will have the try-except statement)
     # TODO: (Implement) -- 5) Fill all Survey answers as received by user (map to the current enabled and unlocked
@@ -45,13 +46,15 @@ class Feedback(db.EmbeddedDocument):
     # TODO: (Implement) -- 6) Fill all Section answers as received by user (map to the current enabled sections)
     # TODO:                   this will receive the data as a giant block
     def __init__(self):
-        super(Feedback, self).__init__()
-        self.update_review_questions()
-        self.update_feedback_sections()
+        pass
+        #super(Feedback, self).__init__()
+        #db.EmbeddedDocument.__init__(self)
+        #self.update_review_questions()
+        #self.update_feedback_sections()
 
         # Directly set things that will only be set once ever.
-        self.creation_time = datetime.now()
-        self.volunteer = accounts_models.User.objects.with_id(current_user.id)
+        #self.creation_time = datetime.now()
+  #      self.volunteer = accounts_models.User.objects.with_id(current_user.id)
 
     # ---------------------------------------------------------------------------------------------------------
     # Knowing the relevant question group that is referred to in the all_questions variable in the config file
@@ -66,6 +69,8 @@ class Feedback(db.EmbeddedDocument):
     #
     # TODO: (Verify) If it is an object created by the database query it should load the data automatically also.
     # TODO: (Implement) If it doesn't then we will need to call it after we set a variable equal to the returned object.
+    #
+    # TODO: Modify this to make it so that it doesn't append questions. Just reads them anew.
     def update_review_questions(self):
         group = self.review_questions_question_group()
         # all_questions is a Dict object
