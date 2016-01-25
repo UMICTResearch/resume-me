@@ -347,7 +347,7 @@
                     name: 'Review',
                     colorByPoint: true,
                     data: [{
-                        name: 'Feedbacks',
+                        name: 'Feedback',
                         y: {{ feedbacks|count }}
 
                     }, {
@@ -519,7 +519,7 @@
                 },
 
                 series: [{
-                    name: 'Resume Created',
+                    name: 'Resume Uploaded',
                     lineWidth: 0,
                     data: [
                         {% for key, value in resumecreated.items() %}
@@ -582,7 +582,7 @@
                 },
 
                 series: [{
-                    name: 'Total Resume Uploaded',
+                    name: 'Total Resumes Uploaded',
                     data: [
                         {% for key, value in totalsortedresume.items() %}
                             [Date.UTC{{ key }}, {{ value }}],
