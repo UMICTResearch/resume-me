@@ -6,20 +6,28 @@
 
 ## Table of Contents
 1. [Coding Standards](#coding-standards)
-2. [Installation Instructions](#installation-instructions)
-3. [Run the application on your local system](#run the application on your local system)
-4. [Code Push](#code-push)
+2. [Mail Server Information](#mail-server-information)
+3. [Installation Instructions](#installation-instructions)
+4. [Run the application on your local system](#run-the-application-on-your-local-system)
+5. [Code Push](#code-push)
 
-##Coding Standards
+
+## Coding Standards
 - Strictly follow PEP8 coding standards
   - You can install pep8 checkers (https://pypi.python.org/pypi/pep8):
     - Linux (Ubuntu) - sudo apt-get install pep8 python-autopep8
     - OR simply using pip - pip install pep8
 - Use the editorconfig file with preferred IDE for consistency
 
-##Installation Instructions
+## Mail Server Information 
 
-####Mongodb
+A new email address is registered for the mail server.
+- Username: sig.umsi@gmail.com
+- Password: SocialInnovationsGroup
+
+## Installation Instructions
+
+#### Mongodb
 Ubuntu official repository can be used for installing mongodb but it is advised to install the latest version using the following method.
 
 1. Adding key to validate new mongodb sources
@@ -46,8 +54,9 @@ For installation on Macs, you can use the following method.
 5. Check status
 ````mongod status````
 
-####Python
+#### Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
+- Note: This application is based on Python 2.
 - Install the following packages: python, python-dev, pip and virtual-environment.
   - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "pip install virtual-environment"
   - Linux (Ubuntu): "sudo apt-get install python python-dev python-pip python-virtualenv virtualenvwrapper" (enter)
@@ -57,7 +66,7 @@ For installation on Macs, you can use the following method.
 - To activate python virtual environment, "source venv/bin/activate"
 - To install all remaining python packages in the virtual environment: pip install -r requirements.txt
 
-####Nodejs, Gulp, Bower
+#### Nodejs, Gulp, Bower
 - Install nodeJS (https://nodejs.org/download/)
 
 For installation on Macs, you'll need to run the first command with "sudo" ; ignore otherwise
@@ -92,17 +101,41 @@ $ bower install
 $ gulp
 ````
 
-##Run the application on your local system
-- Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
+## Run the application on your local system
+
+#### Create Virtual Environment
+- Initiate virtual environment
+````
+vituralenv venv
+````
+- Install requirements.txt 
+````
+pip install -r requirements.txt
+````
+
+- Activate virtual environment 
+````
+source venv/bin/activate
+````
+
+#### Initial MongoDB
+````
+mongod
+````
+
+#### Configure the flask application 
+````
+python run.py
+````
 - You may have to create a secret key, the instructions will be provided in the terminal
 - After you have run the commands for the secret key re-type "python run.py"
 - The server starts and the website is accessible at: http://127.0.0.1:4500/
 - To quit the application, use - "CTRL + C"
 - To exit the virtual environment, type "deactivate"
 
-##Code Push
+## Code Push
 
-####For smaller bug fixes
+#### For smaller bug fixes
 
 1. Clone repository (if you have not already cloned the repository)
 Execute: "$ git clone 'reponame'"
@@ -120,20 +153,20 @@ Execute: "$ git push origin hotfix"
 9. Assign the pull request to another team member
 10. Inform the team member to review code and merge into master
 
-####For Readme
+#### For Readme
 
 All steps are the same except, replace name of branch "hotfix" with "readme". For example, if you are making updates 
 to the readme (for the first time and don't have a readme branch listed), you will need to Execute: 
 "$ git checkout -b readme origin/master". However, if you Execute: "$ git branch -a" and see that you already have a 
 readme branch, simply Execute "$git checkout readme".
 
-####For new features
+#### For new features
 
 All steps are the same except, replace name of branch "hotfix" or "readme" with the name of your branch, like "feature-1"
 
-####For errors
+#### For errors
 If you have committed something prematurely, you may need to Execute: "$ git reset --hard HEAD" but with caution
 
 
+#### Stay tuned for more instructions
 
-####Stay tuned for more instructions

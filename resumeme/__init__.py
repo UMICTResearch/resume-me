@@ -37,13 +37,13 @@ login_manager.init_app(app)
 # Adding Mail Support
 # email server
 app.config.update(
-    MAIL_SERVER='smtp.mandrillapp.com',
-    MAIL_PORT=587,
-    MAIL_USE_TLS=True,
-    MAIL_USE_SSL=False,
-    MAIL_USERNAME='umichictresearch@gmail.com',
-    MAIL_PASSWORD='syknj9Tp5IR41t0CKN8w9w',
-    DEFAULT_MAIL_SENDER='umichictresearch@gmail.com'
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=465,
+    MAIL_USE_TLS=False,
+    MAIL_USE_SSL=True,
+    MAIL_USERNAME='sig.umsi@gmail.com',
+    MAIL_PASSWORD='SocialInnovationsGroup',
+    DEFAULT_MAIL_SENDER='sig.umsi@gmail.com'
 )
 mail = Mail(app)
 
