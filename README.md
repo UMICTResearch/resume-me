@@ -118,10 +118,16 @@ pip install -r requirements.txt
 source venv/bin/activate
 ````
 
-#### Initial MongoDB
+#### Run MongoDB
 ````
 mongod
 ````
+If you see the error message of "exception in initAndListen: IllegalOperation: Attempted to create a lock file on a read-only directory: /data/db, terminating", please use 
+````
+sudo mongod
+````
+How to run MongoDB on mac? https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
+How to run MongoDB on Windows? https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 
 #### Configure the flask application 
 ````
