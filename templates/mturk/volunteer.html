@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+    <div class="container">
+        <div class="row">
+
+            {% for r in resume if r.user.active and current_user.id != r.user.id %}
+
+                <div class="col-md-6 col-md-offset-3 panel panel-default">
+                    <h4 class="panel-body text-center">
+                        <p><a href="/resume/{{ r.id }}">
+                            <small>(resume)</small>
+                            {{ r.title }}</a></p>
+
+                        <p><a href="/mturk/{{ r.id }}/create" class="btn btn-info btn-md">
+                            give feedback</a></p>
+                    </h4>
+                </div>
+
+            {% else %}
+
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="alert alert-danger center-block" role="alert">
+                        There are no resumes' available for review. Please check back later.
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}
