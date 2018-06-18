@@ -15,7 +15,9 @@ mturk = Blueprint('mturk', __name__, template_folder='templates')
 #
 @mturk.route('/mturk')
 def mturk_feedback_main():
-    user_resume_list = models.Resume.objects()
+    user_resume_list = models.Resume.objects(
+        db_query(lock=False)
+        )
 
     templateData = {
         'resume': user_resume_list
@@ -27,7 +29,7 @@ def mturk_feedback_main():
 @mturk.route("/mturk/<resume_id>/create", methods=["GET", "POST"])
 def mturk_volunteer_add_feedback(resume_id):
     resume_requested = models.Resume.objects().with_id(resume_id)
-    if request.method == "POST":
+    if request.method == "POST" and resume_requested.lock is False:
         try:
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
@@ -84,6 +86,9 @@ def mturk_volunteer_add_feedback(resume_id):
                 'resume': models.Resume.objects().with_id(resume_id)
             }
             return render_template('mturk/edit.html', **template_data)
+
+    elif resume_requested.lock is True:
+        return render_template('404.html')
 
     else:
         template_data = {
