@@ -19,7 +19,7 @@
             {{ macros.resume_block(resume.content, resume.file_upload, "7") }}
 
             <div class="col-md-5">
-                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal vividHeaders mturk_form">
+                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal vividHeaders">
 
                     {{ macros.flashed_messages("danger") }}
 
@@ -58,5 +58,9 @@
             </div>
         </div>
     </div>
+
+    <form id="mturk_form"/>
+    <button onclick="alert('Thanks for submitting the HIT!'); $('#mturk_form').submit();">Submit HIT</button>
+
 
 {% endblock %}

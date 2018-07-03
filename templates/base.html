@@ -24,8 +24,11 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"
             type="application/javascript"></script>
+    <script src="{{ url_for('static', filename='js/mturk.js') }}"
+        type="application/javascript"></script>
     <script src="{{ url_for('static', filename='js/global.js') }}"
             type="application/javascript"></script>
 {% endblock %}
