@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed
-from flask.ext.login import (current_user, login_required)
+from flask.ext.login import (current_user, login_required, login_user)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime
 from threading import Timer
+from resumeme.libs.User import User
 
 import models
 import constants as CONSTANTS
@@ -12,19 +13,37 @@ import time
 
 mturk = Blueprint('mturk', __name__, template_folder='templates')
 
-def unlock(resume):
-    print(resume.lock)
-    print("Unlock Now " + str(resume.id))
-    resume.update(lock = False)
-    current_resume = models.Resume.objects().with_id(resume.id)
+def register_mturk():
+    email = 'mturk@review-me.com'
+    username = 'mturk'  
+    password = ''
+    role_initial = ''
+    role = ''
+    location = '' 
+    source = ''
+    sourceoptional = ''
 
-    print(current_resume.lock)
+    user = User(email, username, password, role_initial, role, location, source, sourceoptional)
+    user.save()  
+
+    return user
 
 
 # List of Resume or Feedback seen based on role
 #
 @mturk.route('/mturk', methods=["GET", "POST"])
 def mturk_feedback_main():
+
+    # Login as mturk volunteer
+
+    userObj = User()
+    user = userObj.get_by_username("mturk")
+
+    # Create a new mturk volunteer account if the account does not exist 
+
+    if not user:
+        user = register_mturk()
+    login_user(user, remember="no")   
 
     resume_id = ''
 
