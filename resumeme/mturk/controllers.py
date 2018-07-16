@@ -35,12 +35,10 @@ def register_mturk():
 def mturk_feedback_main():
 
     # Login as mturk volunteer
-
     userObj = User()
     user = userObj.get_by_username("mturk")
 
     # Create a new mturk volunteer account if the account does not exist 
-
     if not user:
         user = register_mturk()
     login_user(user, remember="no")   
@@ -51,18 +49,14 @@ def mturk_feedback_main():
         db_query(lock=False)
         )
 
-    print(len(user_resume_list))
-
     if len(user_resume_list) != 0:
 
         for resume in user_resume_list:
 
             # Check if timedelta between the current time and the last-reviewed time is already over one hour
-
             if (datetime.now()-resume.last_reviewed).seconds > 3600:
                 resume_requested = resume
                 resume_id = resume.id
-                print("current resume id" + str(resume_requested.id))
                 break
             else:
                 continue
@@ -76,12 +70,12 @@ def mturk_feedback_main():
         if request.method == "POST":
 
             current_id = request.form.get('resume_id')
-            print(current_id)
             current_resume = models.Resume.objects().with_id(current_id)
 
             if current_resume.lock is False:
                 try:
-                    # Tells the feedback display page that the feedback was freshly created and saved.
+
+                    # Tells the feedback display page that the feedback was freshly created and saved. 
                     state = "saved"
                     created = datetime.now()
 
@@ -150,8 +144,8 @@ def mturk_feedback_main():
             }
 
             # Update the last_reviewed timestamp 
-
             current_resume.update(last_reviewed = datetime.now())
+            
             return render_template('mturk/edit.html', **template_data)           
 
     else:
