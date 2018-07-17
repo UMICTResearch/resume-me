@@ -10,7 +10,7 @@
  **/
 
 // selector used by jquery to identify your form
-var form_selector = "#mturk_form";
+var form_selector = ".mturk_form";
 
 // function for getting URL parameters
 function gup(name) {
