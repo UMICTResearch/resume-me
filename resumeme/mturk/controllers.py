@@ -15,16 +15,16 @@ mturk = Blueprint('mturk', __name__, template_folder='templates')
 
 def register_mturk():
     email = 'mturk@review-me.com'
-    username = 'mturk'  
+    username = 'mturk'
     password = ''
     role_initial = ''
     role = ''
-    location = '' 
+    location = ''
     source = ''
     sourceoptional = ''
 
     user = User(email, username, password, role_initial, role, location, source, sourceoptional)
-    user.save()  
+    user.save()
 
     return user
 
@@ -34,14 +34,18 @@ def register_mturk():
 @mturk.route('/mturk', methods=["GET", "POST"])
 def mturk_feedback_main():
 
+    # Get the assignment_id from url parameter
+    # assignmentId is ASSIGNMENT_ID_NOT_AVAILABLE in preview mode
+    assignment_id = request.args.get('assignmentId', 'None')
+
     # Login as mturk volunteer
     userObj = User()
     user = userObj.get_by_username("mturk")
 
-    # Create a new mturk volunteer account if the account does not exist 
+    # Create a new mturk volunteer account if the account does not exist
     if not user:
         user = register_mturk()
-    login_user(user, remember="no")   
+    login_user(user, remember="no")
 
     resume_id = ''
 
@@ -62,8 +66,8 @@ def mturk_feedback_main():
                 continue
 
         if resume_id == '':
-            # No resume is avialable 
-            return render_template('no_resume.html')                 
+            # No resume is avialable
+            return render_template('no_resume.html')
 
         current_resume = models.Resume.objects().with_id(resume_id)
 
@@ -74,8 +78,7 @@ def mturk_feedback_main():
 
             if current_resume.lock is False:
                 try:
-
-                    # Tells the feedback display page that the feedback was freshly created and saved. 
+                    # Tells the feedback display page that the feedback was freshly created and saved.
                     state = "saved"
                     created = datetime.now()
 
@@ -115,6 +118,7 @@ def mturk_feedback_main():
 
                     feedback.save()
 
+
                     # push feedback onto resume feedback_list reference list
                     models.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
                     current_resume.save()
@@ -132,10 +136,10 @@ def mturk_feedback_main():
                     return render_template('mturk/edit.html', **template_data)
 
             elif current_resume.lock is True:
-                # Resume has been reviewed 
-                return render_template('404.html')            
+                # Resume has been reviewed
+                return render_template('404.html')
 
-        else: 
+        else:
             # Default
             template_data = {
                 'title': 'Give Feedback',
@@ -143,14 +147,16 @@ def mturk_feedback_main():
                 'resume': models.Resume.objects().with_id(resume_id)
             }
 
-            # Update the last_reviewed timestamp 
-            current_resume.update(last_reviewed = datetime.now())
-            
-            return render_template('mturk/edit.html', **template_data)           
+            # Update the last_reviewed timestamp
+            # No update in preview mode
+            if assignment_id != "ASSIGNMENT_ID_NOT_AVAILABLE":
+                current_resume.update(last_reviewed = datetime.now())
+
+            return render_template('mturk/edit.html', **template_data)
 
     else:
-        # No resume is avialable 
-        return render_template('no_resume.html')        
+        # No resume is avialable
+        return render_template('no_resume.html')
 
 @mturk.route('/mturk/<resume_id>/<feedback_id>/<state>')
 def mturk_entry_page(resume_id, feedback_id, state="view"):
