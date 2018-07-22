@@ -65,7 +65,7 @@ def mturk_feedback_main():
         for resume in user_resume_list:
 
             # Check if timedelta between the current time and the last-reviewed time is already over one hour
-            if (datetime.now()-resume.last_reviewed).seconds > 300:
+            if (datetime.now()-resume.last_reviewed).seconds > 3600:
                 resume_requested = resume
                 resume_id = resume.id
                 break
@@ -130,16 +130,7 @@ def mturk_feedback_main():
                     models.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
                     current_resume.save()
 
-                    # args = {"workerId": worker_id, "assignmentId": assignment_id, "hitId": hit_id, "turkSubmitTo": submit_hit_url}
-                    # return redirect('/mturk/%s/%s/%s?{}'.format(urllib.urlencode(args)) % (feedback.resume.id, feedback.id, state))
-
-                    # return redirect('/mturk/%s/%s/%s?workerId=%s&assignmentId=%s&hitId=%s&turkSubmitTo=%s' % (feedback.resume.id, feedback.id, state, worker_id, assignment_id, hit_id, submit_hit_url))
-
-                    # return redirect('/mturk/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
-
                     url_para = 'workerId=' + worker_id + '&assignmentId=' + assignment_id + '&hitId=' + 'hit_id' + '&turkSubmitTo=' + submit_hit_url
-
-                    print(url_para)
 
                     return redirect('/mturk/%s/%s/%s?%s' % (feedback.resume.id, feedback.id, state, url_para))
 
@@ -181,9 +172,6 @@ def mturk_feedback_main():
 
 @mturk.route('/mturk/<resume_id>/<feedback_id>/<state>')
 def mturk_entry_page(resume_id, feedback_id, state="view"):
-
-    temp = request.args.get('assignmentId')
-    print(temp)
 
     # get class resume entry with matching slug
     resume = models.Resume.objects().with_id(resume_id)
