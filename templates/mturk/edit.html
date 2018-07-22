@@ -19,7 +19,7 @@
             {{ macros.resume_block(resume.content, resume.file_upload, "7") }}
 
             <div class="col-md-5">
-                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal vividHeaders mturk_form">
+                <form method="POST" action="" id="volunteer_feedback_edit" class="form-horizontal vividHeaders">
 
                     {{ macros.flashed_messages("danger") }}
 
@@ -53,9 +53,16 @@
                             </div>
                         {% endfor %}
                     </fieldset>
-                    <input type="submit" value="Submit HIT" onsubmit="alert('Thanks for submitting the HIT!'); $('#mturk_form').submit();"
-                    class="btn btn-primary">
+                    <input type="submit" value="Submit feedback and show me hit button" class="btn btn-primary">
                 </form>
+
+                <form id ="mturk_form">
+                  {% if feedback_is_received %}
+                    <input type="submit" value="Submit Hit"
+                    onclick="alert('Thanks for submitting the HIT!'); $('.mturk_form').submit();">
+                  {% endif %}
+                </form>
+
 
             </div>
         </div>

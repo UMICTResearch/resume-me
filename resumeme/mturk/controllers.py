@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed
+from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed, session
 from flask.ext.login import (current_user, login_required, login_user)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime
 from threading import Timer
 from resumeme.libs.User import User
+import urllib
 
 import models
 import constants as CONSTANTS
@@ -12,6 +13,8 @@ import utils
 import time
 
 mturk = Blueprint('mturk', __name__, template_folder='templates')
+
+
 
 def register_mturk():
     email = 'mturk@review-me.com'
@@ -36,7 +39,11 @@ def mturk_feedback_main():
 
     # Get the assignment_id from url parameter
     # assignmentId is ASSIGNMENT_ID_NOT_AVAILABLE in preview mode
-    assignment_id = request.args.get('assignmentId', 'None')
+    assignment_id = request.args.get('assignmentId', '')
+    worker_id = request.args.get('workerId', '')
+    hit_id = request.args.get('hitId', '')
+    submit_hit_url = request.args.get('turkSubmitTo', '')
+
 
     # Login as mturk volunteer
     userObj = User()
@@ -58,7 +65,7 @@ def mturk_feedback_main():
         for resume in user_resume_list:
 
             # Check if timedelta between the current time and the last-reviewed time is already over one hour
-            if (datetime.now()-resume.last_reviewed).seconds > 3600:
+            if (datetime.now()-resume.last_reviewed).seconds > 300:
                 resume_requested = resume
                 resume_id = resume.id
                 break
@@ -123,7 +130,20 @@ def mturk_feedback_main():
                     models.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
                     current_resume.save()
 
-                    return redirect('/mturk/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
+                    # args = {"workerId": worker_id, "assignmentId": assignment_id, "hitId": hit_id, "turkSubmitTo": submit_hit_url}
+                    # return redirect('/mturk/%s/%s/%s?{}'.format(urllib.urlencode(args)) % (feedback.resume.id, feedback.id, state))
+
+                    # return redirect('/mturk/%s/%s/%s?workerId=%s&assignmentId=%s&hitId=%s&turkSubmitTo=%s' % (feedback.resume.id, feedback.id, state, worker_id, assignment_id, hit_id, submit_hit_url))
+
+                    # return redirect('/mturk/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
+
+                    url_para = 'workerId=' + worker_id + '&assignmentId=' + assignment_id + '&hitId=' + 'hit_id' + '&turkSubmitTo=' + submit_hit_url
+
+                    print(url_para)
+
+                    return redirect('/mturk/%s/%s/%s?%s' % (feedback.resume.id, feedback.id, state, url_para))
+
+
 
                 except ValidationError as e:
                     print "Error:", e
@@ -158,11 +178,17 @@ def mturk_feedback_main():
         # No resume is avialable
         return render_template('no_resume.html')
 
+
 @mturk.route('/mturk/<resume_id>/<feedback_id>/<state>')
 def mturk_entry_page(resume_id, feedback_id, state="view"):
+
+    temp = request.args.get('assignmentId')
+    print(temp)
+
     # get class resume entry with matching slug
     resume = models.Resume.objects().with_id(resume_id)
     feedback = models.Feedback.objects().with_id(feedback_id)
+
 
     if resume and feedback:
         # Display this only when the feedback is freshly saved and not when it is just being viewed.
@@ -179,7 +205,7 @@ def mturk_entry_page(resume_id, feedback_id, state="view"):
             'feedback': feedback
         }
 
-        return render_template('feedback/view.html', **templateData)
+        return render_template('mturk/view.html', **templateData)
 
     else:
         return render_template('404.html')
