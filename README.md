@@ -51,8 +51,10 @@ For installation on Macs, you can use the following method.
 ````brew install mongodb````
 4. MongoDB stores its data in the /data/db directory by default but it does not generate that folder structure for you. So, you have to create that directory.
 ````$ sudo mkdir -p /data/db````
-5. Check status
-````mongod status````
+5. Change the owner of data directory just built so that you can run mongodb without `sudo`, which is recommended.
+````$ sudo chown -R `id -un` /data/db````
+5. Check status and administrate mongodb
+````mongo````
 
 #### Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
