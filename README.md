@@ -108,16 +108,16 @@ $ gulp
 ````
 vituralenv venv
 ````
-- Install requirements.txt 
-````
-pip install -r requirements.txt
-````
 
 - Activate virtual environment 
 ````
 source venv/bin/activate
 ````
 
+- Install requirements.txt 
+````
+pip install -r requirements.txt
+````
 #### Run MongoDB
 ````
 mongod
