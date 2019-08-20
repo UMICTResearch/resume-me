@@ -1,5 +1,8 @@
 import os
+import time
+import atexit
 
+from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, redirect
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
 from flask.ext.login import LoginManager
@@ -33,6 +36,13 @@ moment = Moment(app)
 # Associate Flask-Login manager with current app
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+# Initialize scheduler
+app.scheduler = BackgroundScheduler()
+app.scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: app.scheduler.shutdown())
 
 # Adding Mail Support
 # email server
