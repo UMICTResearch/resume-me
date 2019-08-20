@@ -42,6 +42,7 @@ nosetests.xml
 *.sublime-workspace
 *.sublime-project
 sftp-config.json
+.vscode
 
 # SQLite databases
 *.sqlite
