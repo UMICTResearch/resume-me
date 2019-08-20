@@ -11,7 +11,6 @@ import models
 import constants as CONSTANTS
 import utils
 import time
-import pdb
 
 mturk = Blueprint('mturk', __name__, template_folder='templates')
 
@@ -206,5 +205,4 @@ def get_resume_length():
 
 @mturk.record
 def add_mturk_job(state):
-    pdb.set_trace()
     state.app.scheduler.add_job(func=get_resume_length, trigger="interval", seconds=5)
