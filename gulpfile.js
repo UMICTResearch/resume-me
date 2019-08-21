@@ -21,15 +21,16 @@ var gulp = require('gulp'),
             watch: [
                 './static/src/js/**/*.js'
             ],
-            source: [
+            global_source: [
                 './vendor/jquery/dist/jquery.js',
                 './vendor/bootstrap-sass/assets/javascripts/bootstrap.js',
                 './static/src/js/typeahead.bundle.min.js',
                 './static/src/js/typeahead-addresspicker.min.js',
                 './static/src/js/*.js'
             ],
+            global_target: 'global.js',
+            mturk: './static/src/js/mturk.js',
             dest: './static/js',
-            target: 'global.js'
         },
         fonts: {
             source: [
@@ -44,9 +45,9 @@ gulp.task('fonts', function () {
         .pipe(gulp.dest(config.fonts.dest));
 });
 
-gulp.task('js', function () {
-    return gulp.src(config.js.source)
-        .pipe(concat(config.js.target))
+gulp.task('global-js', function () {
+    return gulp.src(config.js.global_source)
+        .pipe(concat(config.js.global_target))
         .pipe(uglify({
             compress: true,
             outSourceMap: true
@@ -54,6 +55,16 @@ gulp.task('js', function () {
         .pipe(gulp.dest(config.js.dest));
 });
 
+gulp.task('mturk-js', function () {
+    return gulp.src(config.js.mturk)
+        .pipe(uglify({
+            compress: true,
+            outSourceMap: true
+        }))
+        .pipe(gulp.dest(config.js.dest));
+});
+
+gulp.task('js', ['global-js', 'mturk-js']);
 
 gulp.task('js:watch', ['js'], function () {
     gulp.watch(config.js.watch, ['js']);
@@ -74,6 +85,6 @@ gulp.task('sass:watch', ['sass'], function () {
     gulp.watch(config.sass.watch, ['sass']);
 });
 
-gulp.task('watch', ['sass:watch']);
+gulp.task('watch', ['sass:watch', 'js:watch']);
 
 gulp.task('default', ['sass', 'fonts', 'js']);
