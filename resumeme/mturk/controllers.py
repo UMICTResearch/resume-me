@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed, session
+from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed, session, current_app
 from flask.ext.login import (current_user, login_required, login_user)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime
 from threading import Timer
 from resumeme.libs.User import User
+from resumeme.utils.controllers import send_mail
 import urllib
 
 import models
@@ -203,6 +204,19 @@ def get_resume_length():
     resume_list = models.Resume.objects()
     print(len(resume_list))
 
+
+def report_resume_needs_review():
+    resume_list = models.Resume.objects
+    count = 0;
+    for resume in resume_list:
+        if (datetime.now()-resume.last_reviewed).seconds > 3600:
+            count += 1
+    
+    with models.app.app_context():
+        send_mail('Resume needs review', "slark@umich.edu", 'notify_admin', count=count)
+
+            
 @mturk.record
 def add_mturk_job(state):
-    state.app.scheduler.add_job(func=get_resume_length, trigger="interval", seconds=5)
+    #state.app.scheduler.add_job(func=get_resume_length, trigger="interval", seconds=5)
+    state.app.scheduler.add_job(func=report_resume_needs_review, trigger="interval", seconds=10)

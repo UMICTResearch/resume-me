@@ -1,6 +1,7 @@
 import os
 import time
 import atexit
+import logging
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, redirect
@@ -40,6 +41,9 @@ login_manager.init_app(app)
 # Initialize scheduler
 app.scheduler = BackgroundScheduler()
 app.scheduler.start()
+
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: app.scheduler.shutdown())
