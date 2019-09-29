@@ -205,13 +205,29 @@ def get_resume_length():
     print(len(resume_list))
 
 
-def report_resume_needs_review():
-    resume_list = models.Resume.objects
-    count = 0;
+def mturk_post_HIT():
+    resume_list = models.Resume.objects(
+        db_query(posted=False)
+    )
+
     for resume in resume_list:
         if (datetime.now()-resume.last_reviewed).seconds > 3600:
-            count += 1
+            resume.update(posted=True)
+            response = models.boto3_client.create_hit(
+                MaxAssignments=1,
+                AutoApprovalDelayInSeconds=10,
+                LifetimeInSeconds=3600,
+                AssignmentDurationInSeconds=600,
+                Reward='0.1',
+                Title='review-me',
+                Keywords='resume, review, rate',
+                Description='Please review resume, rate it and give feedback',
+                Question=CONSTANTS.EXTERNAL_QUESTION,
+                QualificationRequirements=CONSTANTS.WORKER_REQUIREMENTS,
+            )
+
     
+def mturk_report():
     with models.app.app_context():
         send_mail('Resume needs review', "slark@umich.edu", 'notify_admin', count=count)
 
@@ -219,4 +235,5 @@ def report_resume_needs_review():
 @mturk.record
 def add_mturk_job(state):
     #state.app.scheduler.add_job(func=get_resume_length, trigger="interval", seconds=5)
-    state.app.scheduler.add_job(func=report_resume_needs_review, trigger="interval", seconds=10)
+    #state.app.scheduler.add_job(func=mturk_post_HIT, trigger="interval", seconds=10)
+    pass

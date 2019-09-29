@@ -2,7 +2,9 @@ import os
 import time
 import atexit
 import logging
+import boto3
 
+from config import ENV
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, redirect
 from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
@@ -42,11 +44,22 @@ login_manager.init_app(app)
 app.scheduler = BackgroundScheduler()
 app.scheduler.start()
 
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: app.scheduler.shutdown())
+
+# Set up log for apscheduler task
 logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: app.scheduler.shutdown())
+# Create Boto3 session and client
+boto3_session = boto3.Session()
+boto3_client = boto3_session.client(
+    'mturk',
+    endpoint_url=
+        'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
+        if ENV == 'dev' else
+        'https://mturk-requester.us-east-1.amazonaws.com',
+)
 
 # Adding Mail Support
 # email server

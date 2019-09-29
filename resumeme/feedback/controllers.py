@@ -52,7 +52,8 @@ def feedback_main():
 
         user_resume_list = models.Resume.objects(
             db_query(user__ne=current_user.id) &
-            db_query(lock=False)
+            db_query(lock=False) &
+            db_query(posted=False)
         )
 
         templateData = {

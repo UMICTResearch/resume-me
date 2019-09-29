@@ -1,5 +1,5 @@
 import datetime
-from resumeme import db, app
+from resumeme import db, app, boto3_client
 from resumeme.accounts.models import User
 from resumeme.resume.models import Resume
 import constants as CONSTANTS
