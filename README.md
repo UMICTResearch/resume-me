@@ -1,29 +1,15 @@
 # resume-me
 
-#### Beta [![Deployment status from DeployBot](https://sig.deploybot.com/badge/88313865989649/37135.svg)](https://sig.deploybot.com/session/new)
+[resume-me](https://review-me.us/) is a system dedicated to provide expert resume feedback for job seekers as well as require reflection from job seekers in order to update their resumes. This system could improve users' attitudes toward the job search by increasing their confidence in their application materials, specifically resumes.
 
-#### Test [![Deployment status from DeployBot](https://sig.deploybot.com/badge/02267417997177/37757.svg)](https://sig.deploybot.com/session/new)
+<img src="screenshots/entry_page.png" width="49%">  <img src="screenshots/resume_creation.png" width="49%">
 
 ## Table of Contents
-1. [Coding Standards](#coding-standards)
-2. [Mail Server Information](#mail-server-information)
-3. [Installation Instructions](#installation-instructions)
-4. [Run the application on your local system](#run-the-application-on-your-local-system)
-5. [Code Push](#code-push)
-
-
-## Coding Standards
-- Strictly follow PEP8 coding standards
-  - You can install pep8 checkers (https://pypi.python.org/pypi/pep8):
-    - Linux (Ubuntu) - sudo apt-get install pep8 python-autopep8
-    - OR simply using pip - pip install pep8
-- Use the editorconfig file with preferred IDE for consistency
-
-## Mail Server Information 
-
-A new email address is registered for the mail server.
-- Username: sig.umsi@gmail.com
-- Password: SocialInnovationsGroup
+1. [Installation Instructions](#installation-instructions)
+2. [Run the application on your local system](#run-the-application-on-your-local-system)
+3. [Coding Standards](#coding-standards)
+4. [Git Workflow](#git-workflow)
+5. [Author](#author)
 
 ## Installation Instructions
 
@@ -67,7 +53,7 @@ For installation on Macs, you can use the following method.
 - To install all remaining python packages in the virtual environment: pip install -r requirements.txt
 
 #### Nodejs, Gulp, Bower
-- Install nodeJS (https://nodejs.org/download/)
+- Install [nodeJS](https://nodejs.org/download/)
 
 For installation on Macs, you'll need to run the first command with "sudo" ; ignore otherwise
 
@@ -139,7 +125,15 @@ python run.py
 - To quit the application, use - "CTRL + C"
 - To exit the virtual environment, type "deactivate"
 
-## Code Push
+## Coding Standards
+- Strictly follow PEP8 coding standards
+  - You can install [pep8 checkers](https://pypi.python.org/pypi/pep8):
+    - Linux (Ubuntu) - sudo apt-get install pep8 python-autopep8
+    - OR simply using pip - pip install pep8
+- Use the editorconfig file with preferred IDE for consistency
+
+
+## Git Workflow
 
 #### For smaller bug fixes
 
@@ -173,6 +167,8 @@ All steps are the same except, replace name of branch "hotfix" or "readme" with 
 #### For errors
 If you have committed something prematurely, you may need to Execute: "$ git reset --hard HEAD" but with caution
 
-
 #### Stay tuned for more instructions
 
+## Author
+
+This project is created and managed by the [Social Innovations Group](http://socialinnovations.us/), School of Information, the University of Michigan.
