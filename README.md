@@ -1,6 +1,6 @@
-# resume-me
+# Review-Me
 
-[resume-me](https://review-me.us/) is a system dedicated to provide expert resume feedback for job seekers as well as require reflection from job seekers in order to update their resumes. This system could improve users' attitudes toward the job search by increasing their confidence in their application materials, specifically resumes.
+[Review-Me](https://review-me.us/), i.e.,formerly resume-me, is a system dedicated to provide expert resume feedback for job seekers as well as require reflection from job seekers in order to update their resumes. This system could improve users' attitudes toward the job search by increasing their confidence in their application materials, specifically resumes.
 
 <img src="screenshots/entry_page.png" width="49%">  <img src="screenshots/resume_creation.png" width="49%">
 
