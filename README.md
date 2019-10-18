@@ -7,9 +7,10 @@
 ## Table of Contents
 1. [Installation Instructions](#installation-instructions)
 2. [Run the application on your local system](#run-the-application-on-your-local-system)
-3. [Coding Standards](#coding-standards)
-4. [Git Workflow](#git-workflow)
-5. [Author](#author)
+3. [Resume Review](#Resume-Review)
+4. [Coding Standards](#coding-standards)
+5. [Git Workflow](#git-workflow)
+6. [Author](#author)
 
 ## Installation Instructions
 
@@ -124,6 +125,10 @@ python run.py
 - The server starts and the website is accessible at: http://127.0.0.1:4500/
 - To quit the application, use - "CTRL + C"
 - To exit the virtual environment, type "deactivate"
+
+## Resume Review
+
+After job seekers submit their resumes to Review-Me, other Review-Me users could server as volunteers to review resumes. Besides, our final goal is to take advantage of MTurk, which is a crowdsourcing platform, to outsource resume reviewing to a distributed workforce. In that way, Review-Me could handle more resumes at a time and don't have to rely on our own users to review resumes. If you are interested in integrating MTurk into Review-Me, please see [automate_mturk](https://github.com/UMICTResearch/resume-me/tree/automate_mturk) for current progress.
 
 ## Coding Standards
 - Strictly follow PEP8 coding standards
