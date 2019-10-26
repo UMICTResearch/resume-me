@@ -5,12 +5,26 @@
 <img src="screenshots/entry_page.png" width="49%">  <img src="screenshots/resume_creation.png" width="49%">
 
 ## Table of Contents
-1. [Installation Instructions](#installation-instructions)
-2. [Run the application on your local system](#run-the-application-on-your-local-system)
-3. [Resume Review](#Resume-Review)
-4. [Coding Standards](#coding-standards)
-5. [Git Workflow](#git-workflow)
-6. [Author](#author)
+- [Review-Me](#review-me)
+  - [Table of Contents](#table-of-contents)
+  - [Installation Instructions](#installation-instructions)
+      - [Mongodb](#mongodb)
+      - [Python](#python)
+      - [Nodejs, Gulp, Bower](#nodejs-gulp-bower)
+  - [Run the application on your local system](#run-the-application-on-your-local-system)
+      - [Create Virtual Environment](#create-virtual-environment)
+      - [Run MongoDB](#run-mongodb)
+      - [Configure the flask application](#configure-the-flask-application)
+  - [Resume Review](#resume-review)
+  - [Coding Standards](#coding-standards)
+  - [Git Workflow](#git-workflow)
+      - [For smaller bug fixes](#for-smaller-bug-fixes)
+      - [For Readme](#for-readme)
+      - [For new features](#for-new-features)
+      - [For errors](#for-errors)
+      - [Stay tuned for more instructions](#stay-tuned-for-more-instructions)
+  - [Author](#author)
+  - [Acknowledgement](#acknowledgement)
 
 ## Installation Instructions
 
@@ -177,3 +191,7 @@ If you have committed something prematurely, you may need to Execute: "$ git res
 ## Author
 
 This project is created and managed by the [Social Innovations Group](http://socialinnovations.us/), School of Information, the University of Michigan.
+
+## Acknowledgement
+
+This project is funded by the [the National Science Foundation](https://www.nsf.gov/).
