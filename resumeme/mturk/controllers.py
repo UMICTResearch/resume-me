@@ -163,7 +163,7 @@ def mturk_entry_page(resume_id, feedback_id, state="view"):
 
 def mturk_post_HIT():
     resume_list = models.Resume.objects(
-        db_query(posted=False)
+        db_query(posted=False) & db_query(lock=False)
     )
     count = 0
     for resume in resume_list:
