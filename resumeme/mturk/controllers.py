@@ -118,6 +118,7 @@ def mturk_feedback_main():
             resume.update(push__feedback_list=feedback)
             resume.update(last_reviewed=datetime.now())
             resume.update(posted=False)
+            resume.update(lock=True)
 
             url_para = 'workerId=' + worker_id + '&assignmentId=' + assignment_id + '&hitId=' + 'hit_id' + '&turkSubmitTo=' + submit_hit_url
 
@@ -197,7 +198,6 @@ def mturk_check_status():
         for assignment in assignments:
             print(assignment['AssignmentStatus'])
 
-
 def mturk_clean_HIT():
     """
     For each reviewable HIT,
@@ -220,6 +220,25 @@ def mturk_clean_HIT():
         )
 
     
+def mturk_revive_resume():
+    """
+    If some resume is posted as HIT but not completed
+    within lifetime of HIT, we will need to manually set
+    such a resume back to postable
+    """
+    response = models.boto3_client.list_reviewable_hits()
+    HITs = response['HITs']
+    for HIT in HITs:
+        resume_id = HIT['RequesterAnnotation']
+        resume_id = ObjectId(resume_id)
+        resume = models.Resume.objects().with_id(resume_id)
+        if resume.lock == False:
+            resume.update(posted=False)
+        models.boto3_client.delete_hit(
+            HITId=HIT['HITId']
+        )
+
+
 def mturk_report():
     with models.app.app_context():
         send_mail('Resume needs review', "slark@umich.edu", 'notify_admin', count=count)
@@ -228,3 +247,4 @@ def mturk_report():
 @mturk.record
 def add_mturk_job(state):
     state.app.scheduler.add_job(func=mturk_post_HIT, trigger="interval", seconds=3600)
+    state.app.scheduler.add_job(func=mturk_revive_resume, trigger="interval", seconds=3600)

@@ -26,7 +26,7 @@ SECTION_CHOICE_THREE = "3"
 EXTERNAL_QUESTION = """\
 <?xml version="1.0" encoding="UTF-8"?>
 <ExternalQuestion xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2006-07-14/ExternalQuestion.xsd">
-  <ExternalURL>https://review-me.us/mturk</ExternalURL>
+  <ExternalURL>https://beta.review-me.us/mturk</ExternalURL>
   <FrameHeight>0</FrameHeight>
 </ExternalQuestion>
 """
