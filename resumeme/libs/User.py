@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask.ext.login import (UserMixin, AnonymousUserMixin)
+from flask_login import (UserMixin, AnonymousUserMixin)
 from resumeme.accounts import models
 from datetime import datetime
 

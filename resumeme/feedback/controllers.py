@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed
-from flask.ext.login import (current_user, login_required)
+from flask_login import (current_user, login_required)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime

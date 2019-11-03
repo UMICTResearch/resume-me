@@ -1,5 +1,5 @@
 from flask import current_app, Blueprint, render_template, flash
-from flask.ext.mail import Message
+from flask_mail import Message
 from resumeme import mail
 from os import stat
 from pwd import getpwuid

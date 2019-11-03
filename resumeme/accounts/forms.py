@@ -1,7 +1,7 @@
 import models
-from flask.ext.mongoengine.wtf import model_form
+from flask_mongoengine.wtf import model_form
 from wtforms.fields import *
-from flask.ext.mongoengine.wtf.orm import validators
+from flask_mongoengine.wtf.orm import validators
 
 user_form = model_form(models.User, exclude=['password'])
 

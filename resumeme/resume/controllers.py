@@ -2,7 +2,7 @@ import os, time, sys
 from datetime import datetime
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for, jsonify, \
     send_from_directory
-from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
+from flask_login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 from jinja2 import TemplateNotFound
 from werkzeug import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge

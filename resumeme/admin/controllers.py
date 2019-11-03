@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
 from flask import Blueprint, render_template, redirect
-from flask.ext.login import current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required
+from flask_login import current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required
 from resumeme.accounts import models as usermodels
 from resumeme.resume import models as resumemodels
 from resumeme.feedback import models as feedbackmodels

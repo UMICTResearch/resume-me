@@ -2,7 +2,7 @@
 
 from flask import current_app, Blueprint, render_template, abort, request, flash, redirect, url_for
 from resumeme import login_manager, flask_bcrypt
-from flask.ext.login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
+from flask_login import (current_user, login_required, login_user, logout_user, confirm_login, fresh_login_required)
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import forms
 from resumeme.libs.User import User

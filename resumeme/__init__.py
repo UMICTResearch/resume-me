@@ -7,12 +7,12 @@ import boto3
 from config import ENV
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, render_template, request, redirect
-from flask.ext.mongoengine import MongoEngine, MongoEngineSessionInterface
-from flask.ext.login import LoginManager
-from flask.ext.bcrypt import Bcrypt
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.moment import Moment
-from flask.ext.mail import Mail
+from flask_mongoengine import MongoEngine, MongoEngineSessionInterface
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
+from flask_mail import Mail
 
 # Create and name Flask app
 app = Flask("ResumeMeApp")
