@@ -80,9 +80,14 @@ def mturk_feedback_main():
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
             created = datetime.now()
+            accepted = models.boto3_client.get_assignment(
+                AssignmentId=assignment_id
+            )['Assignment']['AcceptTime']
+            duration = created - accepted
 
             feedback = models.Feedback()
             feedback.last_updated = created
+            feedback.complete_time = duration.total_seconds()
 
             feedback.first_section = models._Section()
             feedback.second_section = models._Section()
