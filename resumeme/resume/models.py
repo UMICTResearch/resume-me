@@ -14,3 +14,4 @@ class Resume(db.Document):
     last_reviewed = db.DateTimeField(default=datetime.datetime(1900,1,1))
     feedback_list = db.ListField(db.GenericReferenceField())
     posted = db.BooleanField(default=False)
+    complete_time = db.IntField(default=0)

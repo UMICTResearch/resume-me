@@ -20,7 +20,6 @@ class _Section(db.EmbeddedDocument):
 class Feedback(db.Document):
     version = 1
     last_updated = db.DateTimeField()
-    complete_time = db.IntField(default=0)
 
     # TODO: Implement edit_lock
     viewed = db.BooleanField(default=False) # used to set edit_lock and show the new feedback flag

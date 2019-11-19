@@ -80,14 +80,9 @@ def mturk_feedback_main():
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
             created = datetime.now()
-            accepted = models.boto3_client.get_assignment(
-                AssignmentId=assignment_id
-            )['Assignment']['AcceptTime']
-            duration = created - accepted
 
             feedback = models.Feedback()
             feedback.last_updated = created
-            feedback.complete_time = duration.total_seconds()
 
             feedback.first_section = models._Section()
             feedback.second_section = models._Section()
@@ -167,6 +162,25 @@ def mturk_entry_page(resume_id, feedback_id, state="view"):
         return render_template('404.html')
 
 
+def mturk_approve_HIT():
+    response = models.boto3_client.list_reviewable_hits()
+    HITs = response['HITs']
+    for HIT in HITs:
+        resume_id = HIT['RequesterAnnotation']
+        resume_id = ObjectId(resume_id)
+        resume = models.Resume.objects().with_id(resume_id)
+
+        assignment = models.boto3_client.list_assignments_for_hit(
+            HITId=HIT['HITId'],
+        )['Assignments'][0]
+
+        accepted = assignment['AcceptTime']
+        duration = resume.last_reviewed - accepted
+        resume.update(complete_time=duration.total_seconds())
+
+        models.boto3_client.approve(AssignmentID=assignment['AssignmentID'])
+
+    
 def mturk_post_HIT():
     resume_list = models.Resume.objects(
         db_query(posted=False) & db_query(lock=False)
@@ -177,7 +191,6 @@ def mturk_post_HIT():
             resume.update(posted=True)
             response = models.boto3_client.create_hit(
                 MaxAssignments=1,
-                AutoApprovalDelayInSeconds=10,
                 LifetimeInSeconds=3600,
                 AssignmentDurationInSeconds=600,
                 Reward='0.1',
