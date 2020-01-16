@@ -57,6 +57,7 @@ def mturk_feedback_main():
     login_user(user, remember="no")
 
     if request.method == "GET":
+	print(hit_id)
         resume_id = models.boto3_client.get_hit(
             HITId=hit_id
         )['HIT']['RequesterAnnotation']
@@ -116,7 +117,7 @@ def mturk_feedback_main():
 
             # push feedback onto resume feedback_list reference list
             resume.update(push__feedback_list=feedback)
-            resume.update(last_reviewed=datetime.now())
+            resume.update(last_reviewed=datetime.utcnow())
             resume.update(posted=False)
             resume.update(lock=True)
 
@@ -169,16 +170,20 @@ def mturk_approve_HIT():
         resume_id = HIT['RequesterAnnotation']
         resume_id = ObjectId(resume_id)
         resume = models.Resume.objects().with_id(resume_id)
+	if resume.posted:
+	    continue
 
-        assignment = models.boto3_client.list_assignments_for_hit(
+	assignments = models.boto3_client.list_assignments_for_hit(
             HITId=HIT['HITId'],
-        )['Assignments'][0]
+        )['Assignments']
+	assignment = assignments[0]
 
         accepted = assignment['AcceptTime']
-        duration = resume.last_reviewed - accepted
-        resume.update(complete_time=duration.total_seconds())
+        duration = resume.last_reviewed - accepted.replace(tzinfo=None) + accepted.utcoffset()
+        resume.update(complete_time=duration.total_seconds() + 60)
 
-        models.boto3_client.approve(AssignmentID=assignment['AssignmentID'])
+        models.boto3_client.approve_assignment(AssignmentId=assignment['AssignmentId'])
+	models.boto3_client.delete_hit(HITId=HIT['HITId'])
 
     
 def mturk_post_HIT():
@@ -191,9 +196,9 @@ def mturk_post_HIT():
             resume.update(posted=True)
             response = models.boto3_client.create_hit(
                 MaxAssignments=1,
-                LifetimeInSeconds=3600,
+                LifetimeInSeconds=36000,
                 AssignmentDurationInSeconds=600,
-                Reward='0.1',
+                Reward='1',
                 Title='review-me',
                 Keywords='resume, review, rate',
                 Description='Please review resume, rate it and give feedback',
@@ -202,7 +207,6 @@ def mturk_post_HIT():
                 QualificationRequirements=CONSTANTS.WORKER_REQUIREMENTS,
             )
             count += 1
-    print('{} HITs posted'.format(count))
 
 
 def mturk_check_status():
@@ -252,17 +256,24 @@ def mturk_revive_resume():
         resume = models.Resume.objects().with_id(resume_id)
         if resume.lock == False:
             resume.update(posted=False)
-        models.boto3_client.delete_hit(
-            HITId=HIT['HITId']
-        )
+            models.boto3_client.delete_hit(HITId=HIT['HITId'])
+
+
+def mturk_check():
+	mturk_post_HIT()
+	mturk_approve_HIT()
+	mturk_revive_resume()
 
 
 def mturk_report():
-    with models.app.app_context():
-        send_mail('Resume needs review', "slark@umich.edu", 'notify_admin', count=count)
+	balance = models.boto3_client.get_account_balance()['AvailableBalance'];
+	if balance < 90:
+		with models.app.app_context():
+			send_mail('MTurk balance is lower than $90', "slark@umich.edu", 'notify_balance', balance=balance)
 
             
 @mturk.record
 def add_mturk_job(state):
-    state.app.scheduler.add_job(func=mturk_post_HIT, trigger="interval", seconds=3600)
-    state.app.scheduler.add_job(func=mturk_revive_resume, trigger="interval", seconds=3600)
+    state.app.scheduler.add_job(func=mturk_check, trigger="interval", seconds=10)
+    state.app.scheduler.add_job(func=mturk_report, trigger="interval",
+days=1)
