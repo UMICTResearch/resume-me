@@ -1,6 +1,7 @@
 import boto3
+import datetime
 
-ENV = 'beta'
+ENV = 'dev'
 
 boto3_session = boto3.Session()
 boto3_client = boto3_session.client(
@@ -12,13 +13,20 @@ boto3_client = boto3_session.client(
 )
 
 response = boto3_client.list_hits()
-num_hits = response['NumResults']
-for HIT in response['HITs']:
-    print('HITStatus: ' + HIT['HITStatus'])
+HITs = response['HITs']
+for HIT in HITs:
+    response = boto3_client.update_expiration_for_hit(
+    HITId=HIT['HITId'],
+    ExpireAt=datetime.datetime.now(),
+)
     assignments = boto3_client.list_assignments_for_hit(
         HITId=HIT['HITId'],
 #       AssignmentStatuses=['Submitted'],
     )['Assignments']
-    print(assignments)
     for assignment in assignments:
-        print('AssignmentStatus: ' + assignment['AssignmentStatus'])
+        boto3_client.approve_assignment(
+            AssignmentId=assignment['AssignmentId'],
+        )
+    boto3_client.delete_hit(
+        HITId=HIT['HITId']
+    )
