@@ -331,11 +331,11 @@ def mturk_unassignable():
 	#logger.info(str(resume_id))
 
 def mturk_check():
-	#mturk_post_HIT()
-	#mturk_approve_HIT()
-	#mturk_revive_resume()
+	mturk_post_HIT()
+	mturk_approve_HIT()
+	mturk_revive_resume()
 	#mturk_clean_all_HIT()
-	mturk_check_status()
+	#mturk_check_status()
 
 def mturk_report():
 	balance = models.boto3_client.get_account_balance()['AvailableBalance']
