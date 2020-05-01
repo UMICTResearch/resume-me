@@ -19,7 +19,7 @@ app = Flask("ResumeMeApp")
 
 # database connection
 app.config['MONGODB_SETTINGS'] = {
-    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'test'}
+    'HOST': os.environ.get('MONGOLAB_URI'), 'DB': 'beta'}
 app.config['SECRET_KEY'] = 'This string will be replaced'
 
 app.debug = os.environ.get('DEBUG', True)
@@ -49,16 +49,15 @@ atexit.register(lambda: app.scheduler.shutdown())
 
 # Set up log for apscheduler task
 logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 # Create Boto3 session and client
 boto3_session = boto3.Session()
 boto3_client = boto3_session.client(
     'mturk',
     endpoint_url=
-        'https://mturk-requester-sandbox.us-east-1.amazonaws.com'
-        if ENV == 'dev' else
-        'https://mturk-requester.us-east-1.amazonaws.com',
+	'https://mturk-requester-sandbox.us-east-1.amazonaws.com',
+	#if ENV == 'dev' else
+        #'https://mturk-requester.us-east-1.amazonaws.com',
 )
 
 # Adding Mail Support
@@ -68,8 +67,8 @@ app.config.update(
     MAIL_PORT=465,
     MAIL_USE_TLS=False,
     MAIL_USE_SSL=True,
-    MAIL_USERNAME='sig.umsi@gmail.com',
-    MAIL_PASSWORD='SocialInnovationsGroup',
+    MAIL_USERNAME='umichictresearch@gmail.com',
+    MAIL_PASSWORD='ICTR3s3arch',
     DEFAULT_MAIL_SENDER='sig.umsi@gmail.com'
 )
 mail = Mail(app)

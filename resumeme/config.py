@@ -1,5 +1,5 @@
 # File upload settings
-ENV = 'dev'
+ENV = 'beta'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'jpg', 'png', 'jpeg'])
 
 ###

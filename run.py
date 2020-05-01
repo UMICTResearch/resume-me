@@ -9,8 +9,6 @@ from resumeme.accounts.controllers import accounts
 from resumeme.resume.controllers import resume
 from resumeme.feedback.controllers import feedback
 from resumeme.utils.controllers import utils
-from resumeme.admin.controllers import admin
-from resumeme.mturk.controllers import mturk
 
 # Register Blueprints modules
 app.register_blueprint(core)
@@ -18,9 +16,6 @@ app.register_blueprint(accounts)
 app.register_blueprint(resume)
 app.register_blueprint(feedback)
 app.register_blueprint(utils)
-app.register_blueprint(admin)
-app.register_blueprint(mturk)
-
 
 
 # start the server

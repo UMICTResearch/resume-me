@@ -1,3 +1,5 @@
+from __future__ import print_function
+import time
 import boto3
 
 ENV = 'dev'
@@ -24,6 +26,7 @@ boto3_client = boto3_session.client(
         'https://mturk-requester.us-east-1.amazonaws.com',
 )
 
+tic = time.time()
 response = boto3_client.create_hit(
     MaxAssignments=1,
     AutoApprovalDelayInSeconds=10,
@@ -36,3 +39,5 @@ response = boto3_client.create_hit(
     Question=EXTERNAL_QUESTION,
     QualificationRequirements=WORKER_REQUIREMENTS,
 )
+toc = time.time()
+print(toc -  tic)

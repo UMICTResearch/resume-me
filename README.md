@@ -1,33 +1,25 @@
 # resume-me
 
-#### Beta [![Deployment status from DeployBot](https://sig.deploybot.com/badge/88313865989649/37135.svg)](https://sig.deploybot.com/session/new)
+#### Beta [![Deployment status from DeployBot](https://sig.deploybot.com/badge/88313865989649/37135.svg)](http://deploybot.com)
 
-#### Test [![Deployment status from DeployBot](https://sig.deploybot.com/badge/02267417997177/37757.svg)](https://sig.deploybot.com/session/new)
+#### Test [![Deployment status from DeployBot](https://sig.deploybot.com/badge/02267417997177/37757.svg)](http://deploybot.com)
 
 ## Table of Contents
 1. [Coding Standards](#coding-standards)
-2. [Mail Server Information](#mail-server-information)
-3. [Installation Instructions](#installation-instructions)
-4. [Run the application on your local system](#run-the-application-on-your-local-system)
-5. [Code Push](#code-push)
+2. [Installation Instructions](#installation-instructions)
+3. [Run the application on your local system](#run the application on your local system)
+4. [Code Push](#code-push)
 
-
-## Coding Standards
+##Coding Standards
 - Strictly follow PEP8 coding standards
   - You can install pep8 checkers (https://pypi.python.org/pypi/pep8):
     - Linux (Ubuntu) - sudo apt-get install pep8 python-autopep8
     - OR simply using pip - pip install pep8
 - Use the editorconfig file with preferred IDE for consistency
 
-## Mail Server Information 
+##Installation Instructions
 
-A new email address is registered for the mail server.
-- Username: sig.umsi@gmail.com
-- Password: SocialInnovationsGroup
-
-## Installation Instructions
-
-#### Mongodb
+####Mongodb
 Ubuntu official repository can be used for installing mongodb but it is advised to install the latest version using the following method.
 
 1. Adding key to validate new mongodb sources
@@ -48,19 +40,16 @@ For installation on Macs, you can use the following method.
 2. If you already have Homebrew, update it
 ````$brew update````
 3. Now install mongodb (the last line of the install output shows you the install location, which you should add to your ~/.bashrc)
-````brew install mongodb````
+````install mongodb````
 4. MongoDB stores its data in the /data/db directory by default but it does not generate that folder structure for you. So, you have to create that directory.
 ````$ sudo mkdir -p /data/db````
-5. Change the owner of data directory just built so that you can run mongodb without `sudo`, which is recommended.
-````$ sudo chown -R `id -un` /data/db````
-5. Check status and administrate mongodb
-````mongo````
+5. Check status
+````mongod status````
 
-#### Python
+####Python
 - Note: The following instructions only need to be done once. After installation, refer to "Run the application on your local system" for instructions on how to launch the app
-- Note: This application is based on Python 2.
 - Install the following packages: python, python-dev, pip and virtual-environment.
-  - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "pip install virtual-environment"
+  - Mac: In the terminal, type "sudo easy_install python" (press enter), "sudo easy_install python-dev" (enter), "sudo easy_install pip" (enter) and "sudo install virtual-environment"
   - Linux (Ubuntu): "sudo apt-get install python python-dev python-pip python-virtualenv virtualenvwrapper" (enter)
 - Clone the repository
 - Now, type virtualenv venv
@@ -68,82 +57,26 @@ For installation on Macs, you can use the following method.
 - To activate python virtual environment, "source venv/bin/activate"
 - To install all remaining python packages in the virtual environment: pip install -r requirements.txt
 
-#### Nodejs, Gulp, Bower
+####Nodejs, Gulp, Bower
 - Install nodeJS (https://nodejs.org/download/)
-
-For installation on Macs, you'll need to run the first command with "sudo" ; ignore otherwise
-
-- Install Gulp globally
-````
-$ (sudo) npm install -g gulp
-````
-- Install Bower globally
-
--- If on Mac, you will need to run 
-
-````
-$ sudo chown -R 'username' ~/.config
-````
-
--- before installing bower--otherwise, you will get an EACCES, permission denied error.
-
-````
-$ npm install -g bower
-````
-- Install npm project dependencies
-````
-$ npm install
-````
-- Install bower project dependencies
-````
-$ bower install
-````
-- Run Gulp to compile css/js/fonts
-````
+- Install Gulp Global
+$ npm install -g gulp
+- Install dependencies
+In the project directory execute: $ npm install
+- Run Gulp
 $ gulp
-````
 
-## Run the application on your local system
-
-#### Create Virtual Environment
-- Initiate virtual environment
-````
-vituralenv venv
-````
-
-- Activate virtual environment 
-````
-source venv/bin/activate
-````
-
-- Install requirements.txt 
-````
-pip install -r requirements.txt
-````
-#### Run MongoDB
-````
-mongod
-````
-If you see the error message of "exception in initAndListen: IllegalOperation: Attempted to create a lock file on a read-only directory: /data/db, terminating", please use 
-````
-sudo mongod
-````
-How to run MongoDB on mac? https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
-How to run MongoDB on Windows? https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
-
-#### Configure the flask application 
-````
-python run.py
-````
+##Run the application on your local system
+- Once in the virtual environment (e.g., source venv/bin/activate), type "python run.py"
 - You may have to create a secret key, the instructions will be provided in the terminal
 - After you have run the commands for the secret key re-type "python run.py"
 - The server starts and the website is accessible at: http://127.0.0.1:4500/
 - To quit the application, use - "CTRL + C"
 - To exit the virtual environment, type "deactivate"
 
-## Code Push
+##Code Push
 
-#### For smaller bug fixes
+####For smaller bug fixes
 
 1. Clone repository (if you have not already cloned the repository)
 Execute: "$ git clone 'reponame'"
@@ -161,20 +94,13 @@ Execute: "$ git push origin hotfix"
 9. Assign the pull request to another team member
 10. Inform the team member to review code and merge into master
 
-#### For Readme
+####For Readme
 
-All steps are the same except, replace name of branch "hotfix" with "readme". For example, if you are making updates 
-to the readme (for the first time and don't have a readme branch listed), you will need to Execute: 
-"$ git checkout -b readme origin/master". However, if you Execute: "$ git branch -a" and see that you already have a 
-readme branch, simply Execute "$git checkout readme".
-
-#### For new features
-
-All steps are the same except, replace name of branch "hotfix" or "readme" with the name of your branch, like "feature-1"
-
-#### For errors
-If you have committed something prematurely, you may need to Execute: "$ git reset --hard HEAD" but with caution
+All steps are the same except, replace name of branch "hotfix" with "readme"
 
 
-#### Stay tuned for more instructions
+####For new features
 
+All steps are the same except, replace name of branch "hotfix" with a different name like "feature-1"
+
+####Stay tuned for more instructions

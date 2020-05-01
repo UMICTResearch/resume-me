@@ -1,90 +1,43 @@
-var gulp = require('gulp'),
-    concat = require('gulp-concat'),
-    sass = require('gulp-sass'),
-    sourcemaps = require('gulp-sourcemaps'),
-    uglify = require('gulp-uglify'),
-    config = {
-        sass: {
-            watch: [
-                './static/src/sass/**/*.scss'
-            ],
-            source: [
-                './static/src/sass/main.scss'
-            ],
-            include: [
-                './vendor/bootstrap-sass/assets/stylesheets'
-            ],
-            dest: './static/css',
-            target: 'main.css'
-        },
-        js: {
-            watch: [
-                './static/src/js/**/*.js'
-            ],
-            global_source: [
-                './vendor/jquery/dist/jquery.js',
-                './vendor/bootstrap-sass/assets/javascripts/bootstrap.js',
-                './static/src/js/typeahead.bundle.min.js',
-                './static/src/js/typeahead-addresspicker.min.js',
-                './static/src/js/*.js'
-            ],
-            global_target: 'global.js',
-            mturk: './static/src/js/mturk.js',
-            dest: './static/js',
-        },
-        fonts: {
-            source: [
-                './vendor/bootstrap-sass/assets/fonts/**/*',
-            ],
-            dest: './static/fonts'
-        }
-    };
+"use strict";
+
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+var uglify = require('gulp-uglifyjs');
+
+var config = {
+    customDir: './static/src',
+    bowerDir: './vendor',
+    publicDir: './static'
+};
 
 gulp.task('fonts', function () {
-    return gulp.src(config.fonts.source)
-        .pipe(gulp.dest(config.fonts.dest));
+    return gulp.src(config.bowerDir + '/bootstrap-sass/assets/fonts/**/*')
+        .pipe(gulp.dest(config.publicDir + '/fonts'));
 });
 
-gulp.task('global-js', function () {
-    return gulp.src(config.js.global_source)
-        .pipe(concat(config.js.global_target))
-        .pipe(uglify({
+gulp.task('js', function () {
+    return gulp.src([
+        config.bowerDir + '/jquery/dist/jquery.min.js',
+        config.bowerDir + '/bootstrap-sass/assets/javascripts/bootstrap.js',
+    ])
+        .pipe(uglify('app.js', {
             compress: true,
             outSourceMap: true
         }))
-        .pipe(gulp.dest(config.js.dest));
-});
-
-gulp.task('mturk-js', function () {
-    return gulp.src(config.js.mturk)
-        .pipe(uglify({
-            compress: true,
-            outSourceMap: true
-        }))
-        .pipe(gulp.dest(config.js.dest));
-});
-
-gulp.task('js', ['global-js', 'mturk-js']);
-
-gulp.task('js:watch', ['js'], function () {
-    gulp.watch(config.js.watch, ['js']);
+        .pipe(gulp.dest(config.publicDir + '/js'));
 });
 
 gulp.task('sass', function () {
-    return gulp.src(config.sass.source)
+    return gulp.src(config.customDir + '/sass/main.scss')
         .pipe(sourcemaps.init())
         .pipe(sass({
             style: 'compressed',
-            includePaths: [config.sass.include]
+            includePaths: [config.bowerDir + '/bootstrap-sass/assets/stylesheets']
         }))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(config.sass.dest));
+        .pipe(gulp.dest(config.publicDir + '/css'));
 });
 
-gulp.task('sass:watch', ['sass'], function () {
-    gulp.watch(config.sass.watch, ['sass']);
-});
-
-gulp.task('watch', ['sass:watch', 'js:watch']);
-
-gulp.task('default', ['sass', 'fonts', 'js']);
+//gulp.task('default', ['sass', 'js', 'fonts']);
+gulp.task('default', ['sass']);

@@ -1,3 +1,4 @@
+
 from flask import Blueprint, render_template, request, flash, redirect, get_flashed_messages, message_flashed, session, current_app
 from flask_login import (current_user, login_required, login_user)
 from mongoengine import Q as db_query
@@ -8,15 +9,31 @@ from resumeme.libs.User import User
 from resumeme.utils.controllers import send_mail
 from bson.objectid import ObjectId
 import urllib
+import math
 
 import models
 import constants as CONSTANTS
 import utils
 import time
-
+import logging 
 mturk = Blueprint('mturk', __name__, template_folder='templates')
 
-
+#Create and configure
+logger = logging.getLogger('Create_HIT')
+logger.setLevel(logging.DEBUG)
+# create file handler which logs even debug messages
+fh = logging.FileHandler('create_hit_wsgi.log')
+fh.setLevel(logging.DEBUG)
+# create console handler with a higher log level
+# ch = logging.StreamHandler()
+# ch.setLevel(logging.ERROR)
+# create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+# ch.setFormatter(formatter)
+fh.setFormatter(formatter)
+# add the handlers to logger
+# logger.addHandler(ch)
+logger.addHandler(fh)
 
 def register_mturk():
     email = 'mturk@review-me.com'
@@ -99,6 +116,15 @@ def mturk_feedback_main():
             feedback.second_section.name = CONSTANTS.SECOND_SECTION
             feedback.second_section.rating = request.form.get('rating_2')
             feedback.second_section.content = request.form.get('content_2')
+            feedback.third_section.name = CONSTANTS.THIRD_SECTION
+
+            feedback.first_section.name = CONSTANTS.FIRST_SECTION
+            feedback.first_section.rating = request.form.get('rating_1')
+            feedback.first_section.content = request.form.get('content_1')
+            feedback.second_section.name = CONSTANTS.SECOND_SECTION
+            feedback.second_section.rating = request.form.get('rating_2')
+            feedback.second_section.content = request.form.get('content_2')
+            feedback.third_section.name = CONSTANTS.THIRD_SECTION
             feedback.third_section.name = CONSTANTS.THIRD_SECTION
             feedback.third_section.rating = request.form.get('rating_3')
             feedback.third_section.content = request.form.get('content_3')
@@ -190,15 +216,20 @@ def mturk_post_HIT():
     resume_list = models.Resume.objects(
         db_query(posted=False) & db_query(lock=False)
     )
+    # resume_list = resume_list[:20]
     count = 0
     for resume in resume_list:
         if (datetime.now()-resume.last_reviewed).seconds > 3600:
             resume.update(posted=True)
+            count += 1
+    #logger.info(str(count))
+    for resume in resume_list:
+        if (datetime.now()-resume.last_reviewed).seconds > 3600:
             response = models.boto3_client.create_hit(
                 MaxAssignments=1,
-                LifetimeInSeconds=36000,
-                AssignmentDurationInSeconds=600,
-                Reward='1',
+                LifetimeInSeconds=60,
+                AssignmentDurationInSeconds=300,
+                Reward='0.06',
                 Title='review-me',
                 Keywords='resume, review, rate',
                 Description='Please review resume, rate it and give feedback',
@@ -206,19 +237,25 @@ def mturk_post_HIT():
                 RequesterAnnotation=str(resume.id),
                 QualificationRequirements=CONSTANTS.WORKER_REQUIREMENTS,
             )
-            count += 1
-
+    	    #logger.info(str(resume.id))
+     	
 
 def mturk_check_status():
     response = models.boto3_client.list_hits()
     num_hits = response['NumResults']
     for HIT in response['HITs']:
+	print('')
+	print(HIT['HITId'])
         print(HIT['HITStatus'])
+	print(HIT['CreationTime'])
         assignments = models.boto3_client.list_assignments_for_hit(
             HITId=HIT['HITId'],
         )['Assignments']
         for assignment in assignments:
             print(assignment['AssignmentStatus'])
+	    print(assignment['AcceptTime'])
+	    print(assignment['SubmitTime'])
+	    print(assignment['Deadline'])
 
 def mturk_clean_HIT():
     """
@@ -229,6 +266,7 @@ def mturk_clean_HIT():
     response = models.boto3_client.list_reviewable_hits()
     HITs = response['HITs']
     for HIT in HITs:
+	print(HIT['HITId'])
         assignments = models.boto3_client.list_assignments_for_hit(
             HITId=HIT['HITId'],
             AssignmentStatuses=['Submitted'],
@@ -240,6 +278,30 @@ def mturk_clean_HIT():
         models.boto3_client.delete_hit(
             HITId=HIT['HITId']
         )
+
+def mturk_clean_all_HIT():
+    """
+    For each reviewable HIT,
+    approve all submitted assignments, and delete HIT.
+    Note: some HITs expire and don't have any assignment.
+    """
+    response = models.boto3_client.list_hits()
+    HITs = response['HITs']
+    for HIT in HITs:
+        print(HIT['HITId'])
+	if HIT['HITStatus'] == 'Assignable':
+            assignments = models.boto3_client.list_assignments_for_hit(
+            	HITId=HIT['HITId'],
+                AssignmentStatuses=['Submitted'],
+            )['Assignments']
+            for assignment in assignments:
+                models.boto3_client.approve_assignment(
+                    AssignmentId=assignment['AssignmentId'],
+                )
+            models.boto3_client.delete_hit(
+                HITId=HIT['HITId']
+            )
+
 
     
 def mturk_revive_resume():
@@ -258,18 +320,30 @@ def mturk_revive_resume():
             resume.update(posted=False)
             models.boto3_client.delete_hit(HITId=HIT['HITId'])
 
+def mturk_unassignable():
+    response = models.boto3_client.list_hits(
+        MaxResults=5
+    )
+    HITs = response['HITs']
+    for HIT in HITs:
+        resume_id = HIT['RequesterAnnotation']
+        resume_id = ObjectId(resume_id)
+	#logger.info(str(resume_id))
 
 def mturk_check():
-	mturk_post_HIT()
-	mturk_approve_HIT()
-	mturk_revive_resume()
-
+	#mturk_post_HIT()
+	#mturk_approve_HIT()
+	#mturk_revive_resume()
+	#mturk_clean_all_HIT()
+	mturk_check_status()
 
 def mturk_report():
-	balance = models.boto3_client.get_account_balance()['AvailableBalance'];
-	if balance < 90:
+	balance = models.boto3_client.get_account_balance()['AvailableBalance']
+	if float(balance) < float(90):
+		bal = str(int(math.ceil(float(balance))))
+		msg = 'MTurk balance is lower than $' + bal
 		with models.app.app_context():
-			send_mail('MTurk balance is lower than $90', "slark@umich.edu", 'notify_balance', balance=balance)
+			send_mail(msg, "umichictresearch@gmail.com", 'notify_balance', balance=balance)
 
             
 @mturk.record
@@ -277,3 +351,4 @@ def add_mturk_job(state):
     state.app.scheduler.add_job(func=mturk_check, trigger="interval", seconds=10)
     state.app.scheduler.add_job(func=mturk_report, trigger="interval",
 days=1)
+    #state.app.scheduler._logger=logger
