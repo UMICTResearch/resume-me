@@ -3,10 +3,13 @@ from flask.ext.login import (current_user, login_required)
 from mongoengine import Q as db_query
 from mongoengine import ValidationError
 from datetime import datetime
+from resumeme.accounts import models as accounts_models
+from resumeme.resume import models as reviewme_document_model
+import models.feedback as feedback_models
+import models.feedback_list as feedback_list_models
 
 from resumeme.utils.controllers import send_mail
 
-import models
 import constants as CONSTANTS
 import utils
 
@@ -34,29 +37,53 @@ def test(state):
     return render_template('feedback/review_thank_you.html', **templateData)
 
 
+# TODO - Doesn't need any change
 # List of Resume or Feedback seen based on role
 #
 @feedback.route('/feedback')
 @login_required
 def feedback_main():
-    user = models.User.objects.with_id(current_user.id)
+    #user = accountsmodels.User.objects(db_query(user=current_user.id))
+    user = accounts_models.User.objects.with_id(current_user.id)
+
+    # This segment is for the job seeker
     if user.role == "jobseeker":
-        user_resume_list = models.Resume.objects(user=current_user.id)
-        user_feedback_list = models.Feedback.objects(user=current_user.id)
+
+        # Get the resume object list from the database and then
+        # get all the feedback lists for each resume and create an
+        # array out of them. That array will be passed and iterated over
+        # along with the resume.
+        #
+        # The view expects the list of resume and feedback lists that
+        # it can iterate over.
+        #
+        # TODO: Change this eventually to just be models.Document or reviewme_document_model.Document
+        #
+        user_reviewme_document_list = reviewme_document_model.Resume.objects(user=current_user.id)
+        reviewme_document_feedback_list_array = []
+        if user_reviewme_document_list != 0:
+            # Essentially for each resume
+            for reviewme_document in user_reviewme_document_list:
+                # Get the list of feedback for each resume and put it into an array creating
+                # a 2D array. It indexes the feedback of each document.
+                if reviewme_document.feedback_list is not None:
+                    reviewme_document_feedback_list_array.append(reviewme_document.feedback)
+
+        # Data passed to the templates.
         templateData = {
-            'resume': user_resume_list,
-            'feedback': user_feedback_list
+            'document_list': user_reviewme_document_list,
+            'feedback_list_array': reviewme_document_feedback_list_array
         }
         return render_template('feedback/seeker.html', **templateData)
     elif user.role == "volunteer":
 
-        user_resume_list = models.Resume.objects(
+        user_reviewme_document_list = reviewme_document_model.Resume.objects(
             db_query(user__ne=current_user.id) &
             db_query(lock=False)
         )
 
         templateData = {
-            'resume': user_resume_list
+            'resume': user_reviewme_document_list
         }
         return render_template('feedback/volunteer.html', **templateData)
     else:
@@ -68,57 +95,59 @@ def feedback_main():
 @feedback.route("/feedback/<resume_id>/create", methods=["GET", "POST"])
 @login_required
 def volunteer_add_feedback(resume_id):
-    resume_requested = models.Resume.objects().with_id(resume_id)
-    if request.method == "POST" and resume_requested.lock is False:
+    requested_document = reviewme_document_model.Resume.objects().with_id(resume_id)
+    feedback = feedback_models.Feedback()
+    active_feedback_sections = feedback.get_active_feedback_sections()
+
+    if request.method == "POST" and requested_document.lock is False:
         try:
             # Tells the feedback display page that the feedback was freshly created and saved.
             state = "saved"
-            created = datetime.now()
-            current_resume = models.Resume.objects().with_id(resume_id)
-            feedback = models.Feedback()
-            feedback.last_updated = created
 
-            feedback.first_section = models._Section()
-            feedback.second_section = models._Section()
-            feedback.third_section = models._Section()
-            feedback.fourth_section = models._Section()
-            feedback.fifth_section = models._Section()
+            # Iterate over the section list and use the question_id to determine
+            # what the html id will be e.g. rating_0001 and so on. This would construct the
+            # the string that would be needed to be passed to the form.get request.
+            #
+            # TODO Put the responses into the feedback data structure along with any other
+            # TODO housekeeping that needs doing. Move this into the classes so that here
+            # TODO it is only one funciton call for most of it.
 
-            feedback.resume = current_resume
-
-            feedback.first_section.name = CONSTANTS.FIRST_SECTION
-            feedback.first_section.rating = request.form.get('rating_1')
-            feedback.first_section.content = request.form.get('content_1')
-            feedback.second_section.name = CONSTANTS.SECOND_SECTION
-            feedback.second_section.rating = request.form.get('rating_2')
-            feedback.second_section.content = request.form.get('content_2')
-            feedback.third_section.name = CONSTANTS.THIRD_SECTION
-            feedback.third_section.rating = request.form.get('rating_3')
-            feedback.third_section.content = request.form.get('content_3')
-            feedback.fourth_section.name = CONSTANTS.FOURTH_SECTION
-            feedback.fourth_section.rating = request.form.get('rating_4')
-            feedback.fourth_section.content = request.form.get('content_4')
-            feedback.fifth_section.name = CONSTANTS.FIFTH_SECTION
-            feedback.fifth_section.rating = request.form.get('rating_5')
-            feedback.fifth_section.content = request.form.get('content_5')
-
+            feedback.add_responses_to_feedback_sections(request)
             feedback.validate()
+            # push onto feedback list
+            # Update remaining feedbacks available
+            # feedback_ list.save()
 
-            feedback.resume.update(lock=True)
+            # If new feedback_list needed create it OR load the feedback_list
+            if requested_document.feedback_list is None:
+                requested_document.feedback_list = feedback_list_models.FeedbackList()
+
+            requested_document.feedback_list.append_object_to_feedback_list(feedback)
+
+            # Now save both the document and the feedback_list
+            requested_document.feedback_list.save()
+            requested_document.save()
+
+            return redirect('/feedback/%s/%s/%s' % (requested_document.id, feedback_list.feedback_threshhold, state))
+
+
+            #feedback.validate()
+
+            #feedback.resume.update(lock=True)
 
             # associate feedback to resume owner
-            feedback.user = feedback.resume.user
+            #feedback.user = feedback.resume.user
+
 
             # associate it to volunteer
-            volunteer = models.User.objects.with_id(current_user.id)
-            feedback.volunteer = volunteer
-            feedback.save()
+            #feedback.volunteer = volunteer
+            #feedback.save()
 
             # push feedback onto resume feedback_list reference list
-            models.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
-            current_resume.save()
+            #reviewme_document_model.Resume.objects(id=resume_id).update_one(push__feedback_list=feedback)
+            #current_resume.save()
 
-            return redirect('/feedback/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
+            #return redirect('/feedback/%s/%s/%s' % (feedback.resume.id, feedback.id, state))
 
         except ValidationError as e:
             print "Error:", e
@@ -126,18 +155,19 @@ def volunteer_add_feedback(resume_id):
             template_data = {
                 'title': 'Give Feedback',
                 'content': None,
-                'resume': models.Resume.objects().with_id(resume_id)
+                'resume': reviewme_document_model.Resume.objects().with_id(resume_id)
             }
             return render_template('feedback/edit.html', **template_data)
 
-    elif resume_requested.lock is True:
+    elif requested_document.lock is True:
         return render_template('404.html')
 
     else:
         template_data = {
             'title': 'Give Feedback',
             'content': None,
-            'resume': models.Resume.objects().with_id(resume_id)
+            'document': requested_document,
+            'sections': active_feedback_sections
         }
         return render_template('feedback/edit.html', **template_data)
 
@@ -145,12 +175,12 @@ def volunteer_add_feedback(resume_id):
 # View of Resume with Feedback and whether it needs a flash saying
 # saved or not.
 #
-@feedback.route('/feedback/<resume_id>/<feedback_id>/<state>')
+@feedback.route('/feedback/<resume_id>/<feedback_threhhold>/<state>')
 @login_required
-def entry_page(resume_id, feedback_id, state="view"):
+def entry_page(resume_id, feedback_threshhold, state="view"):
     # get class resume entry with matching slug
     resume = models.Resume.objects().with_id(resume_id)
-    feedback = models.Feedback.objects().with_id(feedback_id)
+    feedback =  resume.feedback_list[((CONSTANTS.MAX_VOLUNTEER_PER_FEEDBACK - feedback_threshhold) - 1)]
 
     if resume and feedback:
         # Display this only when the feedback is freshly saved and not when it is just being viewed.

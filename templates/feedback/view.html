@@ -7,33 +7,24 @@
     <div class="container">
         <div class="row">
             <div class="page-header">
-                <h1 class="well">
-                    {% if current_user.id == resume.user.id %}
-                        {% if resume.lock == False %}
-                            <a href="/resume/{{ resume.id }}/edit" class="btn btn-default btn-lg">edit</a>
-                        {% endif %}
+                <h3>Job Title: {{ document.title }}
+
+                    {% if current_user.id == document.user.id and document.lock == False %}
+                        {#  TODO Needs to be updated to change text based on type. #}
+                        <a class="btn btn-primary btn-xs" href="/document/{{ document.id }}/edit">edit document</a>
                     {% endif %}
-                    {{ resume.title }}
-                </h1>
+                </h3>
             </div>
 
-            {{ macros.resume_block( resume.content, resume.file_upload, "6") }}
+            {#  TODO Needs to be updated to use type to determine what block function to use. #}
+            {{ macros.resume_block(document.content, document.file_upload, "7") }}
 
-            <div class="col-md-6">
-
+            <div class="col-md-5">
                 {{  macros.flashed_messages("success") }}
-
                 <legend>
                     {{ title }}
                 </legend>
-                {% include "feedback/feedback.html" %}
-                {% if current_user.id == resume.user.id %}
-                    {% if feedback.review_lock == false %}
-                        <a href="/feedback/{{ resume.id }}/{{ feedback.id }}/review"
-                           class="btn btn-info btn-md">Rate your feedback</a>
-                    {% endif %}
-                {% endif %}
-
+                {{ macros.feedback_view(sections) }}
             </div>
         </div>
     </div>

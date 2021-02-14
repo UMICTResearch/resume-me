@@ -7,8 +7,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import forms
 from resumeme.libs.User import User
 from resumeme.utils.controllers import send_mail, do_flash
-from resumeme.accounts import models
-from resumeme.feedback import models
+from resumeme.accounts import models as accountsmodels
+from resumeme.feedback import models as feedbackmodels
 from resumeme.config import *
 
 accounts = Blueprint('accounts', __name__, template_folder='templates')
@@ -189,7 +189,7 @@ def reset_password(token):
     s = Serializer(current_app.config['SECRET_KEY'])
     _id = s.loads(token)
 
-    user = models.User.objects.with_id(_id)
+    user = accountsmodels.User.objects.with_id(_id)
 
     if request.method == 'POST' and resetPasswordForm.validate() is False:
         current_app.logger.info(resetPasswordForm.errors)
@@ -221,7 +221,7 @@ def activate_account_request(token):
     s = Serializer(current_app.config['SECRET_KEY'])
     _id = s.loads(token)
 
-    user = models.User.objects.with_id(_id)
+    user = accountsmodels.User.objects.with_id(_id)
 
     if request.method == 'POST' and user.active is False:
         user.update(active=True)
@@ -236,7 +236,7 @@ def activate_account_request(token):
 @accounts.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-    user = models.User.objects.with_id(current_user.id)
+    user = accountsmodels.User.objects.with_id(current_user.id)
 
     if request.method == "POST" and "role" in request.form:
         user.update(role=request.form['role'])

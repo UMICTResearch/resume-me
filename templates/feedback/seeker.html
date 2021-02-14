@@ -9,7 +9,8 @@
         </div>
     </div>
 
-    {% if not resume %}
+
+    {% if not document_list %}
 
         <div class="container">
             <div class="row row-centered">
@@ -28,35 +29,23 @@
 
     {% else %}
         <div class="container">
-            {% for r in resume %}
+            {% for document in document_list %}
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4>
-                                    {% if current_user.id == r.user.id and r.lock == False %}
-                                        <a href="/resume/{{ r.id }}/edit" class="btn btn-primary btn-xs">edit</a>
+                                    {% if current_user.id == document.user.id and document.lock == False %}
+                                        <a href="/resume/{{ document.id }}/edit" class="btn btn-primary btn-xs">edit</a>
                                     {% endif %}
-                                    <a href="/resume/{{ r.id }}">
+                                    <a href="/resume/{{ document.id }}">
                                         <small>(resume)</small>
-                                        {{ r.title }}</a>
+                                        {{ document.title }}</a>
                                 </h4>
                             </div>
 
-                            {% for f in feedback %}
-                                {% if f.resume.id == r.id %}
-                                    <div class="panel-body">
-                                        <h5>
-                                            <a href="/feedback/{{ r.id }}/{{ f.id }}/view">
-                                                <small>(feedback)</small>
-                                                {{ f.last_updated|feedback_datetime }}
-                                                {% if f.viewed == False %}
-                                                    <span class="label label-warning">New</span>
-                                                {% endif %}
-                                            </a>
-                                        </h5>
-                                    </div>
-                                {% endif %}
+                            {% for feedback_list in feedback_list_array %}
+                                {{ macros.feedback_list_display(document, feedback_list, 5) }}
                             {% endfor %}
                         </div>
                     </div>
